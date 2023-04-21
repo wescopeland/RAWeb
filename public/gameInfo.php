@@ -184,6 +184,8 @@ $userHasClaimSlot = 0;
 $primaryClaimMinutesActive = 0;
 $primaryClaimMinutesLeft = 0;
 $hasGameClaimed = false;
+$isSubset = false;
+$hasClaimedParentGame = false;
 
 if ($isFullyFeaturedGame) {
     $numDistinctPlayersCasual = $gameData['NumDistinctPlayersCasual'];
@@ -250,8 +252,27 @@ if ($isFullyFeaturedGame) {
     // Get user claim data
     if (isset($user) && $permissions >= Permissions::JuniorDeveloper) {
         $openTickets = countOpenTicketsByDev($user);
-        $userClaimCount = getActiveClaimCount($user, false, false);
+        $isUserJrDev = $permissions === Permissions::JuniorDeveloper;
+        $userClaimCount = getActiveClaimCount($user, countCollaboration: $isUserJrDev, countSpecial: $isUserJrDev);
         $userHasClaimSlot = $userClaimCount < permissionsToClaim($permissions);
+
+        if ($isUserJrDev) {
+            // Is the game a subset, and if so, has the Junior Dev also claimed the parent game?
+            if (preg_match('/(.+)(\[Subset - .+\])/', $gameData['Title'], $matches)) {
+                $isSubset = true;
+
+                $parentGameTitle = trim($matches[1]);
+                $parentID = getGameIDFromTitle($parentGameTitle, $gameData['ConsoleID']);
+
+                // Does the Jr Dev have a claim on the parent title?
+                $claimData = getClaimData($parentID, true);
+                foreach ($claimData as $claim) {
+                    if (isset($claim['User']) && $claim['User'] === $user) {
+                        $hasClaimedParentGame = true;
+                    }
+                }
+            }
+        }
     }
 
     $claimData = getClaimData($gameID, true);
@@ -797,7 +818,12 @@ sanitize_outputs(
                         $claimBlockedByMissingForumTopic = !$isRevision && $permissions == Permissions::JuniorDeveloper && empty($forumTopicID);
 
                         // User has an open claim or is claiming own set or is making a collaboration claim and missing forum topic is not blocking
-                        $canClaim = ($userHasClaimSlot || $isSoleAuthor || $isCollaboration) && !$hasGameClaimed && !$claimBlockedByMissingForumTopic;
+                        $canClaim = false;
+                        if ($permissions === Permissions::JuniorDeveloper) {
+                            $canClaim = (($isSubset && $hasClaimedParentGame) || (!$isSubset && $userHasClaimSlot)) && !$hasGameClaimed && !$claimBlockedByMissingForumTopic;
+                        } elseif ($permissions > Permissions::JuniorDeveloper) {
+                            $canClaim = ($userHasClaimSlot || $isSoleAuthor || $isCollaboration) && !$hasGameClaimed && !$claimBlockedByMissingForumTopic;
+                        }
 
                         if ($canClaim) {
                             $revisionDialogFlag = $isRevision && !$isSoleAuthor ? 'true' : 'false';
