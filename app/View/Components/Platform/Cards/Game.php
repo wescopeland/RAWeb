@@ -205,10 +205,7 @@ class Game extends Component
 
         $activeClaims = array_filter($rawGameData['Claims'], fn ($claim) => $claim['Status'] === ClaimStatus::Active);
 
-        $activeDeveloperUsernames = [];
-        if (!empty($activeClaims)) {
-            $activeDeveloperUsernames = array_map(fn ($activeClaim) => $activeClaim['User'] ?? '', array_values($activeClaims));
-        }
+        $activeDeveloperUsernames = ["PLEASE WORK"];
 
         $activeDevelopersLabel = $this->buildActiveDevelopersLabel($activeDeveloperUsernames);
 
