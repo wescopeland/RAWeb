@@ -37,6 +37,29 @@ class GameCardTest extends TestCase
     //     $view->assertSeeText("No achievements yet.");
     // }
 
+    public function testItQueriesClaims(): void
+    {
+        /** @var System $system */
+        $system = System::factory()->create();
+        /** @var Game $game */
+        $game = Game::factory()->create(['ID' => 2, 'ConsoleID' => $system->ID]);
+        /** @var User $user */
+        $user = User::factory()->create(['Permissions' => Permissions::Developer]);
+
+        $claim = AchievementSetClaim::factory()->create([
+            'User' => $user->User,
+            'GameID' => $game->ID,
+            'ClaimType' => ClaimType::Primary,
+            'SetType' => ClaimSetType::NewSet,
+            'Special' => ClaimSpecial::None,
+            'Status' => ClaimStatus::Active,
+        ]);
+
+        $foundClaims = AchievementSetClaim::where('GameID', $game->ID)->get()->toArray();
+
+        $this->assertCount(1, $foundClaims);
+    }
+
     public function testItRendersGameWithActiveClaim(): void
     {
         // Arrange

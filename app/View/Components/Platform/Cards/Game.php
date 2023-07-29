@@ -86,7 +86,6 @@ class Game extends Component
             $foundGameAchievements = $foundGame->achievements->toArray();
 
             $foundClaims = AchievementSetClaim::where('GameID', $gameId)->get()->toArray();
-            Log::info('Here is some information: ' . print_r($foundClaims, true));
 
             $foundAltGames = [];
             if ($foundGameConsoleId === $this->hubConsoleId) {
