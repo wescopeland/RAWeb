@@ -43,7 +43,7 @@ class GameCardTest extends TestCase
         /** @var System $system */
         $system = System::factory()->create();
         /** @var Game $game */
-        $game = Game::factory()->create(['ID' => 1, 'ConsoleID' => $system->ID]);
+        $game = Game::factory()->create(['ID' => 2, 'ConsoleID' => $system->ID]);
         /** @var User $user */
         $user = User::factory()->create(['Permissions' => Permissions::Developer]);
 
@@ -57,7 +57,7 @@ class GameCardTest extends TestCase
         ]);
 
         // Act
-        $view = $this->blade('<x-platform.cards.game gameId="1" />');
+        $view = $this->blade('<x-platform.cards.game gameId="2" />');
 
         // Assert
         $view->assertSeeText($game->Title);
