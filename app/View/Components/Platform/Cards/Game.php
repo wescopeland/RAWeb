@@ -204,9 +204,8 @@ class Game extends Component
         [$highestProgressionStatus, $highestProgressionAwardDate] = $this->buildCardUserProgressionData($userGameProgressionAwards);
 
         $activeClaims = array_filter($rawGameData['Claims'], fn ($claim) => $claim['Status'] === ClaimStatus::Active);
-
-        $activeDeveloperUsernames = ["PLEASE WORK"];
-
+        $activeDeveloperUsernames = [(string) count($rawGameData['Claims'])];
+        // $activeDeveloperUsernames = array_map(fn ($activeClaim) => $activeClaim['User'], array_values($activeClaims));
         $activeDevelopersLabel = $this->buildActiveDevelopersLabel($activeDeveloperUsernames);
 
         return compact(
