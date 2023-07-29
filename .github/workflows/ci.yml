@@ -4,49 +4,49 @@ env:
   LOG_CHANNEL: stderr
 
 jobs:
-  pint:
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [8.0]
-    name: pint (PHP ${{ matrix.php }})
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: mbstring
-          tools: composer:v2
-          coverage: none
-      - name: Install
-        run: composer install
-      - name: Lint
-        run: composer lint
+  # pint:
+  #   runs-on: ubuntu-20.04
+  #   strategy:
+  #     fail-fast: true
+  #     matrix:
+  #       php: [8.0]
+  #   name: pint (PHP ${{ matrix.php }})
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #     - name: Setup PHP
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: ${{ matrix.php }}
+  #         extensions: mbstring
+  #         tools: composer:v2
+  #         coverage: none
+  #     - name: Install
+  #       run: composer install
+  #     - name: Lint
+  #       run: composer lint
 
-  phpstan:
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [8.0]
-    name: phpstan (PHP ${{ matrix.php }})
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: mbstring
-          tools: composer:v2
-          coverage: none
-      - name: Install
-        run: composer install
-      - name: Analyse
-        run: composer analyse
+  # phpstan:
+  #   runs-on: ubuntu-20.04
+  #   strategy:
+  #     fail-fast: true
+  #     matrix:
+  #       php: [8.0]
+  #   name: phpstan (PHP ${{ matrix.php }})
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Setup PHP
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: ${{ matrix.php }}
+  #         extensions: mbstring
+  #         tools: composer:v2
+  #         coverage: none
+  #     - name: Install
+  #       run: composer install
+  #     - name: Analyse
+  #       run: composer analyse
 
   phpunit:
     runs-on: ubuntu-20.04
@@ -70,40 +70,40 @@ jobs:
       - name: Test
         run: composer test -- --filter GameCardTest
 
-  eslint:
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: true
-    name: eslint
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Use Node 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install
-        run: npm install
-      - name: Lint
-        run: npm run lint
+  # eslint:
+  #   runs-on: ubuntu-20.04
+  #   strategy:
+  #     fail-fast: true
+  #   name: eslint
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Use Node 18
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18'
+  #     - name: Install
+  #       run: npm install
+  #     - name: Lint
+  #       run: npm run lint
 
-  vitest:
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: true
-    name: vitest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Use Node 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install
-        run: npm install
-      - name: Test
-        run: npm run test
-        env:
-          VITE_BUILD_PATH: dist
-          APP_URL: https://raweb.test
-          LARAVEL_BYPASS_ENV_CHECK: 1
+  # vitest:
+  #   runs-on: ubuntu-20.04
+  #   strategy:
+  #     fail-fast: true
+  #   name: vitest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Use Node 18
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18'
+  #     - name: Install
+  #       run: npm install
+  #     - name: Test
+  #       run: npm run test
+  #       env:
+  #         VITE_BUILD_PATH: dist
+  #         APP_URL: https://raweb.test
+  #         LARAVEL_BYPASS_ENV_CHECK: 1

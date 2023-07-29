@@ -79,6 +79,8 @@ class GameCardTest extends TestCase
             'Status' => ClaimStatus::Active,
         ]);
 
+        sleep(2);
+
         // Act
         $view = $this->blade('<x-platform.cards.game gameId="2" />');
 
