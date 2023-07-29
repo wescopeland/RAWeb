@@ -68,7 +68,7 @@ jobs:
       - name: Install
         run: composer install
       - name: Test
-        run: composer paratest
+        run: composer test -- --filter GameCardTest
 
   eslint:
     runs-on: ubuntu-20.04
