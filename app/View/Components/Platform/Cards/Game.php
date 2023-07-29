@@ -85,9 +85,6 @@ class Game extends Component
             $foundGameConsoleId = $foundGame->system->ID;
             $foundGameAchievements = $foundGame->achievements->toArray();
 
-            $foundClaim = AchievementSetClaim::where('GameID', $gameId)->first();
-            $foundClaims = $foundClaim ? [$foundClaim->toArray()] : [];
-
             $foundAltGames = [];
             if ($foundGameConsoleId === $this->hubConsoleId) {
                 $foundAltGames = GameAlternative::where('gameID', $gameId)->get()->toArray();
@@ -98,7 +95,6 @@ class Game extends Component
                     'ConsoleID' => $foundGameConsoleId,
                     'ConsoleName' => $foundGame->system->Name,
                     'Achievements' => $foundGameAchievements,
-                    'Claims' => $foundClaims,
                     'AltGames' => $foundAltGames,
                 ]
             );
@@ -196,6 +192,8 @@ class Game extends Component
         $achievementsCount = count($rawGameData['Achievements']);
         $isHub = $rawGameData['ConsoleID'] === $this->hubConsoleId;
         $altGamesCount = count($rawGameData['AltGames']);
+
+        $rawGameData['Claims'] = AchievementSetClaim::where('GameID', $rawGameData['ID'])->get()->toArray();
 
         [$pointsSum, $retroPointsSum, $retroRatio, $lastUpdated] = $this->buildCardAchievementsData(
             $rawGameData['Achievements'],
