@@ -1,5 +1,8 @@
 on: [pull_request]
 
+env:
+  LOG_CHANNEL: stderr
+
 jobs:
   pint:
     runs-on: ubuntu-20.04
