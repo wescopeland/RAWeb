@@ -78,8 +78,9 @@ class GameCardTest extends TestCase
             'Special' => ClaimSpecial::None,
             'Status' => ClaimStatus::Active,
         ]);
-
-        sleep(2);
+        // sanity check
+        $foundClaims = AchievementSetClaim::where('GameID', $game->ID)->get()->toArray();
+        $this->assertCount(1, $foundClaims);
 
         // Act
         $view = $this->blade('<x-platform.cards.game gameId="2" />');
