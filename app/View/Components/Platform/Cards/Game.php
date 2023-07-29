@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\View\Components\Platform\Cards;
 
+use Illuminate\Support\Facades\Log;
 use App\Community\Enums\AwardType;
 use App\Community\Enums\ClaimStatus;
 use App\Community\Models\AchievementSetClaim;
@@ -85,7 +86,7 @@ class Game extends Component
             $foundGameAchievements = $foundGame->achievements->toArray();
 
             $foundClaims = AchievementSetClaim::where('GameID', $gameId)->get()->toArray();
-            dump($foundClaims);
+            Log::info('Here is some information: ' . print_r($foundClaims, true));
 
             $foundAltGames = [];
             if ($foundGameConsoleId === $this->hubConsoleId) {
