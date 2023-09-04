@@ -271,7 +271,7 @@ function renderConsoleHeading(int $consoleID, string $consoleName, bool $isSmall
         }
 
         echo "<div align='right'>";
-        echo "<select class='gameselector' onchange='window.location = \"/gameList.php?$queryParams\" + this.options[this.selectedIndex].value'>";        echo "<option value=''" . (($filter == 0) ? " selected" : "") . ">Games with achievements</option>";
+        echo "<select class='gameselector' onchange='window.location = \"/gameList.php?$queryParams\" + this.options[this.selectedIndex].value'>"; echo "<option value=''" . (($filter == 0) ? " selected" : "") . ">Games with achievements</option>";
         echo "<option value='&f=1'" . (($filter == 1) ? " selected" : "") . ">Games without achievements</option>";
         echo "<option value='&f=2'" . (($filter == 2) ? " selected" : "") . ">All games</option>";
         echo "</select>";
