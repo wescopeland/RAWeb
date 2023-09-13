@@ -60,6 +60,14 @@ final class ShortcodeTest extends TestCase
         );
     }
 
+    public function testHorizontalRule(): void
+    {
+        $this->assertSame(
+            "This is content <hr class='border-text mb-1'> More content",
+            Shortcode::render('This is content [hr] More content')
+        );
+    }
+
     public function testStripAndClampImages(): void
     {
         $this->assertSame(
@@ -70,6 +78,29 @@ final class ShortcodeTest extends TestCase
         $this->assertSame(
             '',
             Shortcode::stripAndClamp('[img]https://google.com/icon.png[/img]')
+        );
+    }
+
+    public function testStripAndClampQuote(): void
+    {
+        $this->assertSame(
+            '',
+            Shortcode::stripAndClamp('[quote]Hello there![/quote]'),
+        );
+
+        $this->assertSame(
+            '',
+            Shortcode::stripAndClamp('[quote author=luchaos]Hello there![/quote]'),
+        );
+
+        $this->assertSame(
+            '',
+            Shortcode::stripAndClamp('[quote comment=123]Hello there![/quote]'),
+        );
+
+        $this->assertSame(
+            '',
+            Shortcode::stripAndClamp('[quote author=luchaos comment=123]Hello there![/quote]'),
         );
     }
 
@@ -108,6 +139,14 @@ final class ShortcodeTest extends TestCase
         $this->assertSame(
             'Hello',
             Shortcode::stripAndClamp('[link=abc.xyz]Hello[/link]')
+        );
+    }
+
+    public function testStripAndClampHorizontalRule(): void
+    {
+        $this->assertSame(
+            "This is content More content",
+            Shortcode::stripAndClamp('This is content [hr] More content')
         );
     }
 

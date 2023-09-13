@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support\Shortcode;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use Thunder\Shortcode\Event\FilterShortcodesEvent;
 use Thunder\Shortcode\EventContainer\EventContainer;
@@ -24,6 +25,8 @@ final class Shortcode
             ->add('i', fn (ShortcodeInterface $s) => '<i>' . $s->getContent() . '</i>')
             ->add('u', fn (ShortcodeInterface $s) => '<u>' . $s->getContent() . '</u>')
             ->add('s', fn (ShortcodeInterface $s) => '<s>' . $s->getContent() . '</s>')
+            ->add('hr', fn () => "<hr class='border-text mb-1'>")
+            ->add('quote', fn (ShortcodeInterface $s) => $this->renderQuote($s))
             ->add('img', fn (ShortcodeInterface $s) => '<img class="inline-image" src="' . ($s->getBbCode() ?: $s->getContent()) . '">')
             ->add('code', fn (ShortcodeInterface $s) => $this->renderCode($s))
             ->add('url', fn (ShortcodeInterface $s) => $this->renderUrlLink($s))
@@ -74,6 +77,12 @@ final class Shortcode
             // "[img=https://google.com/icon.png]" --> ""
             '~\[img(=)?([^]]+)]~i' => '',
 
+            // "[hr]" --> ""
+            '~\[hr]~i' => '',
+
+            // "[quote]content[/quote]" --> ""
+            '~\[quote(?:\s+\w+=(?:[^\]]+?))*\](.*?)\[/quote]~i' => '',
+
             // "[img]https://google.com/icon.png[/img]" --> ""
             '~\[img\](.*?)\[/img\]~i' => '',
 
@@ -91,11 +100,11 @@ final class Shortcode
             '~\[user(=)?([^]]+)]~i' => '@$2',
 
             // Fragments: opening tags without closing tags.
-            '~\[(b|i|u|s|img|code|url|link|spoiler|ach|game|ticket|user)\b[^\]]*?\]~i' => '',
-            '~\[(b|i|u|s|img|code|url|link|spoiler|ach|game|ticket|user)\b[^\]]*?$~i' => '...',
+            '~\[(b|i|u|s|hr|quote|img|code|url|link|spoiler|ach|game|ticket|user)\b[^\]]*?\]~i' => '',
+            '~\[(b|i|u|s|hr|quote|img|code|url|link|spoiler|ach|game|ticket|user)\b[^\]]*?$~i' => '...',
 
             // Fragments: closing tags without opening tags.
-            '~\[/?(b|i|u|s|img|code|url|link|spoiler|ach|game|ticket|user)\]~i' => '',
+            '~\[/?(b|i|u|s|quote|img|code|url|link|spoiler|ach|game|ticket|user)\]~i' => '',
         ];
 
         foreach ($stripPatterns as $stripPattern => $replacement) {
@@ -195,6 +204,11 @@ final class Shortcode
         }
 
         return $href;
+    }
+
+    private function renderQuote(ShortcodeInterface $shortcode): string
+    {
+        return Blade::render('<x-community.shortcode-quote :shortcode="$shortcode" />', ['shortcode' => $shortcode]);
     }
 
     private function renderCode(ShortcodeInterface $shortcode): string
