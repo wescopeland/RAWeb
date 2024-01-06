@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Platform\Services;
 
+use App\Site\Models\User;
+
 class GameListService
 {
-    public function getUserProgressForGameIds(array $gameIds): ?array
+    public function getUserProgressForGameIds(?User $user, array $gameIds): ?array
     {
-        $user = request()->user();
-
         if (!$user) {
             return null;
         }

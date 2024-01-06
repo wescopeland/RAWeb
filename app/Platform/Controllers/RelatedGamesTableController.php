@@ -44,7 +44,7 @@ class RelatedGamesTableController extends GameListControllerBase
         $gameIDs = GameAlternative::where('gameID', $gameId)->pluck('gameIDAlt')->toArray()
                  + GameAlternative::where('gameIDAlt', $gameId)->pluck('gameID')->toArray();
 
-        $userProgress = $this->gameListService->getUserProgressForGameIds($gameIDs);
+        $userProgress = $this->gameListService->getUserProgressForGameIds($loggedInUser, $gameIDs);
         [$games, $consoles] = $this->getGameList($gameIDs, $userProgress, $showTickets);
 
         // ignore hubs and events
