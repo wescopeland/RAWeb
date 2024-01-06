@@ -7,12 +7,18 @@ namespace App\Platform\Controllers;
 use App\Platform\Models\Game;
 use App\Platform\Models\GameAlternative;
 use App\Platform\Models\System;
+use App\Platform\Services\GameListService;
 use App\Site\Enums\Permissions;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class RelatedGamesTableController extends GameListControllerBase
 {
+    public function __construct(
+        protected GameListService $gameListService,
+    ) {
+    }
+
     public function __invoke(Request $request): View
     {
         $gameId = $request->route('game');
@@ -38,7 +44,7 @@ class RelatedGamesTableController extends GameListControllerBase
         $gameIDs = GameAlternative::where('gameID', $gameId)->pluck('gameIDAlt')->toArray()
                  + GameAlternative::where('gameIDAlt', $gameId)->pluck('gameID')->toArray();
 
-        $userProgress = $this->getUserProgress($gameIDs);
+        $userProgress = $this->gameListService->getUserProgressForGameIds($gameIDs);
         [$games, $consoles] = $this->getGameList($gameIDs, $userProgress, $showTickets);
 
         // ignore hubs and events

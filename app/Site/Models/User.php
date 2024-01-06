@@ -12,6 +12,7 @@ use App\Platform\Concerns\ActsAsPlayer;
 use App\Platform\Concerns\CollectsBadges;
 use App\Platform\Contracts\Developer;
 use App\Platform\Contracts\Player;
+use App\Platform\Models\PlayerGame;
 use App\Site\Concerns\HasAccount;
 use App\Site\Concerns\HasAvatar;
 use App\Site\Concerns\HasPreferences;
@@ -22,6 +23,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -338,6 +340,14 @@ class User extends Authenticatable implements CommunityMember, Developer, HasCom
     // == mutators
 
     // == relations
+
+    /**
+     * @return HasMany<PlayerGame>
+     */
+    public function playerGames(): HasMany
+    {
+        return $this->hasMany(PlayerGame::class, 'user_id');
+    }
 
     // public function requestContext(Request $request)
     // {
