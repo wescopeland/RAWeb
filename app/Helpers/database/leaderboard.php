@@ -79,9 +79,9 @@ function SubmitLeaderboardEntry(
         $retVal['BestScore'] = $newEntry;
     }
 
-    $retVal['TopEntries'] = GetLeaderboardEntriesDataJSON($lbID, $user->User, 10, 0, false);
-    $retVal['TopEntriesFriends'] = GetLeaderboardEntriesDataJSON($lbID, $user->User, 10, 0, true);
-    $retVal['RankInfo'] = GetLeaderboardRankingJSON($user->User, $lbID, (bool) $leaderboard->LowerIsBetter);
+    $retVal['TopEntries'] = GetLeaderboardEntriesDataJSON($lbID, $user, 10, 0, false);
+    $retVal['TopEntriesFriends'] = GetLeaderboardEntriesDataJSON($lbID, $user, 10, 0, true);
+    $retVal['RankInfo'] = GetLeaderboardRankingJSON($user, $lbID, (bool) $leaderboard->LowerIsBetter);
 
     return $retVal;
 }
@@ -159,22 +159,19 @@ function removeLeaderboardEntry(User $user, int $lbID, ?string &$score): bool
     return $wasLeaderboardEntryDeleted && $wasLegacyLeaderboardEntryDeleted;
 }
 
-function GetLeaderboardRankingJSON(string $username, int $lbID, bool $lowerIsBetter): array
+function GetLeaderboardRankingJSON(User $user, int $lbID, bool $lowerIsBetter): array
 {
-    sanitize_sql_inputs($username);
-
     $retVal = [];
 
     $query = "SELECT COUNT(*) AS UserRank,
-                (SELECT COUNT(*) AS NumEntries FROM LeaderboardEntry AS le
-                 LEFT JOIN UserAccounts AS ua ON ua.ID=le.UserID
-                 WHERE le.LeaderboardID=$lbID AND NOT ua.Untracked) AS NumEntries
-              FROM LeaderboardEntry AS lbe
-              INNER JOIN LeaderboardEntry AS lbe2 ON lbe.LeaderboardID = lbe2.LeaderboardID AND lbe.Score " . ($lowerIsBetter ? '<=' : '<') . " lbe2.Score
-              LEFT JOIN UserAccounts AS ua ON ua.ID = lbe.UserID
-              LEFT JOIN UserAccounts AS ua2 ON ua2.ID = lbe2.UserID
-              WHERE ua.User = '$username' AND lbe.LeaderboardID = $lbID
-              AND NOT ua.Untracked AND NOT ua2.Untracked";
+                (SELECT COUNT(*) AS NumEntries FROM leaderboard_entries AS le
+                 INNER JOIN UserAccounts AS ua ON ua.ID = le.user_id
+                 WHERE le.leaderboard_id = $lbID AND NOT ua.Untracked) AS NumEntries
+              FROM leaderboard_entries AS lbe
+              INNER JOIN leaderboard_entries AS lbe2 ON lbe.leaderboard_id = lbe2.leaderboard_id AND lbe.score " . ($lowerIsBetter ? '<=' : '<') . " lbe2.score
+              WHERE lbe.user_id = {$user->id} AND lbe.leaderboard_id = $lbID
+              AND NOT (SELECT Untracked FROM UserAccounts WHERE ID = lbe.user_id)
+              AND NOT (SELECT Untracked FROM UserAccounts WHERE ID = lbe2.user_id)";
 
     $dbResult = s_mysql_query($query);
     if ($dbResult !== false) {
@@ -195,44 +192,6 @@ function GetLeaderboardRankingJSON(string $username, int $lbID, bool $lowerIsBet
     }
 
     return $retVal;
-}
-
-/** @deprecated fold into GetLeaderboardRankingJSON */
-function getLeaderboardRanking(string $user, int $lbID, ?int &$rankOut = 0, ?int &$totalEntries = 0): bool
-{
-    sanitize_sql_inputs($user);
-
-    $query = "SELECT
-              COUNT(*) AS UserRank,
-              (SELECT ld.LowerIsBetter FROM LeaderboardDef AS ld WHERE ld.ID=$lbID) AS LowerIsBetter,
-              (SELECT COUNT(*) AS NumEntries FROM LeaderboardEntry AS le WHERE le.LeaderboardID=$lbID) AS NumEntries
-              FROM LeaderboardEntry AS lbe
-              INNER JOIN LeaderboardEntry AS lbe2 ON lbe.LeaderboardID = lbe2.LeaderboardID AND lbe.Score < lbe2.Score
-              LEFT JOIN UserAccounts AS ua ON ua.ID = lbe.UserID
-              WHERE ua.User = '$user' AND lbe.LeaderboardID = $lbID ";
-
-    $dbResult = s_mysql_query($query);
-    if ($dbResult !== false) {
-        $db_entry = mysqli_fetch_assoc($dbResult);
-
-        $rankOut = (int) $db_entry['UserRank'];
-        $totalEntries = (int) $db_entry['NumEntries'];
-
-        // Query actually gives 'how many players are below me in the list.'
-        // Top position yields '0', which we should change to '1' for '1st'
-        // Reversing the list means we wouldn't need to do this however: Rank 0 becomes 5-0: 5th of 5.
-        // 0=1st place.
-        if ($db_entry['LowerIsBetter'] == 1) {
-            $rankOut = $totalEntries - $rankOut;
-        } else {
-            $rankOut++;
-        }
-
-        return true;
-    }
-    log_sql_fail();
-
-    return false;
 }
 
 function getLeaderboardsForGame(int $gameID, ?array &$dataOut, ?string $localUser, bool $retrieveHidden = true): int
@@ -285,21 +244,19 @@ function getLeaderboardsForGame(int $gameID, ?array &$dataOut, ?string $localUse
     return 0;
 }
 
-function GetLeaderboardEntriesDataJSON(int $lbID, string $username, int $numToFetch, int $offset, bool $friendsOnly): array
+function GetLeaderboardEntriesDataJSON(int $lbID, User $user, int $numToFetch, int $offset, bool $friendsOnly): array
 {
-    sanitize_sql_inputs($username);
-
     $retVal = [];
 
     // 'Me or my friends'
-    $friendQuery = $friendsOnly ? "( ua.User IN ( " . GetFriendsSubquery($username) . " ) )" : "TRUE";
+    $friendQuery = $friendsOnly ? "( ua.User IN ( " . GetFriendsSubquery($user->User) . " ) )" : "TRUE";
 
     // Get entries:
-    $query = "SELECT ua.User, le.Score, UNIX_TIMESTAMP( le.DateSubmitted ) AS DateSubmitted
-              FROM LeaderboardEntry AS le
-              LEFT JOIN UserAccounts AS ua ON ua.ID = le.UserID
-              LEFT JOIN LeaderboardDef AS lbd ON lbd.ID = le.LeaderboardID
-              WHERE le.LeaderboardID = $lbID AND $friendQuery
+    $query = "SELECT ua.User, le.score AS Score, UNIX_TIMESTAMP( le.created_at ) AS DateSubmitted
+              FROM leaderboard_entries AS le
+              LEFT JOIN UserAccounts AS ua ON ua.ID = le.user_id
+              LEFT JOIN LeaderboardDef AS lbd ON lbd.ID = le.leaderboard_id
+              WHERE le.leaderboard_id = $lbID AND $friendQuery
               ORDER BY
               CASE WHEN lbd.LowerIsBetter = 0 THEN Score END DESC,
               CASE WHEN lbd.LowerIsBetter = 1 THEN Score END ASC, DateSubmitted ASC
@@ -567,9 +524,9 @@ function getLeaderboardsList(
                 LEFT JOIN GameData AS gd ON gd.ID = ld.GameID
                 LEFT JOIN
                 (
-                    SELECT le.LeaderboardID, COUNT(*) AS NumResults FROM LeaderboardEntry AS le
-                    GROUP BY le.LeaderboardID
-                    ) AS leInner ON leInner.LeaderboardID = ld.ID
+                    SELECT le.leaderboard_id, COUNT(*) AS NumResults FROM leaderboard_entries AS le
+                    GROUP BY le.leaderboard_id
+                    ) AS leInner ON leInner.leaderboard_id = ld.ID
                 LEFT JOIN Console AS c ON c.ID = gd.ConsoleID
                 WHERE gd.ID = :gameId
                 GROUP BY ld.GameID, ld.ID
