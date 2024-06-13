@@ -1,5 +1,6 @@
 /// <reference types="vitest" />
 
+import react from '@vitejs/plugin-react';
 import { existsSync, readFileSync } from 'fs';
 import laravel from 'laravel-vite-plugin';
 import { homedir } from 'os';
@@ -27,9 +28,11 @@ export default defineConfig(({ mode }) => {
     // https://vitejs.dev/config/#plugins
     plugins: [
       laravel({
-        input: ['resources/css/app.css', 'resources/js/tall-stack/app.ts'],
+        input: ['resources/css/app.css', 'resources/js/tall-stack/app.ts', 'resources/js/app.tsx'],
+        ssr: 'resources/js/ssr.tsx',
         refresh: ['resources/views/**'],
       }),
+      react(),
     ],
     resolve: {
       alias: {

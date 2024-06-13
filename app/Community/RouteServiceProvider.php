@@ -8,6 +8,7 @@ use App\Community\Controllers\MessageController;
 use App\Community\Controllers\MessageThreadController;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -34,6 +35,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware(['web', 'csp'])
             ->group(function () {
+                Route::get('/inertia', function () {
+                    return Inertia::render('HelloWorld');
+                })->name('inertia-demo');
+
                 /*
                  * shallow comment routes - keep comments at the root level, not nested (topic.comment, user.comment, achievement.comment)
                  * -> deeplinks & legacy links
