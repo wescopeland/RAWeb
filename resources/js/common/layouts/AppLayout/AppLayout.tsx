@@ -2,11 +2,10 @@ import { type FC, type ReactNode } from 'react';
 
 interface AppLayoutBaseProps {
   children: ReactNode;
-
-  withSidebar?: boolean;
+  withSidebar: boolean;
 }
 
-const AppLayoutBase: FC<AppLayoutBaseProps> = ({ children, withSidebar = true }) => {
+const AppLayoutBase: FC<AppLayoutBaseProps> = ({ children, withSidebar }) => {
   return (
     <div className="container">
       <main className={withSidebar ? 'with-sidebar' : undefined} data-scroll-target>

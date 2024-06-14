@@ -11,6 +11,8 @@ use App\Models\ForumTopic;
 use App\Models\ForumTopicComment;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class ForumTopicCommentController extends CommentController
 {
@@ -82,5 +84,12 @@ class ForumTopicCommentController extends CommentController
 
         return redirect($return)
             ->with('success', $this->resourceActionSuccessMessage('comment', 'delete'));
+    }
+
+    public function showRecentPosts(): InertiaResponse
+    {
+        $this->authorize('viewAny', ForumTopicComment::class);
+
+        return Inertia::render('forums/recent-posts', []);
     }
 }

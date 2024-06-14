@@ -13,6 +13,6 @@ const HelloWorld: AppPage = (props) => {
   );
 };
 
-HelloWorld.layout = (page) => <AppLayout withSidebar={true}>{page}</AppLayout>;
+HelloWorld.layout = (page) => <AppLayout withSidebar>{page}</AppLayout>;
 
 export default HelloWorld;

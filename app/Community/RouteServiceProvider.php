@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Community;
 
+use App\Community\Controllers\ForumTopicCommentController;
 use App\Community\Controllers\MessageController;
 use App\Community\Controllers\MessageThreadController;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -36,6 +36,8 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware(['web', 'csp'])
             ->group(function () {
                 Route::inertia('/inertia', 'HelloWorld')->name('test-name');
+            
+                Route::get('forums/recent-posts2', [ForumTopicCommentController::class, 'showRecentPosts'])->name('forum.recent-posts2');
 
                 /*
                  * shallow comment routes - keep comments at the root level, not nested (topic.comment, user.comment, achievement.comment)
