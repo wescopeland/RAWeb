@@ -1,10 +1,18 @@
 import { AppLayout } from '@/common/layouts/AppLayout';
 import type { AppPage } from '@/common/models';
 
-const HelloWorld: AppPage = () => {
-  return <p>{route().current()}</p>;
+const HelloWorld: AppPage = (props) => {
+  return (
+    <>
+      <AppLayout.Main>
+        <p>hi</p>
+      </AppLayout.Main>
+
+      <AppLayout.Sidebar>stuff</AppLayout.Sidebar>
+    </>
+  );
 };
 
-HelloWorld.layout = (page) => <AppLayout>{page}</AppLayout>;
+HelloWorld.layout = (page) => <AppLayout withSidebar={true}>{page}</AppLayout>;
 
 export default HelloWorld;

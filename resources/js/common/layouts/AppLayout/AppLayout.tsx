@@ -1,17 +1,38 @@
-import type { FC, ReactNode } from 'react';
+import { type FC, type ReactNode } from 'react';
 
-import { AppBar } from '@/common/components/AppBar';
+interface AppLayoutBaseProps {
+  children: ReactNode;
 
-interface AppLayoutProps {
+  withSidebar?: boolean;
+}
+
+const AppLayoutBase: FC<AppLayoutBaseProps> = ({ children, withSidebar = true }) => {
+  return (
+    <div className="container">
+      <main className={withSidebar ? 'with-sidebar' : undefined} data-scroll-target>
+        {children}
+      </main>
+    </div>
+  );
+};
+
+interface AppLayoutMainProps {
   children: ReactNode;
 }
 
-export const AppLayout: FC<AppLayoutProps> = ({ children }) => {
-  return (
-    <>
-      <AppBar />
-
-      <main>{children}</main>
-    </>
-  );
+const AppLayoutMain: FC<AppLayoutMainProps> = ({ children }) => {
+  return <article>{children}</article>;
 };
+
+interface AppLayoutSidebarProps {
+  children: ReactNode;
+}
+
+const AppLayoutSidebar: FC<AppLayoutSidebarProps> = ({ children }) => {
+  return <aside>{children}</aside>;
+};
+
+export const AppLayout = Object.assign(AppLayoutBase, {
+  Main: AppLayoutMain,
+  Sidebar: AppLayoutSidebar,
+});

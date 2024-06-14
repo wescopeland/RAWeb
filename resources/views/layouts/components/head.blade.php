@@ -1,3 +1,7 @@
+@props([
+    'page' => null,
+])
+
 <head prefix="og: http://ogp.me/ns# retroachievements: http://ogp.me/ns/apps/retroachievements#">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +36,13 @@
     {{-- TODO replace with ESM imports, Alpine, tailwind --}}
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/sunny/jquery-ui.css">
 
-    @vite(['resources/js/tall-stack/app.ts', 'resources/css/app.css'], config('vite.build_path'))
+    @routes
+    @viteReactRefresh
+    @vite(['resources/js/tall-stack/app.ts', 'resources/css/app.css', 'resources/js/app.tsx'], config('vite.build_path'))
+    @if (!empty($page))
+        @inertiaHead
+        @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"], config('vite.build_path'))
+    @endif
 
     <livewire:styles />
 

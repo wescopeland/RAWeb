@@ -35,9 +35,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware(['web', 'csp'])
             ->group(function () {
-                Route::get('/inertia', function () {
-                    return Inertia::render('HelloWorld');
-                })->name('inertia-demo');
+                Route::inertia('/inertia', 'HelloWorld')->name('test-name');
 
                 /*
                  * shallow comment routes - keep comments at the root level, not nested (topic.comment, user.comment, achievement.comment)
