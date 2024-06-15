@@ -1,22 +1,8 @@
-import { PageProps } from '@inertiajs/core';
+import type { AppGlobalProps } from '@/common/models';
 
-interface RecentForumPost {
-  author: string;
-  authorDisplayName: string | null;
-  authorId: string | null;
-  commentID: string | null;
-  commentID1d: string | null;
-  commentID7d: string | null;
-  forumID: string;
-  forumTitle: string;
-  forumTopicID: string;
-  forumTopicTitle: string;
-  isTruncated: '0' | '1';
-  postedAt: string;
-  shortMsg: string;
-}
+import type { RecentForumPost } from './recent-forum-post.model';
 
-export interface RecentPostsPageProps extends PageProps {
+export interface RecentPostsPageProps extends AppGlobalProps {
   maxPerPage: number;
   nextPageUrl: string;
   previousPageUrl: string | null;

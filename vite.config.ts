@@ -49,7 +49,8 @@ export default defineConfig(({ mode, isSsrBuild }) => {
     test: {
       environment: 'jsdom',
       setupFiles: 'resources/js/setupTests.ts',
-      include: ['resources/js/**/*.{test,spec}.ts'],
+      include: ['resources/js/**/*.{test,spec}.{ts,tsx}'],
+      globals: true,
     },
 
     // @ see https://vitejs.dev/config/#server-options

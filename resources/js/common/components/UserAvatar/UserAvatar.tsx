@@ -6,9 +6,12 @@ interface UserAvatarProps {
   displayName: string | null;
 
   hasTooltip?: boolean;
+  // This is strongly typed so we don't wind up with 100 different possible sizes.
+  // If possible, use one of these sane defaults. Only add another one if necessary.
+  size?: 8 | 16 | 24 | 32 | 64 | 128;
 }
 
-export const UserAvatar: FC<UserAvatarProps> = ({ displayName, hasTooltip = true }) => {
+export const UserAvatar: FC<UserAvatarProps> = ({ displayName, size = 32, hasTooltip = true }) => {
   const { cardTooltipProps } = useCardTooltip({ dynamicType: 'user', dynamicId: displayName });
 
   return (
@@ -20,14 +23,14 @@ export const UserAvatar: FC<UserAvatarProps> = ({ displayName, hasTooltip = true
       <img
         loading="lazy"
         decoding="async"
-        width="24"
-        height="24"
+        width={size}
+        height={size}
         src={`http://media.retroachievements.org/UserPic/${displayName}.png`}
         alt={displayName ?? 'Deleted User'}
         className="rounded-sm"
       />
 
-      <span>{displayName}</span>
+      {displayName ? <span>{displayName}</span> : null}
     </a>
   );
 };

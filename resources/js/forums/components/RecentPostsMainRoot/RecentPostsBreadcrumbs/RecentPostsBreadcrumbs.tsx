@@ -7,7 +7,7 @@ import {
   BaseBreadcrumbList,
   BaseBreadcrumbPage,
   BaseBreadcrumbSeparator,
-} from '@/common/components/+shadcn-ui/BaseBreadcrumb';
+} from '@/common/components/+vendor/BaseBreadcrumb';
 
 export const RecentPostsBreadcrumbs: FC = () => {
   return (

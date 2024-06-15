@@ -1,5 +1,10 @@
 import { Slot } from '@radix-ui/react-slot';
-import { type ComponentProps, type ComponentPropsWithoutRef, forwardRef } from 'react';
+import {
+  type ComponentProps,
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  type ReactNode,
+} from 'react';
 import { LuChevronRight, LuMoreHorizontal } from 'react-icons/lu';
 
 import { cn } from '@/utils/cn';
@@ -7,7 +12,7 @@ import { cn } from '@/utils/cn';
 const BaseBreadcrumb = forwardRef<
   HTMLElement,
   ComponentPropsWithoutRef<'nav'> & {
-    separator?: React.ReactNode;
+    separator?: ReactNode;
   }
 >(({ ...props }, ref) => <nav ref={ref} aria-label="breadcrumb" {...props} />);
 BaseBreadcrumb.displayName = 'BaseBreadcrumb';
@@ -77,7 +82,7 @@ const BaseBreadcrumbSeparator = ({ children, className, ...props }: ComponentPro
 );
 BaseBreadcrumbSeparator.displayName = 'BaseBreadcrumbSeparator';
 
-const BaseBreadcrumbEllipsis = ({ className, ...props }: React.ComponentProps<'span'>) => (
+const BaseBreadcrumbEllipsis = ({ className, ...props }: ComponentProps<'span'>) => (
   <span
     role="presentation"
     aria-hidden="true"
