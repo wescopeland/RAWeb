@@ -6,13 +6,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ (!empty($pageTitle) ? $pageTitle . ' · ' : '') . config('app.name') }}</title>
+
+    {{-- Inertia.js pages cannot override an existing title or meta description. --}}
+    @if (empty($page))
+        <title>{{ (!empty($pageTitle) ? $pageTitle . ' · ' : '') . config('app.name') }}</title>
+        <meta name="description" content="{{ $pageDescription ?? __('app.description') }}">
+    @endif
+
     <link rel="icon" type="image/png" href="{{ asset(app()->environment('local', 'stage') ? 'assets/images/favicon-gray.webp' : 'assets/images/favicon.webp') }}">
     <link rel="preload" as="image" importance="high" href="{{ asset('assets/images/ra-icon.webp') }}">
     <link rel="image_src" href="{{ asset('assets/images/ra-icon.webp') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="copyright" content="Copyright 2014-{{ date('Y') }}">
-    <meta name="description" content="{{ $pageDescription ?? __('app.description') }}">
     <meta name="keywords" content="games, achievements, retro, emulator">
     <meta name="format-detection" content="telephone=no">
     @if (config('services.facebook.client_id'))

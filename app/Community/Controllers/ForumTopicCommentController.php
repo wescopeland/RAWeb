@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 namespace App\Community\Controllers;
+use Illuminate\Support\Str;
 
 use App\Community\Actions\AddCommentAction;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Community\Requests\ForumTopicCommentRequest;
+use App\Community\Services\ForumRecentPostsPageService;
 use App\Models\ForumTopic;
 use App\Models\ForumTopicComment;
 use Illuminate\Contracts\View\View;
@@ -16,6 +18,11 @@ use Inertia\Response as InertiaResponse;
 
 class ForumTopicCommentController extends CommentController
 {
+    public function __construct(
+        protected ForumRecentPostsPageService $recentPostsPageService
+    ) {
+    }
+
     /**
      * There is no create form for creating a new comment.
      * comments have to be created for something -> use sub resource create route, e.g.
@@ -90,6 +97,26 @@ class ForumTopicCommentController extends CommentController
     {
         $this->authorize('viewAny', ForumTopicComment::class);
 
-        return Inertia::render('forums/recent-posts', []);
+        // TODO thin this out
+        $pageProps = $this->recentPostsPageService->buildViewData(
+            request()->user(),
+            (int) request()->input('offset', 0)
+        );
+
+        $pageProps = $this->arrayKeysToCamelCase($pageProps);
+
+        return Inertia::render('forums/recent-posts', $pageProps);
+    }
+
+    protected function arrayKeysToCamelCase(array $array): array
+    {
+        $result = [];
+        foreach ($array as $key => $value) {
+            $newKey = Str::camel($key);
+            $result[$newKey] = is_array($value)
+                ? $this->arrayKeysToCamelCase($value)
+                : $value;
+        }
+        return $result;
     }
 }
