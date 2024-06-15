@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 namespace App\Community\Controllers;
-use Illuminate\Support\Str;
 
 use App\Community\Actions\AddCommentAction;
 use App\Community\Actions\GetUrlToCommentDestinationAction;

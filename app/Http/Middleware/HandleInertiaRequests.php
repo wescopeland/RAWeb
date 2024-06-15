@@ -54,10 +54,10 @@ class HandleInertiaRequests extends Middleware
                 'roles' => $user->getRoleNames(),
             ] : null,
 
-            'ziggy' => fn() => [
+            'ziggy' => fn () => [
                 ...(new Ziggy())->toArray(),
                 'location' => $request->url(),
-            ]
+            ],
         ]);
     }
 }
