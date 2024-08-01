@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Enums\UserPreference;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileSettingsRequest extends FormRequest
+class WebsitePrefsRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -19,8 +20,7 @@ class ProfileSettingsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'motto' => 'nullable|string|max:50',
-            'userWallActive' => 'nullable|boolean',
+            'websitePrefs' => 'required|integer',
         ];
     }
 }

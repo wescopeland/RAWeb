@@ -6,7 +6,7 @@ import { cn } from '@/utils/cn';
 
 const baseButtonVariants = cva(
   [
-    'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium light:ring-offset-white',
+    'inline-flex items-center justify-center whitespace-nowrap rounded text-sm font-medium light:ring-offset-white',
     'focus-visible:outline-none focus-visible:ring-2 light:focus-visible:ring-neutral-950 focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50 ring-offset-neutral-950 focus-visible:ring-neutral-300',
   ],
@@ -14,7 +14,7 @@ const baseButtonVariants = cva(
     variants: {
       variant: {
         default:
-          'light:bg-neutral-900 light:text-neutral-50 light:hover:bg-neutral-900/90 bg-neutral-50 text-neutral-900 hover:bg-neutral-50/90',
+          'bg-embed text-link border border-neutral-700 hover:bg-embed-highlight hover:text-link-hover hover:border-menu-link light:bg-white light:border-link light:text-link light:hover:bg-neutral-100',
         destructive:
           'light:bg-red-500 light:text-neutral-50 light:hover:bg-red-500/90 bg-red-900 text-neutral-50 hover:bg-red-900/90',
         outline:

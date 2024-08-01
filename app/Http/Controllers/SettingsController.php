@@ -4,16 +4,37 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\UpdateAvatarAction;
+use App\Data\ProfileSettingsData;
+use App\Data\UserData;
+use App\Data\WebsitePrefsData;
 use App\Http\Controller;
 use App\Http\Requests\ProfileSettingsRequest;
+use App\Http\Requests\WebsitePrefsRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class SettingsController extends Controller
 {
+    public function index(): InertiaResponse
+    {
+        $this->authorize('updateSettings');
+
+        $user = UserData::fromUser(Auth::user())->include(
+            'motto',
+            'userWallActive',
+            'websitePrefs',
+        );
+
+        return Inertia::render('settings', [
+            'user' => $user,
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -28,28 +49,25 @@ class SettingsController extends Controller
         return view("settings.$section");
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function updateProfile(
-        ProfileSettingsRequest $request,
-        UpdateAvatarAction $updateAvatarAction
-    ): RedirectResponse {
-        $this->authorize('updateProfileSettings', $request->user());
+    public function updateProfile(ProfileSettingsRequest $request): JsonResponse
+    {
+        $data = ProfileSettingsData::fromRequest($request);
 
-        /**
-         * settings are always processed in the current user's context
-         */
         /** @var User $user */
         $user = $request->user();
+        $user->update($data->toArray());
 
-        $updateAvatarAction->execute($user, $request);
-        $data = $request->validated();
-        // $data['wall_active'] = $data['wall_active'] ?? false;
-        $user->fill($data)->save();
+        return response()->json(['success' => true]);
+    }
 
-        // dd($data);
+    public function updatePreferences(WebsitePrefsRequest $request): JsonResponse
+    {
+        $data = WebsitePrefsData::fromRequest($request);
 
-        return back()->with('success', $this->resourceActionSuccessMessage('setting.profile', 'update', null, 2));
+        /** @var User $user */
+        $user = $request->user();
+        $user->update($data->toArray());
+
+        return response()->json(['success' => true]);
     }
 }

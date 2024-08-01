@@ -1,4 +1,5 @@
 import type { Alpine } from 'alpinejs';
+import type { AxiosInstance } from 'axios';
 import type { route as routeFn } from 'ziggy-js';
 
 import type {
@@ -52,4 +53,9 @@ declare global {
 
   // Inertia
   var route: typeof routeFn;
+
+  // Axios
+  interface Window {
+    axios: AxiosInstance;
+  }
 }

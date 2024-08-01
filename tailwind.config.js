@@ -8,6 +8,7 @@ module.exports = {
     './app/Helpers/util/*.php',
     './public/*.php',
     './resources/js/**/*.ts',
+    './resources/js/**/*.tsx',
     './resources/views/**/*.blade.php',
     './storage/framework/views/*.php',
     './vendor/filament/**/*.blade.php',

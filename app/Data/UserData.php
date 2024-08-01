@@ -20,6 +20,7 @@ class UserData extends Data
 
         public Lazy|int $id,
         public Lazy|string $username,
+        public Lazy|string $motto,
         public Lazy|int $legacyPermissions,
 
         #[TypeScriptType([
@@ -31,6 +32,8 @@ class UserData extends Data
         public Lazy|array $roles,
 
         public Lazy|int $unreadMessageCount,
+        public Lazy|bool $userWallActive,
+        public Lazy|int $websitePrefs,
     ) {
     }
 
@@ -42,6 +45,7 @@ class UserData extends Data
 
             id: Lazy::create(fn () => $user->id),
             username: Lazy::create(fn () => $user->username),
+            motto: Lazy::create(fn () => $user->Motto),
             legacyPermissions: Lazy::create(fn () => (int) $user->getAttribute('Permissions')),
             preferences: Lazy::create(
                 fn () => [
@@ -50,6 +54,8 @@ class UserData extends Data
             ),
             roles: Lazy::create(fn () => $user->getRoleNames()->toArray()),
             unreadMessageCount: Lazy::create(fn () => $user->UnreadMessageCount),
+            userWallActive: Lazy::create(fn () => $user->UserWallActive),
+            websitePrefs: Lazy::create(fn() => $user->websitePrefs),
         );
     }
 }

@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Http\Concerns\HandlesPublicFileRequests;
 use App\Http\Controllers\RedirectController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -104,20 +105,24 @@ class RouteServiceProvider extends ServiceProvider
             Route::group([
                 'middleware' => ['auth'],
             ], function () {
+                Route::middleware(['inertia'])->group(function () {
+                    Route::get('settings', [SettingsController::class, 'index'])->name('settings');
+                });
+
                 // Route::get('notifications', [NotificationsController::class, 'index'])->name('notification.index');
 
                 /*
                  * settings and user attributes
                  */
-                // Route::group(['prefix' => 'settings'], function () {
-                //     Route::get('keys', [SettingsController::class, 'edit'])->middleware('password.confirm');
-                //     Route::get('{section?}', [SettingsController::class, 'edit'])->name('settings');
-                //
-                //     Route::put('profile', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
-                //     Route::put('password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
-                //     Route::put('email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
-                //     Route::put('notifications', [SettingsController::class, 'updateNotificationPreferences'])->name('settings.notifications.update');
-                // });
+                Route::group(['prefix' => 'settings'], function () {
+                    // Route::get('keys', [SettingsController::class, 'edit'])->middleware('password.confirm');
+                    // Route::get('{section?}', [SettingsController::class, 'edit'])->name('settings');
+                    
+                    Route::put('profile', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
+                    Route::put('preferences', [SettingsController::class, 'updatePreferences'])->name('settings.preferences.update');
+                    // Route::put('password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
+                    // Route::put('email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
+                });
             });
         });
     }

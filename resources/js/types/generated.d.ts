@@ -37,10 +37,13 @@ declare namespace App.Data {
     avatarUrl: string;
     id?: number;
     username?: string;
+    motto?: string;
     legacyPermissions?: number;
     preferences?: { prefersAbsoluteDates: boolean };
     roles?: App.Models.UserRole[];
     unreadMessageCount?: number;
+    userWallActive?: boolean;
+    websitePrefs?: number;
   };
 }
 declare namespace App.Models {
@@ -68,10 +71,4 @@ declare namespace App.Models {
     | 'team-account'
     | 'beta'
     | 'developer-veteran';
-}
-declare namespace App.Platform.Enums {
-  export enum AchievementFlag {
-    OfficialCore = 3,
-    Unofficial = 5,
-  }
 }
