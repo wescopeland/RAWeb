@@ -6,20 +6,18 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WebsitePrefsRequest extends FormRequest
+class ResetWebApiKeyRequest extends FormRequest
 {
     public function authorize(): bool
     {
         /** @var User $user */
         $user = $this->user();
 
-        return $user->can('updateProfileSettings', $user);
+        return $user->can('resetWebApiKey', $user);
     }
 
     public function rules(): array
     {
-        return [
-            'websitePrefs' => 'required|integer',
-        ];
+        return [];
     }
 }

@@ -10,32 +10,18 @@ import { StringifiedUserPreference } from '@/common/utils/generatedAppConstants'
 import { convertObjectToWebsitePrefs } from '../../utils/convertObjectToWebsitePrefs';
 import { convertWebsitePrefsToObject } from '../../utils/convertWebsitePrefsToObject';
 
-const notificationsFormSchema = z.object({
-  [StringifiedUserPreference.EmailOn_ActivityComment]: z.boolean(),
-  [StringifiedUserPreference.EmailOn_AchievementComment]: z.boolean(),
-  [StringifiedUserPreference.EmailOn_UserWallComment]: z.boolean(),
-  [StringifiedUserPreference.EmailOn_ForumReply]: z.boolean(),
-  [StringifiedUserPreference.EmailOn_Followed]: z.boolean(),
-  [StringifiedUserPreference.EmailOn_PrivateMessage]: z.boolean(),
-  [StringifiedUserPreference.EmailOn_Newsletter]: z.boolean(),
+const settingsFormSchema = z.object({
   [StringifiedUserPreference.Site_SuppressMatureContentWarning]: z.boolean(),
-  [StringifiedUserPreference.SiteMsgOn_ActivityComment]: z.boolean(),
-  [StringifiedUserPreference.SiteMsgOn_AchievementComment]: z.boolean(),
-  [StringifiedUserPreference.SiteMsgOn_UserWallComment]: z.boolean(),
-  [StringifiedUserPreference.SiteMsgOn_ForumReply]: z.boolean(),
-  [StringifiedUserPreference.SiteMsgOn_Followed]: z.boolean(),
-  [StringifiedUserPreference.SiteMsgOn_PrivateMessage]: z.boolean(),
-  [StringifiedUserPreference.SiteMsgOn_Newsletter]: z.boolean(),
   [StringifiedUserPreference.Forum_ShowAbsoluteDates]: z.boolean(),
   [StringifiedUserPreference.Game_HideMissableIndicators]: z.boolean(),
   [StringifiedUserPreference.User_OnlyContactFromFollowing]: z.boolean(),
 });
 
-export type FormValues = z.infer<typeof notificationsFormSchema>;
+export type FormValues = z.infer<typeof settingsFormSchema>;
 
-export function useNotificationsSectionForm(websitePrefs: number) {
+export function usePreferencesSectionForm(websitePrefs: number) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(notificationsFormSchema),
+    resolver: zodResolver(settingsFormSchema),
     defaultValues: convertWebsitePrefsToObject(websitePrefs),
   });
 

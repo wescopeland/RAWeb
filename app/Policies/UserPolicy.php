@@ -179,6 +179,22 @@ class UserPolicy
         return true;
     }
 
+    public function resetWebApiKey(User $user, User $model): bool
+    {
+        /**
+         * Users may only reset their own web API keys.
+         */
+        return $user->is($model);
+    }
+
+    public function resetConnectApiKey(User $user, User $model): bool
+    {
+        /**
+         * Users may only reset their own Connect API keys.
+         */
+        return $user->is($model);
+    }
+
     public function updateAvatar(User $user): bool
     {
         // Users may only upload a new avatar if they have been a member for at

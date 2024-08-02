@@ -6,6 +6,7 @@ namespace App\Enums;
 
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
+#[TypeScript]
 abstract class UserPreference
 {
     public const EmailOn_ActivityComment = 0;

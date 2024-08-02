@@ -71,7 +71,7 @@ const BaseFormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLD
 
     return (
       <BaseFormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn('space-y-2', className)} {...props} />
+        <div ref={ref} className={cn(className)} {...props} />
       </BaseFormItemContext.Provider>
     );
   },
@@ -87,7 +87,7 @@ const BaseFormLabel = React.forwardRef<
   return (
     <BaseLabel
       ref={ref}
-      className={cn(error && 'text-red-500 dark:text-red-900', className)}
+      className={cn(error ? 'text-red-500 dark:text-red-900' : 'text-menu-link', className)}
       htmlFor={formItemId}
       {...props}
     />

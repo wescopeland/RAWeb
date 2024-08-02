@@ -4,14 +4,18 @@ import { useFormContext } from 'react-hook-form';
 import { BaseCheckbox } from '@/common/components/+vendor/BaseCheckbox';
 import { BaseFormControl, BaseFormField } from '@/common/components/+vendor/BaseForm';
 import { BaseLabel } from '@/common/components/+vendor/BaseLabel';
+import type { StringifiedUserPreference } from '@/common/utils/generatedAppConstants';
 
 import type { FormValues as NotificationsSectionFormValues } from './useNotificationsSectionForm';
+
+type UserPreferenceValue =
+  (typeof StringifiedUserPreference)[keyof typeof StringifiedUserPreference];
 
 interface NotificationsTableRowProps {
   label: string;
 
-  emailFieldName?: keyof NotificationsSectionFormValues;
-  siteFieldName?: keyof NotificationsSectionFormValues;
+  emailFieldName?: UserPreferenceValue;
+  siteFieldName?: UserPreferenceValue;
 }
 
 export const NotificationsTableRow: FC<NotificationsTableRowProps> = ({
@@ -68,7 +72,7 @@ export const NotificationsTableRow: FC<NotificationsTableRowProps> = ({
                     />
                   </BaseFormControl>
 
-                  <BaseLabel htmlFor={siteId}>Notify me on RetroAchievements</BaseLabel>
+                  <BaseLabel htmlFor={siteId}>Notify me on the site</BaseLabel>
                 </>
               )}
             />

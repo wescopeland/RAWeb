@@ -31,6 +31,7 @@ class UserData extends Data
         #[LiteralTypeScriptType('App.Models.UserRole[]')]
         public Lazy|array $roles,
 
+        public Lazy|string $apiKey,
         public Lazy|int $unreadMessageCount,
         public Lazy|bool $userWallActive,
         public Lazy|int $websitePrefs,
@@ -53,9 +54,11 @@ class UserData extends Data
                 ]
             ),
             roles: Lazy::create(fn () => $user->getRoleNames()->toArray()),
+            
+            apiKey: Lazy::create(fn () => $user->APIKey),
             unreadMessageCount: Lazy::create(fn () => $user->UnreadMessageCount),
             userWallActive: Lazy::create(fn () => $user->UserWallActive),
-            websitePrefs: Lazy::create(fn() => $user->websitePrefs),
+            websitePrefs: Lazy::create(fn () => $user->websitePrefs),
         );
     }
 }

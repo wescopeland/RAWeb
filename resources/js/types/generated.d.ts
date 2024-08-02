@@ -41,10 +41,32 @@ declare namespace App.Data {
     legacyPermissions?: number;
     preferences?: { prefersAbsoluteDates: boolean };
     roles?: App.Models.UserRole[];
+    apiKey?: string;
     unreadMessageCount?: number;
     userWallActive?: boolean;
     websitePrefs?: number;
   };
+}
+declare namespace App.Enums {
+  export type UserPreference =
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17;
 }
 declare namespace App.Models {
   export type UserRole =

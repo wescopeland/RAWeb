@@ -9,6 +9,8 @@ use App\Data\UserData;
 use App\Data\WebsitePrefsData;
 use App\Http\Controller;
 use App\Http\Requests\ProfileSettingsRequest;
+use App\Http\Requests\ResetConnectApiKeyRequest;
+use App\Http\Requests\ResetWebApiKeyRequest;
 use App\Http\Requests\WebsitePrefsRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
@@ -25,6 +27,7 @@ class SettingsController extends Controller
         $this->authorize('updateSettings');
 
         $user = UserData::fromUser(Auth::user())->include(
+            'apiKey',
             'motto',
             'userWallActive',
             'websitePrefs',
@@ -67,6 +70,20 @@ class SettingsController extends Controller
         /** @var User $user */
         $user = $request->user();
         $user->update($data->toArray());
+
+        return response()->json(['success' => true]);
+    }
+
+    public function resetWebApiKey(ResetWebApiKeyRequest $request): JsonResponse
+    {
+        $newKey = generateAPIKey($request->user()->username);
+
+        return response()->json(['newKey' => $newKey]);
+    }
+
+    public function resetConnectApiKey(ResetConnectApiKeyRequest $request): JsonResponse
+    {
+        generateAppToken($request->user()->username, $newToken);
 
         return response()->json(['success' => true]);
     }

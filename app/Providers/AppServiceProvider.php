@@ -9,6 +9,7 @@ use App\Components\TicketNotificationsIcon;
 use App\Console\Commands\CleanupAvatars;
 use App\Console\Commands\DeleteExpiredEmailVerificationTokens;
 use App\Console\Commands\DeleteOverdueUserAccounts;
+use App\Console\Commands\GenerateTypeScript;
 use App\Console\Commands\LogUsersOnlineCount;
 use App\Console\Commands\SyncUsers;
 use App\Console\Commands\SystemAlert;
@@ -43,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
                 LogUsersOnlineCount::class,
                 DeleteExpiredEmailVerificationTokens::class,
                 DeleteOverdueUserAccounts::class,
+                GenerateTypeScript::class,
 
                 /*
                  * User Accounts

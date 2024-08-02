@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import type { FieldValues, UseFormReturn } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import {
@@ -11,7 +11,7 @@ import {
 } from '@/common/components/+vendor/BaseCard';
 import { BaseForm } from '@/common/components/+vendor/BaseForm';
 
-interface SettingsFormCardProps {
+interface SectionFormCardProps {
   title: string;
   children: ReactNode;
   formMethods: UseFormReturn<any>;
@@ -19,7 +19,7 @@ interface SettingsFormCardProps {
   isSubmitting: boolean;
 }
 
-export const SettingsFormCard: FC<SettingsFormCardProps> = ({
+export const SectionFormCard: FC<SectionFormCardProps> = ({
   title,
   children,
   formMethods,
@@ -28,17 +28,17 @@ export const SettingsFormCard: FC<SettingsFormCardProps> = ({
 }) => {
   return (
     <BaseCard className="w-full">
+      <BaseCardHeader className="pb-4">
+        <BaseCardTitle>{title}</BaseCardTitle>
+      </BaseCardHeader>
+
       <BaseForm {...formMethods}>
         <form onSubmit={formMethods.handleSubmit(onSubmit)}>
-          <BaseCardHeader className="pb-2">
-            <BaseCardTitle>{title}</BaseCardTitle>
-          </BaseCardHeader>
-
           <BaseCardContent>{children}</BaseCardContent>
 
           <BaseCardFooter>
             <div className="w-full flex justify-end">
-              <BaseButton type="submit" size="sm" disabled={isSubmitting}>
+              <BaseButton type="submit" disabled={isSubmitting}>
                 Update
               </BaseButton>
             </div>

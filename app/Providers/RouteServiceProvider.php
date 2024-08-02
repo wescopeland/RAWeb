@@ -117,11 +117,14 @@ class RouteServiceProvider extends ServiceProvider
                 Route::group(['prefix' => 'settings'], function () {
                     // Route::get('keys', [SettingsController::class, 'edit'])->middleware('password.confirm');
                     // Route::get('{section?}', [SettingsController::class, 'edit'])->name('settings');
-                    
+
                     Route::put('profile', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
                     Route::put('preferences', [SettingsController::class, 'updatePreferences'])->name('settings.preferences.update');
                     // Route::put('password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
                     // Route::put('email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
+
+                    Route::delete('keys/web', [SettingsController::class, 'resetWebApiKey'])->name('settings.keys.web.reset');
+                    Route::delete('keys/connect', [SettingsController::class, 'resetConnectApiKey'])->name('settings.keys.connect.reset');
                 });
             });
         });
