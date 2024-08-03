@@ -10,10 +10,8 @@ class ResetConnectApiKeyRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        /** @var User $user */
-        $user = $this->user();
-
-        return $user->can('resetConnectApiKey', $user);
+        // The caller is always the target user.
+        return true;
     }
 
     public function rules(): array

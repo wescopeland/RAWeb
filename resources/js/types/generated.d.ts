@@ -42,6 +42,7 @@ declare namespace App.Data {
     preferences?: { prefersAbsoluteDates: boolean };
     roles?: App.Models.UserRole[];
     apiKey?: string;
+    emailAddress?: string;
     unreadMessageCount?: number;
     userWallActive?: boolean;
     websitePrefs?: number;

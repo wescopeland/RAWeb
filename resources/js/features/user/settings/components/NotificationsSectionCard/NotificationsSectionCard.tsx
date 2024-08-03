@@ -23,7 +23,7 @@ export const NotificationsSectionCard: FC = () => {
       isSubmitting={mutation.isPending}
     >
       <table>
-        <tbody className="[&>tr>td]:py-2 [&>tr]:!bg-embed [&>tr>th]:!px-0 [&>tr>td]:!px-0">
+        <tbody className="[&>tr>td]:!px-0 [&>tr>td]:py-2 [&>tr>th]:!px-0 [&>tr]:!bg-embed">
           <NotificationsTableRow
             label="Comments on my activity"
             emailFieldName={StringifiedUserPreference.EmailOn_ActivityComment}

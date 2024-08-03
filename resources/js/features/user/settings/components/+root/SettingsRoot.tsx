@@ -1,5 +1,7 @@
 import type { FC } from 'react';
 
+import { ChangeEmailAddressSectionCard } from '../ChangeEmailAddressSectionCard/ChangeEmailAddressSectionCard';
+import { ChangePasswordSectionCard } from '../ChangePasswordSectionCard';
 import { KeysSectionCard } from '../KeysSectionCard/KeysSectionCard';
 import { NotificationsSectionCard } from '../NotificationsSectionCard';
 import { PreferencesSectionCard } from '../PreferencesSectionCard/PreferencesSectionCard';
@@ -15,6 +17,8 @@ export const SettingsRoot: FC = () => {
         <NotificationsSectionCard />
         <PreferencesSectionCard />
         <KeysSectionCard />
+        <ChangePasswordSectionCard />
+        <ChangeEmailAddressSectionCard />
       </div>
     </div>
   );

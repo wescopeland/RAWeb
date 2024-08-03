@@ -37,7 +37,7 @@ export const SectionFormCard: FC<SectionFormCardProps> = ({
           <BaseCardContent>{children}</BaseCardContent>
 
           <BaseCardFooter>
-            <div className="w-full flex justify-end">
+            <div className="flex w-full justify-end">
               <BaseButton type="submit" disabled={isSubmitting}>
                 Update
               </BaseButton>

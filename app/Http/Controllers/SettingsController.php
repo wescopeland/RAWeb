@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Data\ProfileSettingsData;
+use App\Community\Enums\ArticleType;
+use App\Data\UpdateEmailData;
+use App\Data\UpdatePasswordData;
+use App\Data\UpdateProfileData;
+use App\Data\UpdateWebsitePrefsData;
 use App\Data\UserData;
-use App\Data\WebsitePrefsData;
+use App\Enums\Permissions;
 use App\Http\Controller;
-use App\Http\Requests\ProfileSettingsRequest;
 use App\Http\Requests\ResetConnectApiKeyRequest;
 use App\Http\Requests\ResetWebApiKeyRequest;
-use App\Http\Requests\WebsitePrefsRequest;
+use App\Http\Requests\UpdateEmailRequest;
+use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\UpdateWebsitePrefsRequest;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -28,6 +34,7 @@ class SettingsController extends Controller
 
         $user = UserData::fromUser(Auth::user())->include(
             'apiKey',
+            'emailAddress',
             'motto',
             'userWallActive',
             'websitePrefs',
@@ -52,9 +59,47 @@ class SettingsController extends Controller
         return view("settings.$section");
     }
 
-    public function updateProfile(ProfileSettingsRequest $request): JsonResponse
+    public function updatePassword(UpdatePasswordRequest $request): JsonResponse
     {
-        $data = ProfileSettingsData::fromRequest($request);
+        $data = UpdatePasswordData::fromRequest($request);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        changePassword($user->username, $data->newPassword);
+        generateAppToken($user->username, $tokenInOut);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateEmail(UpdateEmailRequest $request): JsonResponse
+    {
+        $data = UpdateEmailData::fromRequest($request);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        // The user will need to reconfirm their email address.
+        $user->EmailAddress = $data->newEmail;
+        $user->Permissions = Permissions::Unregistered;
+        $user->email_verified_at = null;
+        $user->save();
+
+        sendValidationEmail($user->username, $data->newEmail);
+
+        addArticleComment(
+            'Server',
+            ArticleType::UserModeration,
+            $user->id,
+            $user->username . ' changed their email address'
+        );
+
+        return response()->json(['success' => true]);
+    }
+
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        $data = UpdateProfileData::fromRequest($request);
 
         /** @var User $user */
         $user = $request->user();
@@ -63,9 +108,9 @@ class SettingsController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function updatePreferences(WebsitePrefsRequest $request): JsonResponse
+    public function updatePreferences(UpdateWebsitePrefsRequest $request): JsonResponse
     {
-        $data = WebsitePrefsData::fromRequest($request);
+        $data = UpdateWebsitePrefsData::fromRequest($request);
 
         /** @var User $user */
         $user = $request->user();

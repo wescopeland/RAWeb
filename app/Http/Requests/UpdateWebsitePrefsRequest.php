@@ -6,7 +6,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ResetWebApiKeyRequest extends FormRequest
+class UpdateWebsitePrefsRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,6 +16,8 @@ class ResetWebApiKeyRequest extends FormRequest
 
     public function rules(): array
     {
-        return [];
+        return [
+            'websitePrefs' => 'required|integer',
+        ];
     }
 }

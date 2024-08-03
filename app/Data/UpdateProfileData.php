@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Data;
 
-use App\Http\Requests\ProfileSettingsRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use Spatie\LaravelData\Data;
 
-class ProfileSettingsData extends Data
+class UpdateProfileData extends Data
 {
     public function __construct(
         public string $motto,
@@ -15,7 +15,7 @@ class ProfileSettingsData extends Data
     ) {
     }
 
-    public static function fromRequest(ProfileSettingsRequest $request): self
+    public static function fromRequest(UpdateProfileRequest $request): self
     {
         return new self(
             motto: $request->motto ?? '',

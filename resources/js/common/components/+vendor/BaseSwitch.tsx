@@ -15,7 +15,7 @@ const BaseSwitch = React.forwardRef<
       'disabled:cursor-not-allowed disabled:opacity-50',
       'light:data-[state=checked]:bg-text light:data-[state=unchecked]:bg-neutral-200',
       'dark:focus-visible:ring-neutral-300',
-      'dark:focus-visible:ring-offset-neutral-950 data-[state=checked]:bg-text',
+      'data-[state=checked]:bg-text dark:focus-visible:ring-offset-neutral-950',
       'data-[state=unchecked]:bg-neutral-700',
       className,
     )}

@@ -120,8 +120,8 @@ class RouteServiceProvider extends ServiceProvider
 
                     Route::put('profile', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
                     Route::put('preferences', [SettingsController::class, 'updatePreferences'])->name('settings.preferences.update');
-                    // Route::put('password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
-                    // Route::put('email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
+                    Route::put('password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
+                    Route::put('email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
 
                     Route::delete('keys/web', [SettingsController::class, 'resetWebApiKey'])->name('settings.keys.web.reset');
                     Route::delete('keys/connect', [SettingsController::class, 'resetConnectApiKey'])->name('settings.keys.connect.reset');

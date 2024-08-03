@@ -22,7 +22,7 @@ export const PreferencesSectionCard: FC = () => {
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}
     >
-      <div className="grid md:grid-cols-2 gap-y-6 gap-x-36">
+      <div className="grid gap-x-36 gap-y-6 md:grid-cols-2">
         <PreferencesSwitchField
           label="Suppress mature content warnings"
           fieldName={StringifiedUserPreference.Site_SuppressMatureContentWarning}

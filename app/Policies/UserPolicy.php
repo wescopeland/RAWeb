@@ -166,35 +166,6 @@ class UserPolicy
         return true;
     }
 
-    public function updateProfileSettings(User $user, User $model): bool
-    {
-        /*
-         * users may only edit their own settings
-         * kept here for settings button on profiles
-         */
-        if (!$user->is($model)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function resetWebApiKey(User $user, User $model): bool
-    {
-        /**
-         * Users may only reset their own web API keys.
-         */
-        return $user->is($model);
-    }
-
-    public function resetConnectApiKey(User $user, User $model): bool
-    {
-        /**
-         * Users may only reset their own Connect API keys.
-         */
-        return $user->is($model);
-    }
-
     public function updateAvatar(User $user): bool
     {
         // Users may only upload a new avatar if they have been a member for at
@@ -229,7 +200,7 @@ class UserPolicy
 
     public function deleteMotto(User $user, User $model): bool
     {
-        // users may delete their own avatar
+        // users may delete their own motto
         if ($user->is($model)) {
             return true;
         }

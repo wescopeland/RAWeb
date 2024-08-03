@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Data;
 
-use App\Http\Requests\WebsitePrefsRequest;
+use App\Http\Requests\UpdateWebsitePrefsRequest;
 use Spatie\LaravelData\Data;
 
-class WebsitePrefsData extends Data
+class UpdateWebsitePrefsData extends Data
 {
     public function __construct(
         public int $websitePrefs,
     ) {
     }
 
-    public static function fromRequest(WebsitePrefsRequest $request): self
+    public static function fromRequest(UpdateWebsitePrefsRequest $request): self
     {
         return new self(
             websitePrefs: $request->websitePrefs,

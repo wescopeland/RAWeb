@@ -52,10 +52,10 @@ export const ManageWebApiKey: FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-4 w-full">
+    <div className="grid w-full grid-cols-4">
       <p className="w-48 text-menu-link">Web API Key</p>
 
-      <div className="flex flex-col gap-2 w-full col-span-3">
+      <div className="col-span-3 flex w-full flex-col gap-2">
         <BaseTooltip>
           <BaseTooltipTrigger asChild>
             <BaseButton className="flex gap-2" onClick={handleCopyApiKeyClick}>
@@ -72,7 +72,7 @@ export const ManageWebApiKey: FC = () => {
             This is your <span className="italic">personal</span> web API key. Handle it with care.
           </p>
           <p>
-            API documentation can be found{' '}
+            The RetroAchievements API documentation can be found{' '}
             <a href="https://api-docs.retroachievements.org" target="_blank" rel="noreferrer">
               here
             </a>
@@ -81,7 +81,7 @@ export const ManageWebApiKey: FC = () => {
         </div>
 
         <BaseButton
-          className="flex gap-2 max-w-fit"
+          className="flex max-w-fit gap-2"
           size="sm"
           variant="destructive"
           onClick={handleResetApiKeyClick}

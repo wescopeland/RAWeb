@@ -32,6 +32,7 @@ class UserData extends Data
         public Lazy|array $roles,
 
         public Lazy|string $apiKey,
+        public Lazy|string $emailAddress,
         public Lazy|int $unreadMessageCount,
         public Lazy|bool $userWallActive,
         public Lazy|int $websitePrefs,
@@ -54,8 +55,9 @@ class UserData extends Data
                 ]
             ),
             roles: Lazy::create(fn () => $user->getRoleNames()->toArray()),
-            
+
             apiKey: Lazy::create(fn () => $user->APIKey),
+            emailAddress: Lazy::create(fn () => $user->EmailAddress),
             unreadMessageCount: Lazy::create(fn () => $user->UnreadMessageCount),
             userWallActive: Lazy::create(fn () => $user->UserWallActive),
             websitePrefs: Lazy::create(fn () => $user->websitePrefs),

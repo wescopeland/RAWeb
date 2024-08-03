@@ -6,7 +6,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WebsitePrefsRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -19,7 +19,8 @@ class WebsitePrefsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'websitePrefs' => 'required|integer',
+            'motto' => 'nullable|string|max:50',
+            'userWallActive' => 'nullable|boolean',
         ];
     }
 }

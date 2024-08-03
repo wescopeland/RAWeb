@@ -31,7 +31,7 @@ export const PreferencesSwitchField: FC<PreferencesTableRowProps> = ({
       control={control}
       name={fieldName as keyof PreferencesSectionFormValues}
       render={({ field }) => (
-        <BaseFormItem className="flex items-center w-full justify-between">
+        <BaseFormItem className="flex w-full items-center justify-between">
           <BaseFormLabel>{label}</BaseFormLabel>
 
           <BaseFormControl>
