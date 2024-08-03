@@ -36,53 +36,55 @@ export const ChangeEmailAddressSectionCard: FC = () => {
           <p>{currentEmailAddress}</p>
         </div>
 
-        <BaseFormField
-          control={form.control}
-          name="newEmail"
-          render={({ field }) => (
-            <BaseFormItem className="flex w-full items-center">
-              <BaseFormLabel className="w-2/5 text-menu-link">New Email Address</BaseFormLabel>
+        <div className="flex flex-col gap-2">
+          <BaseFormField
+            control={form.control}
+            name="newEmail"
+            render={({ field }) => (
+              <BaseFormItem className="flex w-full items-center">
+                <BaseFormLabel className="w-2/5 text-menu-link">New Email Address</BaseFormLabel>
 
-              <div className="flex flex-grow flex-col gap-1">
-                <BaseFormControl>
-                  <BaseInput
-                    type="email"
-                    placeholder="enter your new email address here..."
-                    required
-                    {...field}
-                  />
-                </BaseFormControl>
+                <div className="flex flex-grow flex-col gap-1">
+                  <BaseFormControl>
+                    <BaseInput
+                      type="email"
+                      placeholder="enter your new email address here..."
+                      required
+                      {...field}
+                    />
+                  </BaseFormControl>
 
-                <BaseFormMessage />
-              </div>
-            </BaseFormItem>
-          )}
-        />
+                  <BaseFormMessage />
+                </div>
+              </BaseFormItem>
+            )}
+          />
 
-        <BaseFormField
-          control={form.control}
-          name="confirmEmail"
-          render={({ field }) => (
-            <BaseFormItem className="flex w-full items-center">
-              <BaseFormLabel className="w-2/5 text-menu-link">
-                Confirm New Email Address
-              </BaseFormLabel>
+          <BaseFormField
+            control={form.control}
+            name="confirmEmail"
+            render={({ field }) => (
+              <BaseFormItem className="flex w-full items-center">
+                <BaseFormLabel className="w-2/5 text-menu-link">
+                  Confirm New Email Address
+                </BaseFormLabel>
 
-              <div className="flex flex-grow flex-col gap-1">
-                <BaseFormControl>
-                  <BaseInput
-                    type="email"
-                    placeholder="confirm your new email address here..."
-                    required
-                    {...field}
-                  />
-                </BaseFormControl>
+                <div className="flex flex-grow flex-col gap-1">
+                  <BaseFormControl>
+                    <BaseInput
+                      type="email"
+                      placeholder="confirm your new email address here..."
+                      required
+                      {...field}
+                    />
+                  </BaseFormControl>
 
-                <BaseFormMessage />
-              </div>
-            </BaseFormItem>
-          )}
-        />
+                  <BaseFormMessage />
+                </div>
+              </BaseFormItem>
+            )}
+          />
+        </div>
       </div>
     </SectionFormCard>
   );

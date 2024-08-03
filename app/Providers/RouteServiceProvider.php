@@ -118,6 +118,11 @@ class RouteServiceProvider extends ServiceProvider
                     // Route::get('keys', [SettingsController::class, 'edit'])->middleware('password.confirm');
                     // Route::get('{section?}', [SettingsController::class, 'edit'])->name('settings');
 
+                    // TODO move to a dedicated controller
+                    Route::get('resettable-games', [SettingsController::class, 'getUserResettableGames'])->name('settings.resettable-games');
+                    Route::get('resettable-game-achievements', [SettingsController::class, 'getUserResettableGameAchievements'])->name('settings.resettable-game-achievements');
+                    Route::delete('reset-progress', [SettingsController::class, 'resetProgress'])->name('settings.reset-progress');
+
                     Route::put('profile', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
                     Route::put('preferences', [SettingsController::class, 'updatePreferences'])->name('settings.preferences.update');
                     Route::put('password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');

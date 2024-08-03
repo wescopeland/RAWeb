@@ -10,15 +10,20 @@ use App\Data\UpdatePasswordData;
 use App\Data\UpdateProfileData;
 use App\Data\UpdateWebsitePrefsData;
 use App\Data\UserData;
+use App\Data\UserResettableGameAchievementData;
+use App\Data\UserResettableGameData;
 use App\Enums\Permissions;
 use App\Http\Controller;
 use App\Http\Requests\ResetConnectApiKeyRequest;
+use App\Http\Requests\ResetPlayerProgressRequest;
 use App\Http\Requests\ResetWebApiKeyRequest;
 use App\Http\Requests\UpdateEmailRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdateWebsitePrefsRequest;
+use App\Http\Requests\UserResettableGameAchievementsRequest;
 use App\Models\User;
+use App\Platform\Actions\ResetPlayerProgress;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -131,5 +136,76 @@ class SettingsController extends Controller
         generateAppToken($request->user()->username, $newToken);
 
         return response()->json(['success' => true]);
+    }
+
+    public function resetProgress(ResetPlayerProgressRequest $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        return response()->json(['message' => __('legacy.success.reset')]);
+
+        $action = app()->make(ResetPlayerProgress::class);
+
+        if ($request->achievementId) {
+            $action->execute($user, achievementID: (int) $request->achievementId);
+
+            return response()->json(['message' => __('legacy.success.reset')]);
+        }
+
+        if ($request->gameId) {
+            $action->execute($user, gameID: (int) $request->gameId);
+
+            return response()->json(['message' => __('legacy.success.reset')]);
+        }
+    }
+
+    public function getUserResettableGames(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $resettableGames = $user
+            ->games()
+            ->with('system')
+            ->where('player_games.achievements_unlocked', '>', 0)
+            ->orderBy('Title')
+            ->select(['GameData.ID', 'Title', 'ConsoleID', 'achievements_published', 'player_games.achievements_unlocked'])
+            ->get()
+            ->map(function ($game) {
+                return new UserResettableGameData(
+                    id: $game->id,
+                    title: $game->title,
+                    consoleName: $game->system->name,
+                    numAwarded: $game->achievements_unlocked,
+                    numPossible: $game->achievements_published
+                );
+            });
+
+        return response()->json(['results' => $resettableGames]);
+    }
+
+    public function getUserResettableGameAchievements(UserResettableGameAchievementsRequest $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $gameId = $request->gameId;
+
+        $resettableGameAchievements = $user
+            ->achievements()
+            ->where('GameID', $gameId)
+            ->withPivot(['unlocked_at', 'unlocked_hardcore_at'])
+            ->orderBy('Title')
+            ->get()
+            ->map(function ($unlockedAchievement) {
+                return new UserResettableGameAchievementData(
+                    id: $unlockedAchievement->id,
+                    title: $unlockedAchievement->title,
+                    points: $unlockedAchievement->points,
+                    isHardcore: $unlockedAchievement->pivot->unlocked_hardcore_at ? true : false,
+                );
+            });
+
+        return response()->json(['results' => $resettableGameAchievements]);
     }
 }

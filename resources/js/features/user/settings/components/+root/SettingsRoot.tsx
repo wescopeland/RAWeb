@@ -6,6 +6,7 @@ import { KeysSectionCard } from '../KeysSectionCard/KeysSectionCard';
 import { NotificationsSectionCard } from '../NotificationsSectionCard';
 import { PreferencesSectionCard } from '../PreferencesSectionCard/PreferencesSectionCard';
 import { ProfileSectionCard } from '../ProfileSectionCard';
+import { ResetGameProgressSectionCard } from '../ResetGameProgressSectionCard';
 
 export const SettingsRoot: FC = () => {
   return (
@@ -19,6 +20,7 @@ export const SettingsRoot: FC = () => {
         <KeysSectionCard />
         <ChangePasswordSectionCard />
         <ChangeEmailAddressSectionCard />
+        <ResetGameProgressSectionCard />
       </div>
     </div>
   );

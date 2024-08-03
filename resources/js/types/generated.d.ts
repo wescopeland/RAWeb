@@ -47,6 +47,19 @@ declare namespace App.Data {
     userWallActive?: boolean;
     websitePrefs?: number;
   };
+  export type UserResettableGameAchievement = {
+    id: number;
+    title: string;
+    points: number;
+    isHardcore: boolean;
+  };
+  export type UserResettableGame = {
+    id: number;
+    title: string;
+    consoleName: string;
+    numAwarded: number;
+    numPossible: number;
+  };
 }
 declare namespace App.Enums {
   export type UserPreference =
