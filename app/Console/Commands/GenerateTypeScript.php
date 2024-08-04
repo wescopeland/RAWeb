@@ -12,7 +12,7 @@ class GenerateTypeScript extends Command
     protected $signature = 'typescript:generate';
     protected $description = 'Generate TypeScript definitions and constants';
 
-    public function handle()
+    public function handle(): void
     {
         $configArray = config('typescript-transformer');
 

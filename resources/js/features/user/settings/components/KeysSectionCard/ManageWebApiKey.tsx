@@ -4,16 +4,12 @@ import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 import { type FC, useState } from 'react';
 import { LuAlertCircle, LuCopy } from 'react-icons/lu';
-import { useCopyToClipboard } from 'react-use';
+import { useCopyToClipboard, useMedia } from 'react-use';
 import { route } from 'ziggy-js';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { toastMessage } from '@/common/components/+vendor/BaseToaster';
-import {
-  BaseTooltip,
-  BaseTooltipContent,
-  BaseTooltipTrigger,
-} from '@/common/components/+vendor/BaseTooltip';
+import { SimpleTooltip } from '@/common/components/SimpleTooltip/SimpleTooltip';
 
 import type { SettingsPageProps } from '../../models';
 
@@ -23,6 +19,9 @@ export const ManageWebApiKey: FC = () => {
   } = usePage<SettingsPageProps>();
 
   const [, copyToClipboard] = useCopyToClipboard();
+
+  // Hide the copy button's tooltip on mobile.
+  const isXs = useMedia('(max-width: 640px)');
 
   const [currentWebApiKey, setCurrentWebApiKey] = useState(user.apiKey);
 
@@ -60,16 +59,16 @@ export const ManageWebApiKey: FC = () => {
         <p className="w-48 text-menu-link">Web API Key</p>
 
         <div className="col-span-3 flex w-full flex-col gap-2">
-          <BaseTooltip>
-            <BaseTooltipTrigger asChild>
-              <BaseButton className="flex gap-2" onClick={handleCopyApiKeyClick}>
-                <LuCopy />
-                <span className="font-mono">{safeFormatApiKey(currentWebApiKey)}</span>
-              </BaseButton>
-            </BaseTooltipTrigger>
-
-            <BaseTooltipContent>Copy to clipboard</BaseTooltipContent>
-          </BaseTooltip>
+          <SimpleTooltip
+            isOpen={isXs ? false : undefined}
+            isWrappingTapTarget={true}
+            tooltipContent="Copy to clipboard"
+          >
+            <BaseButton className="flex gap-2" onClick={handleCopyApiKeyClick}>
+              <LuCopy />
+              <span className="font-mono">{safeFormatApiKey(currentWebApiKey)}</span>
+            </BaseButton>
+          </SimpleTooltip>
 
           <div>
             <p>
@@ -91,7 +90,7 @@ export const ManageWebApiKey: FC = () => {
             variant="destructive"
             onClick={handleResetApiKeyClick}
           >
-            <LuAlertCircle className="text-lg" />
+            <LuAlertCircle className="h-4 w-4" />
             Reset Web API Key
           </BaseButton>
         </div>

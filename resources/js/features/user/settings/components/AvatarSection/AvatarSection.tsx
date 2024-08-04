@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import type { FC } from 'react';
 import { LuAlertCircle } from 'react-icons/lu';
 
@@ -15,10 +16,15 @@ import { BaseInput } from '@/common/components/+vendor/BaseInput';
 import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 
 import { useResetNavbarUserPic } from '../../hooks/useResetNavbarUserPic';
+import type { SettingsPageProps } from '../../models';
 import { useAvatarSectionForm } from './useAvatarSectionForm';
 import { useResetAvatarMutation } from './useResetAvatarMutation';
 
 export const AvatarSection: FC = () => {
+  const {
+    props: { can },
+  } = usePage<SettingsPageProps>();
+
   const { form, mutation: formMutation, onSubmit } = useAvatarSectionForm();
 
   const resetAvatarMutation = useResetAvatarMutation();
@@ -49,60 +55,68 @@ export const AvatarSection: FC = () => {
     <div className="flex flex-col gap-4">
       <h3 className={baseCardTitleClassNames}>Avatar</h3>
 
-      <p>Only png, jpeg, and gif files are supported.</p>
+      {can.updateAvatar ? (
+        <>
+          <p>Only png, jpeg, and gif files are supported.</p>
 
-      <BaseFormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-1">
-          <div>
-            <BaseFormField
-              control={form.control}
-              name="imageData"
-              render={({ field }) => (
-                <BaseFormItem className="flex flex-col gap-2">
-                  <BaseFormLabel className="text-menu-link">New Image</BaseFormLabel>
+          <BaseFormProvider {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-1">
+              <div>
+                <BaseFormField
+                  control={form.control}
+                  name="imageData"
+                  render={({ field }) => (
+                    <BaseFormItem className="flex flex-col gap-2">
+                      <BaseFormLabel className="text-menu-link">New Image</BaseFormLabel>
 
-                  <BaseFormControl>
-                    <BaseInput
-                      {...field}
-                      type="file"
-                      accept=".png,.jpeg,.jpg,.gif"
-                      value={(field.value as any)?.fileName}
-                      onChange={(event) => {
-                        if (event.target.files) {
-                          field.onChange(event.target.files[0]);
-                        }
-                      }}
-                    />
-                  </BaseFormControl>
+                      <BaseFormControl>
+                        <BaseInput
+                          {...field}
+                          type="file"
+                          accept=".png,.jpeg,.jpg,.gif"
+                          value={(field.value as any)?.fileName}
+                          onChange={(event) => {
+                            if (event.target.files) {
+                              field.onChange(event.target.files[0]);
+                            }
+                          }}
+                        />
+                      </BaseFormControl>
 
-                  <BaseFormMessage />
-                </BaseFormItem>
-              )}
-            />
-          </div>
+                      <BaseFormMessage />
+                    </BaseFormItem>
+                  )}
+                />
+              </div>
 
-          <div className="flex w-full justify-end">
-            <BaseButton type="submit" disabled={formMutation.isPending}>
-              Upload
-            </BaseButton>
-          </div>
-        </form>
-      </BaseFormProvider>
+              <div className="flex w-full justify-end">
+                <BaseButton type="submit" disabled={formMutation.isPending}>
+                  Upload
+                </BaseButton>
+              </div>
+            </form>
+          </BaseFormProvider>
 
-      <p>
-        After uploading, press Ctrl + F5. This refreshes your browser cache making the new image
-        visible.
-      </p>
+          <p>
+            After uploading, press Ctrl + F5. This refreshes your browser cache making the new image
+            visible.
+          </p>
 
-      <BaseButton
-        className="gap-2"
-        size="sm"
-        variant="destructive"
-        onClick={handleResetAvatarClick}
-      >
-        <LuAlertCircle className="h-4 w-4" />
-        Reset Avatar to Default
-      </BaseButton>
+          <BaseButton
+            className="gap-2"
+            size="sm"
+            variant="destructive"
+            onClick={handleResetAvatarClick}
+          >
+            <LuAlertCircle className="h-4 w-4" />
+            Reset Avatar to Default
+          </BaseButton>
+        </>
+      ) : (
+        <p>
+          To upload an avatar, earn 250 points or wait until your account is at least 14 days old.
+        </p>
+      )}
     </div>
   );
 };

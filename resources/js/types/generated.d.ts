@@ -35,6 +35,7 @@ declare namespace App.Data {
   export type User = {
     displayName: string;
     avatarUrl: string;
+    isMuted: boolean;
     id?: number;
     username?: string;
     motto?: string;
@@ -46,8 +47,8 @@ declare namespace App.Data {
     emailAddress?: string;
     unreadMessageCount?: number;
     userWallActive?: boolean;
+    visibleRole?: string | null;
     websitePrefs?: number;
-    canUpdateAvatar?: boolean;
   };
 }
 declare namespace App.Enums {

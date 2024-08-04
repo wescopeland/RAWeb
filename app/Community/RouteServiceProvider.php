@@ -8,6 +8,7 @@ use App\Community\Controllers\ForumTopicCommentController;
 use App\Community\Controllers\ForumTopicController;
 use App\Community\Controllers\MessageController;
 use App\Community\Controllers\MessageThreadController;
+use App\Community\Controllers\UserCommentController;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -153,9 +154,11 @@ class RouteServiceProvider extends ServiceProvider
                  * protected routes, need an authenticated user with a verified email address
                  * permissions are checked in controllers individually by authorizing abilities in the respective controller actions
                  */
-                // Route::group([
-                //     'middleware' => ['auth', 'verified'],
-                // ], function () {
+                Route::group([
+                    'middleware' => ['auth', 'verified'],
+                ], function () {
+                    Route::delete('user/{user}/comments', [UserCommentController::class, 'destroyAll'])->name('user.comment.destroyAll');
+
                 //     /*
                 //      * commentables
                 //      * nested auth comments routes -> no conflicts with id/slug in route
@@ -221,9 +224,6 @@ class RouteServiceProvider extends ServiceProvider
                 //             ])
                 //             ->shallow();
                 //     });
-                //     // additional "delete all" route
-                //     Route::delete('user/{user}/comments', [UserCommentController::class, 'destroyAll'])->name('user.comment.destroyAll');
-
                 //     /*
                 //      * "My" friends
                 //      */
@@ -232,6 +232,8 @@ class RouteServiceProvider extends ServiceProvider
                 //     Route::resource('relation', UserRelationController::class)->only('store', 'update', 'destroy');
 
                 //     // Route::get('history', [PlayerHistoryController::class, 'index'])->name('history.index');
+
+                });
 
                 /*
                  * messages

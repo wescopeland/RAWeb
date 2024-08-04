@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Data;
 
+use App\Enums\Permissions;
 use App\Models\User;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Lazy;
@@ -17,6 +18,7 @@ class UserData extends Data
     public function __construct(
         public string $displayName,
         public string $avatarUrl,
+        public bool $isMuted,
 
         public Lazy|int $id,
         public Lazy|string $username,
@@ -36,23 +38,24 @@ class UserData extends Data
         public Lazy|string $emailAddress,
         public Lazy|int $unreadMessageCount,
         public Lazy|bool $userWallActive,
+        public Lazy|string|null $visibleRole,
         public Lazy|int $websitePrefs,
-
-        // Permissions
-        public Lazy|bool $canUpdateAvatar,
     ) {
     }
 
     public static function fromUser(User $user): self
     {
+        $legacyPermissions = (int) $user->getAttribute('Permissions');
+
         return new self(
             displayName: $user->display_name,
             avatarUrl: $user->avatar_url,
+            isMuted: $user->isMuted(),
 
             id: Lazy::create(fn () => $user->id),
             username: Lazy::create(fn () => $user->username),
             motto: Lazy::create(fn () => $user->Motto),
-            legacyPermissions: Lazy::create(fn () => (int) $user->getAttribute('Permissions')),
+            legacyPermissions: Lazy::create(fn () => $legacyPermissions),
             preferences: Lazy::create(
                 fn () => [
                     'prefersAbsoluteDates' => $user->prefers_absolute_dates,
@@ -65,10 +68,8 @@ class UserData extends Data
             emailAddress: Lazy::create(fn () => $user->EmailAddress),
             unreadMessageCount: Lazy::create(fn () => $user->UnreadMessageCount),
             userWallActive: Lazy::create(fn () => $user->UserWallActive),
+            visibleRole: Lazy::create(fn () => $legacyPermissions > 1 ? Permissions::toString($legacyPermissions) : null),
             websitePrefs: Lazy::create(fn () => $user->websitePrefs),
-
-            // Permissions
-            canUpdateAvatar: Lazy::create(fn () => $user->can('updateAvatar', $user)),
         );
     }
 }

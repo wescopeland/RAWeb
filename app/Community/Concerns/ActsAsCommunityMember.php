@@ -98,6 +98,11 @@ trait ActsAsCommunityMember
         return $this->getRelationship($user) === UserRelationship::Blocked;
     }
 
+    public function isEmailVerified(): bool
+    {
+        return !empty($this->email_verified_at);
+    }
+
     public function isForumVerified(): bool
     {
         return !empty($this->forum_verified_at);

@@ -28,22 +28,31 @@ use Inertia\Response as InertiaResponse;
 
 class SettingsController extends Controller
 {
-    public function index(): InertiaResponse
+    public function show(): InertiaResponse
     {
         $this->authorize('updateSettings');
 
-        $user = UserData::fromUser(Auth::user())->include(
+        /** @var User $user */
+        $user = Auth::user();
+
+        $userData = UserData::fromUser($user)->include(
             'apiKey',
             'canUpdateAvatar',
             'deleteRequested',
             'emailAddress',
             'motto',
             'userWallActive',
+            'visibleRole',
             'websitePrefs',
         );
 
         return Inertia::render('settings', [
-            'user' => $user,
+            'user' => $userData,
+            'can' => [
+                'manipulateApiKeys' => $user->can('manipulateApiKeys', $user),
+                'updateAvatar' => $user->can('updateAvatar', $user),
+                'updateMotto' => $user->can('updateMotto', $user),
+            ],
         ]);
     }
 
@@ -83,7 +92,7 @@ class SettingsController extends Controller
 
         // The user will need to reconfirm their email address.
         $user->EmailAddress = $data->newEmail;
-        $user->Permissions = Permissions::Unregistered;
+        $user->setAttribute('Permissions', Permissions::Unregistered);
         $user->email_verified_at = null;
         $user->save();
 
@@ -105,6 +114,7 @@ class SettingsController extends Controller
 
         /** @var User $user */
         $user = $request->user();
+
         $user->update($data->toArray());
 
         return response()->json(['success' => true]);
@@ -116,6 +126,7 @@ class SettingsController extends Controller
 
         /** @var User $user */
         $user = $request->user();
+
         $user->update($data->toArray());
 
         return response()->json(['success' => true]);

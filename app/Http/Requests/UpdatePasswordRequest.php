@@ -12,7 +12,6 @@ class UpdatePasswordRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // The caller is always the target user.
         return true;
     }
 
@@ -29,7 +28,7 @@ class UpdatePasswordRequest extends FormRequest
         ];
     }
 
-    public function withValidator(Validator $validator)
+    public function withValidator(Validator $validator): void
     {
         $validator->after(function ($validator) {
             $user = $this->user();

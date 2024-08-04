@@ -106,7 +106,7 @@ class RouteServiceProvider extends ServiceProvider
                 'middleware' => ['auth'],
             ], function () {
                 Route::middleware(['inertia'])->group(function () {
-                    Route::get('settings', [SettingsController::class, 'index'])->name('settings');
+                    Route::get('settings', [SettingsController::class, 'show'])->name('settings.show');
                 });
 
                 // Route::get('notifications', [NotificationsController::class, 'index'])->name('notification.index');

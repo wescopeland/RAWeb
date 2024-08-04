@@ -288,6 +288,12 @@ declare module 'ziggy-js' {
         }
     ],
     "forum.recent-posts": [],
+    "user.comment.destroyAll": [
+        {
+            "name": "user",
+            "required": true
+        }
+    ],
     "message.store": [],
     "message-thread.destroy": [
         {

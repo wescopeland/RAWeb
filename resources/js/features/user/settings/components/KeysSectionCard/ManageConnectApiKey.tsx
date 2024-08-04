@@ -47,7 +47,7 @@ export const ManageConnectApiKey: FC = () => {
             variant="destructive"
             onClick={handleResetApiKeyClick}
           >
-            <LuAlertCircle className="text-lg" />
+            <LuAlertCircle className="h-4 w-4" />
             Reset Connect API Key
           </BaseButton>
         </div>

@@ -7,10 +7,20 @@ use ReflectionClass;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
 use Spatie\TypeScriptTransformer\Transformers\Transformer;
 
+/**
+ * Responsible for outputting the generatedAppConstants.ts file.
+ * RAWeb contains a lot of abstract class enums. These do not neatly map to
+ * JS/TS enums. They instead need to be transformed to dictionary objects.
+ * This transformer is responsible for ingesting these abstract class enums
+ * and writing to the TS file using the `composer types` command.
+ */
 class SiteEnumTransformer implements Transformer
 {
-    private static $generatedConstants = [];
+    private static array $generatedConstants = [];
 
+    /**
+     * @param ReflectionClass<object> $class
+     */
     public function transform(ReflectionClass $class, string $name): ?TransformedType
     {
         $reflection = new ReflectionClass($class->getName());

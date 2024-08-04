@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProfileRequest extends FormRequest
@@ -13,7 +14,16 @@ class UpdateProfileRequest extends FormRequest
         /** @var User $user */
         $user = $this->user();
 
-        return $user->can('updateProfileSettings', $user);
+        if ($user->isBanned()) {
+            return false;
+        }
+
+        $isMottoBeingUpdated = $this->input('motto') !== $user->Motto;
+        if ($isMottoBeingUpdated && !$user->can('updateMotto', $user)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function rules(): array

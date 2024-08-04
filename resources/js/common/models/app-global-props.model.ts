@@ -3,7 +3,7 @@ import type { SetRequired } from 'type-fest';
 
 type AuthenticatedUser = SetRequired<
   App.Data.User,
-  'legacyPermissions' | 'preferences' | 'roles' | 'unreadMessageCount'
+  'id' | 'legacyPermissions' | 'preferences' | 'roles' | 'unreadMessageCount'
 >;
 
 export interface AppGlobalProps extends PageProps {
