@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { route } from 'ziggy-js';
 import { z } from 'zod';
 
 import { toast } from '@/common/components/+vendor/BaseToaster';
@@ -31,7 +32,7 @@ export function useChangeEmailAddressForm(props: {
 
   const mutation = useMutation({
     mutationFn: (formValues: FormValues) => {
-      return axios.put('/settings/email', formValues);
+      return axios.put(route('settings.email.update'), formValues);
     },
     onSuccess: () => {
       props.setCurrentEmailAddress(form.getValues().newEmail);

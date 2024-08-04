@@ -10,10 +10,10 @@ import {
   BaseCardHeader,
   BaseCardTitle,
 } from '@/common/components/+vendor/BaseCard';
-import { BaseForm } from '@/common/components/+vendor/BaseForm';
+import { BaseFormProvider } from '@/common/components/+vendor/BaseForm';
 
 interface SectionFormCardProps {
-  title: string;
+  headingLabel: string;
   children: ReactNode;
   formMethods: UseFormReturn<any>;
   onSubmit: (formValues: any) => void;
@@ -23,7 +23,7 @@ interface SectionFormCardProps {
 }
 
 export const SectionFormCard: FC<SectionFormCardProps> = ({
-  title,
+  headingLabel,
   children,
   formMethods,
   onSubmit,
@@ -33,10 +33,10 @@ export const SectionFormCard: FC<SectionFormCardProps> = ({
   return (
     <BaseCard className="w-full">
       <BaseCardHeader className="pb-4">
-        <BaseCardTitle>{title}</BaseCardTitle>
+        <BaseCardTitle>{headingLabel}</BaseCardTitle>
       </BaseCardHeader>
 
-      <BaseForm {...formMethods}>
+      <BaseFormProvider {...formMethods}>
         <form onSubmit={formMethods.handleSubmit(onSubmit)}>
           <BaseCardContent>{children}</BaseCardContent>
 
@@ -48,7 +48,7 @@ export const SectionFormCard: FC<SectionFormCardProps> = ({
             </div>
           </BaseCardFooter>
         </form>
-      </BaseForm>
+      </BaseFormProvider>
     </BaseCard>
   );
 };

@@ -17,7 +17,7 @@ export const NotificationsSectionCard: FC = () => {
 
   return (
     <SectionFormCard
-      title="Notifications"
+      headingLabel="Notifications"
       formMethods={form}
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}

@@ -4,12 +4,12 @@ import { LuAlertCircle } from 'react-icons/lu';
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { baseCardTitleClassNames } from '@/common/components/+vendor/BaseCard';
 import {
-  BaseForm,
   BaseFormControl,
   BaseFormField,
   BaseFormItem,
   BaseFormLabel,
   BaseFormMessage,
+  BaseFormProvider,
 } from '@/common/components/+vendor/BaseForm';
 import { BaseInput } from '@/common/components/+vendor/BaseInput';
 import { toast } from '@/common/components/+vendor/BaseToaster';
@@ -51,7 +51,7 @@ export const AvatarSection: FC = () => {
 
       <p>Only png, jpeg, and gif files are supported.</p>
 
-      <BaseForm {...form}>
+      <BaseFormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-1">
           <div>
             <BaseFormField
@@ -87,7 +87,7 @@ export const AvatarSection: FC = () => {
             </BaseButton>
           </div>
         </form>
-      </BaseForm>
+      </BaseFormProvider>
 
       <p>
         After uploading, press Ctrl + F5. This refreshes your browser cache making the new image

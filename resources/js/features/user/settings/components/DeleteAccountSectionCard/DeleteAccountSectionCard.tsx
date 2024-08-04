@@ -63,7 +63,7 @@ export const DeleteAccountSectionCard: FC = () => {
     : dayjs().add(2, 'weeks');
 
   return (
-    <SectionStandardCard title="Delete Account">
+    <SectionStandardCard headingLabel="Delete Account">
       <div className="flex flex-col gap-4">
         {isDeleteAlreadyRequested ? (
           <BaseAlert variant="destructive">

@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { route } from 'ziggy-js';
 
 import { toast } from '@/common/components/+vendor/BaseToaster';
 
@@ -25,7 +26,7 @@ export function useAvatarSectionForm() {
       const formData = new FormData();
       formData.append('imageData', base64ImageData);
 
-      return axios.post('/user/avatar', formData, {
+      return axios.post(route('user.avatar.store'), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

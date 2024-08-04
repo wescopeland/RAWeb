@@ -8,8 +8,8 @@ import { SettingsSidebar } from '@/features/user/settings/components/+sidebar';
 const Settings: AppPage = () => {
   return (
     <>
-      <Head title="TODO">
-        <meta name="description" content="TODO" />
+      <Head title="Settings">
+        <meta name="description" content="Adjust your account's settings and preferences." />
       </Head>
 
       <div className="container">

@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { type FC } from 'react';
 import { LuAlertCircle } from 'react-icons/lu';
+import { route } from 'ziggy-js';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { toast } from '@/common/components/+vendor/BaseToaster';
@@ -9,7 +10,7 @@ import { toast } from '@/common/components/+vendor/BaseToaster';
 export const ManageConnectApiKey: FC = () => {
   const mutation = useMutation({
     mutationFn: () => {
-      return axios.delete('/settings/keys/connect');
+      return axios.delete(route('settings.keys.connect.destroy'));
     },
   });
 

@@ -25,7 +25,7 @@ export const ChangeEmailAddressSectionCard: FC = () => {
 
   return (
     <SectionFormCard
-      title="Change Email"
+      headingLabel="Change Email"
       formMethods={form}
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}

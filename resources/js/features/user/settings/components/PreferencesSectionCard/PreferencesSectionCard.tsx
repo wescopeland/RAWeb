@@ -17,7 +17,7 @@ export const PreferencesSectionCard: FC = () => {
 
   return (
     <SectionFormCard
-      title="Preferences"
+      headingLabel="Preferences"
       formMethods={form}
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}

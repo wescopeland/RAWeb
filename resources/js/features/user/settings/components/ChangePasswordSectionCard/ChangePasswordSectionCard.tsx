@@ -18,7 +18,7 @@ export const ChangePasswordSectionCard: FC = () => {
 
   return (
     <SectionFormCard
-      title="Change Password"
+      headingLabel="Change Password"
       formMethods={form}
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}

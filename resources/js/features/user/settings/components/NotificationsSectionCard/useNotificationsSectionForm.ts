@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { route } from 'ziggy-js';
 import { z } from 'zod';
 
 import { toast } from '@/common/components/+vendor/BaseToaster';
@@ -41,7 +42,7 @@ export function useNotificationsSectionForm(websitePrefs: number) {
 
   const mutation = useMutation({
     mutationFn: (websitePrefs: number) => {
-      return axios.put('/settings/preferences', { websitePrefs });
+      return axios.put(route('settings.preferences.update'), { websitePrefs });
     },
   });
 

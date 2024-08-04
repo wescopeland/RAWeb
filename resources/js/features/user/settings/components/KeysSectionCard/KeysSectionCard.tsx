@@ -6,7 +6,7 @@ import { ManageWebApiKey } from './ManageWebApiKey';
 
 export const KeysSectionCard: FC = () => {
   return (
-    <SectionStandardCard title="Keys">
+    <SectionStandardCard headingLabel="Keys">
       <div className="flex flex-col gap-8">
         <ManageWebApiKey />
         <ManageConnectApiKey />

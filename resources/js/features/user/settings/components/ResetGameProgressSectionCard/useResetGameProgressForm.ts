@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import urlcat from 'urlcat';
+import { route } from 'ziggy-js';
 import { z } from 'zod';
 
 import { toast } from '@/common/components/+vendor/BaseToaster';
@@ -42,9 +42,9 @@ export function useResetGameProgressForm() {
 
   const [alreadyResetGameIds, setAlreadyResetGameIds] = useState<number[]>([]);
   const [alreadyResetAchievementIds, setAlreadyResetAchievementIds] = useState<number[]>([]);
-  const [filteredGames, setFilteredGames] = useState<App.Data.UserResettableGame[]>([]);
+  const [filteredGames, setFilteredGames] = useState<App.Platform.Data.PlayerResettableGame[]>([]);
   const [filteredAchievements, setFilteredAchievements] = useState<
-    App.Data.UserResettableGameAchievement[]
+    App.Platform.Data.PlayerResettableGameAchievement[]
   >([]);
 
   useEffect(() => {
@@ -67,7 +67,18 @@ export function useResetGameProgressForm() {
 
   const mutation = useMutation({
     mutationFn: (payload: Partial<FormValues>) => {
-      return axios.delete(urlcat('/settings/reset-progress', payload));
+      let url = '';
+      if (payload.gameId) {
+        url = route('user.game.destroy', payload.gameId);
+      } else if (payload.achievementId) {
+        url = route('user.achievement.destroy', payload.achievementId);
+      }
+
+      if (!url.length) {
+        throw new Error('Nothing to reset.');
+      }
+
+      return axios.delete(url);
     },
     onSuccess: (_, variables) => {
       // After performing the mutation, store IDs for whatever we've wiped

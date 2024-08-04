@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Data;
+namespace App\Platform\Data;
 
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
-#[TypeScript('UserResettableGame')]
-class UserResettableGameData extends Data
+#[TypeScript('PlayerResettableGame')]
+class PlayerResettableGameData extends Data
 {
     public function __construct(
         public int $id,

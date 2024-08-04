@@ -8,7 +8,7 @@ import { cn } from '@/utils/cn';
 
 import { BaseLabel } from './BaseLabel';
 
-const BaseForm = FormProvider;
+const BaseFormProvider = FormProvider;
 
 type BaseFormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -155,12 +155,12 @@ const BaseFormMessage = React.forwardRef<
 BaseFormMessage.displayName = 'BaseFormMessage';
 
 export {
-  BaseForm,
   BaseFormControl,
   BaseFormDescription,
   BaseFormField,
   BaseFormItem,
   BaseFormLabel,
   BaseFormMessage,
+  BaseFormProvider,
   useBaseFormField,
 };

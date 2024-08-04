@@ -27,7 +27,7 @@ export const ProfileSectionCard: FC = () => {
 
   return (
     <SectionFormCard
-      title="Profile"
+      headingLabel="Profile"
       formMethods={form}
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}

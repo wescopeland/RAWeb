@@ -54,7 +54,7 @@ services:
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         volumes:
-            - 'mariadb-data_prod_07092024:/var/lib/mysql'
+            - 'mariadb-data:/var/lib/mysql'
             - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
             - './database:/docker-entrypoint-initdb.d/database'
             - './docker/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro'
@@ -123,7 +123,7 @@ networks:
     raweb:
         driver: bridge
 volumes:
-    mariadb-data_prod_07092024:
+    mariadb-data:
         driver: local
     minio-data:
         driver: local

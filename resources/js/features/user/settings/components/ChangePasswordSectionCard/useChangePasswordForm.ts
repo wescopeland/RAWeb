@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { route } from 'ziggy-js';
 import { z } from 'zod';
 
 import { toast } from '@/common/components/+vendor/BaseToaster';
@@ -32,7 +33,7 @@ export function useChangePasswordForm() {
 
   const mutation = useMutation({
     mutationFn: (formValues: FormValues) => {
-      return axios.put('/settings/password', formValues);
+      return axios.put(route('settings.password.update'), formValues);
     },
   });
 

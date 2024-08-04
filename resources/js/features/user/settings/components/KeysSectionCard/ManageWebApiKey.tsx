@@ -5,6 +5,7 @@ import axios from 'axios';
 import { type FC, useState } from 'react';
 import { LuAlertCircle, LuCopy } from 'react-icons/lu';
 import { useCopyToClipboard } from 'react-use';
+import { route } from 'ziggy-js';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { toast } from '@/common/components/+vendor/BaseToaster';
@@ -27,7 +28,9 @@ export const ManageWebApiKey: FC = () => {
 
   const mutation = useMutation({
     mutationFn: () => {
-      return axios.delete<any, AxiosResponse<{ newKey: string }>>('/settings/keys/web');
+      return axios.delete<unknown, AxiosResponse<{ newKey: string }>>(
+        route('settings.keys.web.destroy'),
+      );
     },
     onSuccess: ({ data }) => {
       setCurrentWebApiKey(data.newKey);
@@ -95,8 +98,8 @@ export const ManageWebApiKey: FC = () => {
 };
 
 /**
- * If someone is sharing their screen, we don't want them to accidentally
- * leak their entire web API key.
+ * If someone is sharing their screen, we don't want them
+ * to accidentally leak their web API key.
  */
 function safeFormatApiKey(apiKey: string): string {
   // For safety, but this should never happen.

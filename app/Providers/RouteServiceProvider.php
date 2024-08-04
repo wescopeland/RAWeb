@@ -118,26 +118,21 @@ class RouteServiceProvider extends ServiceProvider
                     // Route::get('keys', [SettingsController::class, 'edit'])->middleware('password.confirm');
                     // Route::get('{section?}', [SettingsController::class, 'edit'])->name('settings');
 
-                    // TODO move to a dedicated controller
-                    Route::get('resettable-games', [SettingsController::class, 'getUserResettableGames'])->name('settings.resettable-games');
-                    Route::get('resettable-game-achievements', [SettingsController::class, 'getUserResettableGameAchievements'])->name('settings.resettable-game-achievements');
-                    Route::delete('reset-progress', [SettingsController::class, 'resetProgress'])->name('settings.reset-progress');
-
                     Route::put('profile', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
                     Route::put('preferences', [SettingsController::class, 'updatePreferences'])->name('settings.preferences.update');
                     Route::put('password', [SettingsController::class, 'updatePassword'])->name('settings.password.update');
                     Route::put('email', [SettingsController::class, 'updateEmail'])->name('settings.email.update');
 
-                    Route::delete('keys/web', [SettingsController::class, 'resetWebApiKey'])->name('settings.keys.web.reset');
-                    Route::delete('keys/connect', [SettingsController::class, 'resetConnectApiKey'])->name('settings.keys.connect.reset');
+                    Route::delete('keys/web', [SettingsController::class, 'resetWebApiKey'])->name('settings.keys.web.destroy');
+                    Route::delete('keys/connect', [SettingsController::class, 'resetConnectApiKey'])->name('settings.keys.connect.destroy');
                 });
 
                 Route::group(['prefix' => 'user'], function () {
-                    Route::post('delete-request', [UserController::class, 'requestAccountDeletion'])->name('user.delete.request');
-                    Route::delete('delete-request', [UserController::class, 'cancelAccountDeletion'])->name('user.delete.request.cancel');
+                    Route::post('delete-request', [UserController::class, 'requestAccountDeletion'])->name('user.delete-request.store');
+                    Route::delete('delete-request', [UserController::class, 'cancelAccountDeletion'])->name('user.delete-request.destroy');
 
-                    Route::post('avatar', [UserController::class, 'uploadAvatar'])->name('user.avatar.create');
-                    Route::delete('avatar', [UserController::class, 'deleteAvatar'])->name('user.avatar.delete');
+                    Route::post('avatar', [UserController::class, 'uploadAvatar'])->name('user.avatar.store');
+                    Route::delete('avatar', [UserController::class, 'deleteAvatar'])->name('user.avatar.destroy');
                 });
             });
         });

@@ -49,19 +49,6 @@ declare namespace App.Data {
     websitePrefs?: number;
     canUpdateAvatar?: boolean;
   };
-  export type UserResettableGameAchievement = {
-    id: number;
-    title: string;
-    points: number;
-    isHardcore: boolean;
-  };
-  export type UserResettableGame = {
-    id: number;
-    title: string;
-    consoleName: string;
-    numAwarded: number;
-    numPossible: number;
-  };
 }
 declare namespace App.Enums {
   export type UserPreference =
@@ -109,4 +96,19 @@ declare namespace App.Models {
     | 'team-account'
     | 'beta'
     | 'developer-veteran';
+}
+declare namespace App.Platform.Data {
+  export type PlayerResettableGameAchievement = {
+    id: number;
+    title: string;
+    points: number;
+    isHardcore: boolean;
+  };
+  export type PlayerResettableGame = {
+    id: number;
+    title: string;
+    consoleName: string;
+    numAwarded: number;
+    numPossible: number;
+  };
 }

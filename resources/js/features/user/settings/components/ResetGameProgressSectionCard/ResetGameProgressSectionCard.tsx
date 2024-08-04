@@ -45,7 +45,7 @@ export const ResetGameProgressSectionCard: FC = () => {
 
   return (
     <SectionFormCard
-      title="Reset Game Progress"
+      headingLabel="Reset Game Progress"
       formMethods={form}
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}
