@@ -39,6 +39,8 @@ class SettingsController extends Controller
 
         $user = UserData::fromUser(Auth::user())->include(
             'apiKey',
+            'canUpdateAvatar',
+            'deleteRequested',
             'emailAddress',
             'motto',
             'userWallActive',

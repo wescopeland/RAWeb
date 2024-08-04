@@ -131,6 +131,14 @@ class RouteServiceProvider extends ServiceProvider
                     Route::delete('keys/web', [SettingsController::class, 'resetWebApiKey'])->name('settings.keys.web.reset');
                     Route::delete('keys/connect', [SettingsController::class, 'resetConnectApiKey'])->name('settings.keys.connect.reset');
                 });
+
+                Route::group(['prefix' => 'user'], function () {
+                    Route::post('delete-request', [UserController::class, 'requestAccountDeletion'])->name('user.delete.request');
+                    Route::delete('delete-request', [UserController::class, 'cancelAccountDeletion'])->name('user.delete.request.cancel');
+
+                    Route::post('avatar', [UserController::class, 'uploadAvatar'])->name('user.avatar.create');
+                    Route::delete('avatar', [UserController::class, 'deleteAvatar'])->name('user.avatar.delete');
+                });
             });
         });
     }

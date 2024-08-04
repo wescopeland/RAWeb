@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import { ChangeEmailAddressSectionCard } from '../ChangeEmailAddressSectionCard/ChangeEmailAddressSectionCard';
 import { ChangePasswordSectionCard } from '../ChangePasswordSectionCard';
+import { DeleteAccountSectionCard } from '../DeleteAccountSectionCard';
 import { KeysSectionCard } from '../KeysSectionCard/KeysSectionCard';
 import { NotificationsSectionCard } from '../NotificationsSectionCard';
 import { PreferencesSectionCard } from '../PreferencesSectionCard/PreferencesSectionCard';
@@ -21,6 +22,7 @@ export const SettingsRoot: FC = () => {
         <ChangePasswordSectionCard />
         <ChangeEmailAddressSectionCard />
         <ResetGameProgressSectionCard />
+        <DeleteAccountSectionCard />
       </div>
     </div>
   );

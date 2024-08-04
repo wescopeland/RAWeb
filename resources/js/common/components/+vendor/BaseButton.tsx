@@ -17,7 +17,7 @@ const baseButtonVariants = cva(
       variant: {
         default:
           'bg-embed text-link border border-neutral-700 hover:bg-embed-highlight hover:text-link-hover hover:border-menu-link light:bg-white light:border-link light:text-link light:hover:bg-neutral-100',
-        destructive: 'border btn-danger hover:text-link-hover hover:border-menu-link',
+        destructive: 'bg-embed border btn-danger hover:text-link-hover hover:border-menu-link',
         outline:
           'border light:border-neutral-200 light:bg-white light:hover:bg-neutral-100 light:hover:text-neutral-900 border-neutral-800 bg-neutral-950 hover:bg-neutral-800 hover:text-neutral-50',
         secondary:
@@ -28,7 +28,7 @@ const baseButtonVariants = cva(
       },
       size: {
         default: 'h-9 px-4 py-2',
-        sm: 'h-7 rounded-md px-3',
+        sm: 'h-[30px] rounded-md px-3 !text-[13px]',
         lg: 'h-11 rounded-md px-8',
         icon: 'h-10 w-10',
       },

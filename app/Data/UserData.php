@@ -32,10 +32,14 @@ class UserData extends Data
         public Lazy|array $roles,
 
         public Lazy|string $apiKey,
+        public Lazy|string $deleteRequested,
         public Lazy|string $emailAddress,
         public Lazy|int $unreadMessageCount,
         public Lazy|bool $userWallActive,
         public Lazy|int $websitePrefs,
+
+        // Permissions
+        public Lazy|bool $canUpdateAvatar,
     ) {
     }
 
@@ -57,10 +61,14 @@ class UserData extends Data
             roles: Lazy::create(fn () => $user->getRoleNames()->toArray()),
 
             apiKey: Lazy::create(fn () => $user->APIKey),
+            deleteRequested: Lazy::create(fn () => $user->DeleteRequested),
             emailAddress: Lazy::create(fn () => $user->EmailAddress),
             unreadMessageCount: Lazy::create(fn () => $user->UnreadMessageCount),
             userWallActive: Lazy::create(fn () => $user->UserWallActive),
             websitePrefs: Lazy::create(fn () => $user->websitePrefs),
+
+            // Permissions
+            canUpdateAvatar: Lazy::create(fn () => $user->can('updateAvatar', $user)),
         );
     }
 }

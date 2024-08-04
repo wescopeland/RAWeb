@@ -7,7 +7,7 @@ const BaseCard = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
     <div
       ref={ref}
       className={cn(
-        'bg-card text-card-foreground rounded-lg border border-embed-highlight bg-embed shadow-sm',
+        'text-card-foreground rounded-lg border border-embed-highlight bg-embed shadow-sm',
         className,
       )}
       {...props}
@@ -23,15 +23,13 @@ const BaseCardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTM
 );
 BaseCardHeader.displayName = 'CardHeader';
 
+const baseCardTitleClassNames =
+  'mb-0 border-b-0 text-2xl font-semibold leading-none tracking-tight';
 const BaseCardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn('mb-0 border-b-0 text-2xl font-semibold leading-none tracking-tight', className)}
-    {...props}
-  />
+  <h3 ref={ref} className={cn(baseCardTitleClassNames, className)} {...props} />
 ));
 BaseCardTitle.displayName = 'BaseCardTitle';
 
@@ -64,4 +62,5 @@ export {
   BaseCardFooter,
   BaseCardHeader,
   BaseCardTitle,
+  baseCardTitleClassNames,
 };

@@ -170,9 +170,13 @@ class UserPolicy
     {
         // Users may only upload a new avatar if they have been a member for at
         // least 14 days or if they have earned at least a minimum number of points
-        // in either mode.
+        // in either mode. They also must have verified their email address.
 
         if ($user->isMuted()) {
+            return false;
+        }
+
+        if ($user->email_verified_at === null) {
             return false;
         }
 

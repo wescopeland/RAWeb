@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/react';
 import { AppLayout } from '@/common/layouts/AppLayout';
 import type { AppPage } from '@/common/models';
 import { SettingsRoot } from '@/features/user/settings/components/+root';
+import { SettingsSidebar } from '@/features/user/settings/components/+sidebar';
 
 const Settings: AppPage = () => {
   return (
@@ -18,7 +19,7 @@ const Settings: AppPage = () => {
       </div>
 
       <AppLayout.Sidebar>
-        <p>hello world</p>
+        <SettingsSidebar />
       </AppLayout.Sidebar>
     </>
   );
