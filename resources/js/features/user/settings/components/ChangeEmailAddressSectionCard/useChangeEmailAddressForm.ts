@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { route } from 'ziggy-js';
 import { z } from 'zod';
 
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 
 const changeEmailAddressFormSchema = z
   .object({
@@ -40,7 +40,7 @@ export function useChangeEmailAddressForm(props: {
   });
 
   const onSubmit = (formValues: FormValues) => {
-    toast.promise(mutation.mutateAsync(formValues), {
+    toastMessage.promise(mutation.mutateAsync(formValues), {
       loading: 'Changing email address...',
       success: 'Changed email address!',
       error: 'Something went wrong.',

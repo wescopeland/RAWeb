@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports -- allow imports from sonner */
+
 import type { ComponentProps } from 'react';
 import { toast, Toaster as Sonner } from 'sonner';
 
@@ -34,4 +36,7 @@ const BaseToaster = ({ ...props }: BaseToasterProps) => {
   );
 };
 
-export { BaseToaster, toast };
+// Rename toast, otherwise IDEs will always try to auto-import from sonner instead of our own.
+const toastMessage = toast;
+
+export { BaseToaster, toastMessage };

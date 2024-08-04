@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { route } from 'ziggy-js';
 import { z } from 'zod';
 
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 
 const profileFormSchema = z.object({
   motto: z.string().max(50),
@@ -27,7 +27,7 @@ export function useProfileSectionForm(initialValues: FormValues) {
   });
 
   const onSubmit = (formValues: FormValues) => {
-    toast.promise(mutation.mutateAsync(formValues), {
+    toastMessage.promise(mutation.mutateAsync(formValues), {
       loading: 'Updating...',
       success: 'Updated.',
       error: 'Something went wrong.',

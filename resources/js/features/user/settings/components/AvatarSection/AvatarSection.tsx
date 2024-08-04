@@ -12,7 +12,7 @@ import {
   BaseFormProvider,
 } from '@/common/components/+vendor/BaseForm';
 import { BaseInput } from '@/common/components/+vendor/BaseInput';
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 
 import { useResetNavbarUserPic } from '../../hooks/useResetNavbarUserPic';
 import { useAvatarSectionForm } from './useAvatarSectionForm';
@@ -34,7 +34,7 @@ export const AvatarSection: FC = () => {
       return;
     }
 
-    toast.promise(resetAvatarMutation.mutateAsync(), {
+    toastMessage.promise(resetAvatarMutation.mutateAsync(), {
       loading: 'Resetting...',
       success: () => {
         resetNavbarUserPic();

@@ -32,9 +32,9 @@ export const ProfileSectionCard: FC = () => {
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}
     >
-      <div className="flex flex-col gap-5">
-        <div className="flex w-full items-center">
-          <p className="w-2/5 text-menu-link">Roles</p>
+      <div className="@container @xl:gap-5 flex flex-col gap-7">
+        <div className="@xl:flex-row @xl:items-center flex w-full flex-col">
+          <p className="@xl:w-2/5 text-menu-link">Visible Role</p>
           <p>Moderator</p>
         </div>
 
@@ -42,13 +42,14 @@ export const ProfileSectionCard: FC = () => {
           control={form.control}
           name="motto"
           render={({ field }) => (
-            <BaseFormItem className="flex w-full items-center">
-              <BaseFormLabel className="w-2/5 text-menu-link">User Motto</BaseFormLabel>
+            <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
+              <BaseFormLabel className="@xl:w-2/5 text-menu-link">User Motto</BaseFormLabel>
 
               <div className="flex flex-grow flex-col gap-1">
                 <BaseFormControl>
                   <BaseInput maxLength={50} placeholder="enter a motto here..." {...field} />
                 </BaseFormControl>
+
                 <BaseFormDescription className="flex w-full justify-between">
                   <span>No profanity.</span>
                   <span>{field.value.length}/50</span>
@@ -62,8 +63,8 @@ export const ProfileSectionCard: FC = () => {
           control={form.control}
           name="userWallActive"
           render={({ field }) => (
-            <BaseFormItem className="flex w-full items-center">
-              <BaseFormLabel className="w-2/5 text-menu-link">
+            <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
+              <BaseFormLabel className="@xl:w-2/5 text-menu-link">
                 Allow Comments on my User Wall
               </BaseFormLabel>
 

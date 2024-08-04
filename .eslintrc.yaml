@@ -113,6 +113,13 @@ rules:
   # similar to pint, force a newline before return statements
   newline-before-return: error
 
+  # prevent accidental imports from libraries that build the Base* components
+  no-restricted-imports:
+    - error
+    - patterns:
+      - '@radix-ui/*'
+      - 'sonner'
+
 # don't enforce explicit-any rule in test files
 overrides:
   - files:

@@ -9,7 +9,7 @@ import {
   BaseAlertTitle,
 } from '@/common/components/+vendor/BaseAlert';
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 
 import type { SettingsPageProps } from '../../models';
 import { SectionStandardCard } from '../SectionStandardCard';
@@ -19,8 +19,6 @@ export const DeleteAccountSectionCard: FC = () => {
   const {
     props: { user },
   } = usePage<SettingsPageProps>();
-
-  console.log(user);
 
   const [isDeleteAlreadyRequested, setIsDeleteAlreadyRequested] = useState(!!user.deleteRequested);
 
@@ -36,7 +34,7 @@ export const DeleteAccountSectionCard: FC = () => {
     }
 
     if (isDeleteAlreadyRequested) {
-      toast.promise(cancelDeleteMutation.mutateAsync(), {
+      toastMessage.promise(cancelDeleteMutation.mutateAsync(), {
         loading: 'Loading...',
         success: () => {
           setIsDeleteAlreadyRequested((prev) => !prev);
@@ -46,7 +44,7 @@ export const DeleteAccountSectionCard: FC = () => {
         error: 'Something went wrong.',
       });
     } else {
-      toast.promise(requestDeleteMutation.mutateAsync(), {
+      toastMessage.promise(requestDeleteMutation.mutateAsync(), {
         loading: 'Loading...',
         success: () => {
           setIsDeleteAlreadyRequested((prev) => !prev);

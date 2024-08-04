@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { route } from 'ziggy-js';
 import { z } from 'zod';
 
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 import type { LaravelValidationError } from '@/common/models';
 
 const changePasswordFormSchema = z
@@ -38,7 +38,7 @@ export function useChangePasswordForm() {
   });
 
   const onSubmit = (formValues: FormValues) => {
-    toast.promise(mutation.mutateAsync(formValues), {
+    toastMessage.promise(mutation.mutateAsync(formValues), {
       loading: 'Changing password...',
       success: 'Changed password!',
       error: ({ response }: LaravelValidationError) => {

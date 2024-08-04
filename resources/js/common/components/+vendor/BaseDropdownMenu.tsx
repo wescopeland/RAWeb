@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports -- allow imports from @radix-ui */
+
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import * as React from 'react';
 import { LuCheck, LuChevronRight, LuCircle } from 'react-icons/lu';

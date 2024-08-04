@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports -- allow imports from @radix-ui */
+
 import * as SwitchPrimitives from '@radix-ui/react-switch';
 import * as React from 'react';
 

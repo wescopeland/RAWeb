@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports -- allow imports from @radix-ui */
+
 import { Slot } from '@radix-ui/react-slot';
 import {
   type ComponentProps,

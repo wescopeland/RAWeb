@@ -23,79 +23,81 @@ export const ChangePasswordSectionCard: FC = () => {
       onSubmit={onSubmit}
       isSubmitting={mutation.isPending}
     >
-      <div className="flex flex-col gap-5">
-        <BaseFormField
-          control={form.control}
-          name="currentPassword"
-          render={({ field }) => (
-            <BaseFormItem className="flex w-full items-center">
-              <BaseFormLabel className="w-2/5 text-menu-link">Current Password</BaseFormLabel>
+      <div className="@container">
+        <div className="flex flex-col gap-5">
+          <BaseFormField
+            control={form.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
+                <BaseFormLabel className="@xl:w-2/5 text-menu-link">Current Password</BaseFormLabel>
 
-              <div className="flex flex-grow flex-col gap-1">
-                <BaseFormControl>
-                  <BaseInput
-                    type="password"
-                    placeholder="enter your current password here..."
-                    required
-                    {...field}
-                  />
-                </BaseFormControl>
+                <div className="flex flex-grow flex-col gap-1">
+                  <BaseFormControl>
+                    <BaseInput
+                      type="password"
+                      placeholder="enter your current password here..."
+                      required
+                      {...field}
+                    />
+                  </BaseFormControl>
 
-                <BaseFormMessage />
-              </div>
-            </BaseFormItem>
-          )}
-        />
+                  <BaseFormMessage />
+                </div>
+              </BaseFormItem>
+            )}
+          />
 
-        <BaseFormField
-          control={form.control}
-          name="newPassword"
-          render={({ field }) => (
-            <BaseFormItem className="flex w-full items-center">
-              <BaseFormLabel className="w-2/5 text-menu-link">New Password</BaseFormLabel>
+          <BaseFormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
+                <BaseFormLabel className="@xl:w-2/5 text-menu-link">New Password</BaseFormLabel>
 
-              <div className="flex flex-grow flex-col gap-1">
-                <BaseFormControl>
-                  <BaseInput
-                    type="password"
-                    placeholder="enter a new password here..."
-                    required
-                    minLength={8}
-                    {...field}
-                  />
-                </BaseFormControl>
+                <div className="flex flex-grow flex-col gap-1">
+                  <BaseFormControl>
+                    <BaseInput
+                      type="password"
+                      placeholder="enter a new password here..."
+                      required
+                      minLength={8}
+                      {...field}
+                    />
+                  </BaseFormControl>
 
-                <BaseFormDescription>Must be at least 8 characters.</BaseFormDescription>
+                  <BaseFormDescription>Must be at least 8 characters.</BaseFormDescription>
 
-                <BaseFormMessage />
-              </div>
-            </BaseFormItem>
-          )}
-        />
+                  <BaseFormMessage />
+                </div>
+              </BaseFormItem>
+            )}
+          />
 
-        <BaseFormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <BaseFormItem className="flex w-full items-center">
-              <BaseFormLabel className="w-2/5 text-menu-link">Confirm Password</BaseFormLabel>
+          <BaseFormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
+                <BaseFormLabel className="@xl:w-2/5 text-menu-link">Confirm Password</BaseFormLabel>
 
-              <div className="flex flex-grow flex-col gap-1">
-                <BaseFormControl>
-                  <BaseInput
-                    type="password"
-                    placeholder="confirm your new password here..."
-                    required
-                    minLength={8}
-                    {...field}
-                  />
-                </BaseFormControl>
+                <div className="flex flex-grow flex-col gap-1">
+                  <BaseFormControl>
+                    <BaseInput
+                      type="password"
+                      placeholder="confirm your new password here..."
+                      required
+                      minLength={8}
+                      {...field}
+                    />
+                  </BaseFormControl>
 
-                <BaseFormMessage />
-              </div>
-            </BaseFormItem>
-          )}
-        />
+                  <BaseFormMessage />
+                </div>
+              </BaseFormItem>
+            )}
+          />
+        </div>
       </div>
     </SectionFormCard>
   );

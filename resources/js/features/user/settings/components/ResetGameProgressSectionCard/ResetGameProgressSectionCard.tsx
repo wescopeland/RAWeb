@@ -55,92 +55,96 @@ export const ResetGameProgressSectionCard: FC = () => {
         disabled: !form.formState.isValid,
       }}
     >
-      <div className="flex flex-col gap-2">
-        <BaseFormField
-          control={form.control}
-          name="gameId"
-          render={({ field }) => (
-            <BaseFormItem className="grid w-full grid-cols-5 items-center">
-              <BaseFormLabel className="col-span-2 text-menu-link">Game</BaseFormLabel>
+      <div className="@container">
+        <div className="@xl:gap-2 flex flex-col gap-5">
+          <BaseFormField
+            control={form.control}
+            name="gameId"
+            render={({ field }) => (
+              <BaseFormItem className="@xl:grid @xl:grid-cols-5 @xl:items-center flex w-full flex-col gap-1">
+                <BaseFormLabel className="col-span-2 text-menu-link">Game</BaseFormLabel>
 
-              <div ref={inViewRef} className="col-span-3 flex flex-grow flex-col gap-1">
-                <BaseSelect value={field.value} onValueChange={field.onChange}>
-                  <BaseFormControl>
-                    <BaseSelectTrigger>
-                      <BaseSelectValue placeholder="Select a game" />
-                    </BaseSelectTrigger>
-                  </BaseFormControl>
+                <div ref={inViewRef} className="col-span-3 flex flex-grow flex-col gap-1">
+                  <BaseSelect value={field.value} onValueChange={field.onChange}>
+                    <BaseFormControl>
+                      <BaseSelectTrigger>
+                        <BaseSelectValue placeholder="Select a game" />
+                      </BaseSelectTrigger>
+                    </BaseFormControl>
 
-                  <BaseSelectContent>
-                    {resettableGamesQuery.isFetched ? (
-                      <>
-                        {filteredGames.map((game) => (
-                          <BaseSelectItem
-                            key={`resettable-game-${game.id}`}
-                            value={String(game.id)}
-                          >
-                            {game.title} ({game.consoleName}) ({game.numAwarded} /{' '}
-                            {game.numPossible} won)
-                          </BaseSelectItem>
-                        ))}
-                      </>
-                    ) : (
-                      <BaseSelectItem value="null" disabled>
-                        Loading...
+                    <BaseSelectContent>
+                      {resettableGamesQuery.isFetched ? (
+                        <>
+                          {filteredGames.map((game) => (
+                            <BaseSelectItem
+                              key={`resettable-game-${game.id}`}
+                              value={String(game.id)}
+                            >
+                              {game.title} ({game.consoleName}) ({game.numAwarded} /{' '}
+                              {game.numPossible} won)
+                            </BaseSelectItem>
+                          ))}
+                        </>
+                      ) : (
+                        <BaseSelectItem value="null" disabled>
+                          Loading...
+                        </BaseSelectItem>
+                      )}
+                    </BaseSelectContent>
+                  </BaseSelect>
+                </div>
+              </BaseFormItem>
+            )}
+          />
+
+          <BaseFormField
+            control={form.control}
+            name="achievementId"
+            render={({ field }) => (
+              <BaseFormItem className="@xl:grid @xl:grid-cols-5 @xl:items-center flex w-full flex-col gap-1">
+                <BaseFormLabel className="col-span-2 text-menu-link">Achievement</BaseFormLabel>
+
+                <div ref={inViewRef} className="col-span-3 flex flex-grow flex-col gap-1">
+                  <BaseSelect
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={!selectedGameId}
+                  >
+                    <BaseFormControl>
+                      <BaseSelectTrigger>
+                        <BaseSelectValue placeholder="Select an achievement" />
+                      </BaseSelectTrigger>
+                    </BaseFormControl>
+
+                    <BaseSelectContent>
+                      <BaseSelectItem value="all">
+                        All won achievements for this game
                       </BaseSelectItem>
-                    )}
-                  </BaseSelectContent>
-                </BaseSelect>
-              </div>
-            </BaseFormItem>
-          )}
-        />
 
-        <BaseFormField
-          control={form.control}
-          name="achievementId"
-          render={({ field }) => (
-            <BaseFormItem className="grid w-full grid-cols-5 items-center">
-              <BaseFormLabel className="col-span-2 text-menu-link">Achievement</BaseFormLabel>
-
-              <div ref={inViewRef} className="col-span-3 flex flex-grow flex-col gap-1">
-                <BaseSelect
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={!selectedGameId}
-                >
-                  <BaseFormControl>
-                    <BaseSelectTrigger>
-                      <BaseSelectValue placeholder="Select an achievement" />
-                    </BaseSelectTrigger>
-                  </BaseFormControl>
-
-                  <BaseSelectContent>
-                    <BaseSelectItem value="all">All won achievements for this game</BaseSelectItem>
-
-                    {resettableGameAchievementsQuery.isFetched ? (
-                      <>
-                        {filteredAchievements.map((achievement) => (
-                          <BaseSelectItem
-                            key={`resettable-achievement-${achievement.id}`}
-                            value={String(achievement.id)}
-                          >
-                            {achievement.title} ({achievement.points} points){' '}
-                            {achievement.isHardcore ? '(Hardcore)' : null}
-                          </BaseSelectItem>
-                        ))}
-                      </>
-                    ) : (
-                      <BaseSelectItem value="null" disabled>
-                        Loading...
-                      </BaseSelectItem>
-                    )}
-                  </BaseSelectContent>
-                </BaseSelect>
-              </div>
-            </BaseFormItem>
-          )}
-        />
+                      {resettableGameAchievementsQuery.isFetched ? (
+                        <>
+                          {filteredAchievements.map((achievement) => (
+                            <BaseSelectItem
+                              key={`resettable-achievement-${achievement.id}`}
+                              value={String(achievement.id)}
+                            >
+                              {achievement.title} ({achievement.points} points){' '}
+                              {achievement.isHardcore ? '(Hardcore)' : null}
+                            </BaseSelectItem>
+                          ))}
+                        </>
+                      ) : (
+                        <BaseSelectItem value="null" disabled>
+                          Loading...
+                        </BaseSelectItem>
+                      )}
+                    </BaseSelectContent>
+                  </BaseSelect>
+                </div>
+              </BaseFormItem>
+            )}
+          />
+        </div>
       </div>
     </SectionFormCard>
   );

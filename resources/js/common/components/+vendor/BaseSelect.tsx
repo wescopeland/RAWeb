@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports -- allow imports from @radix-ui */
+
 import * as SelectPrimitive from '@radix-ui/react-select';
 import * as React from 'react';
 import { LuCheck, LuChevronDown, LuChevronUp } from 'react-icons/lu';

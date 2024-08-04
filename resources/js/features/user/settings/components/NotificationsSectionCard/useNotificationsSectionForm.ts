@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { route } from 'ziggy-js';
 import { z } from 'zod';
 
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 import { StringifiedUserPreference } from '@/common/utils/generatedAppConstants';
 
 import { convertObjectToWebsitePrefs } from '../../utils/convertObjectToWebsitePrefs';
@@ -47,7 +47,7 @@ export function useNotificationsSectionForm(websitePrefs: number) {
   });
 
   const onSubmit = (formValues: FormValues) => {
-    toast.promise(mutation.mutateAsync(convertObjectToWebsitePrefs(formValues)), {
+    toastMessage.promise(mutation.mutateAsync(convertObjectToWebsitePrefs(formValues)), {
       loading: 'Updating...',
       success: 'Updated.',
       error: 'Something went wrong.',

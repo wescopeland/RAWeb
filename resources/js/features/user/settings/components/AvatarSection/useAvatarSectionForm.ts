@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { route } from 'ziggy-js';
 
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 
 import { useResetNavbarUserPic } from '../../hooks/useResetNavbarUserPic';
 
@@ -37,7 +37,7 @@ export function useAvatarSectionForm() {
   const { resetNavbarUserPic } = useResetNavbarUserPic();
 
   const onSubmit = (formValues: FormValues) => {
-    toast.promise(mutation.mutateAsync(formValues), {
+    toastMessage.promise(mutation.mutateAsync(formValues), {
       loading: 'Uploading new avatar...',
       success: () => {
         resetNavbarUserPic();

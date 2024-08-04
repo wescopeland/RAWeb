@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports -- allow imports from @radix-ui */
+
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import * as React from 'react';
 

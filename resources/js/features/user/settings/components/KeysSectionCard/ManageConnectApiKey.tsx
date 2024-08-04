@@ -5,7 +5,7 @@ import { LuAlertCircle } from 'react-icons/lu';
 import { route } from 'ziggy-js';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 
 export const ManageConnectApiKey: FC = () => {
   const mutation = useMutation({
@@ -23,7 +23,7 @@ export const ManageConnectApiKey: FC = () => {
       return;
     }
 
-    toast.promise(mutation.mutateAsync(), {
+    toastMessage.promise(mutation.mutateAsync(), {
       loading: 'Resetting...',
       success: 'Your Connect API key has been reset.',
       error: 'Something went wrong.',
@@ -31,24 +31,26 @@ export const ManageConnectApiKey: FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-4">
-      <p className="w-48 text-menu-link">Connect API Key</p>
+    <div className="@container">
+      <div className="@lg:grid @lg:grid-cols-4 flex flex-col">
+        <p className="w-48 text-menu-link">Connect API Key</p>
 
-      <div className="col-span-3 flex flex-col gap-2">
-        <p>
-          Your Connect API key is used by emulators to keep you logged in. Resetting the key will
-          log you out of all emulators.
-        </p>
+        <div className="col-span-3 flex flex-col gap-2">
+          <p>
+            Your Connect API key is used by emulators to keep you logged in. Resetting the key will
+            log you out of all emulators.
+          </p>
 
-        <BaseButton
-          className="flex max-w-fit gap-2"
-          size="sm"
-          variant="destructive"
-          onClick={handleResetApiKeyClick}
-        >
-          <LuAlertCircle className="text-lg" />
-          Reset Connect API Key
-        </BaseButton>
+          <BaseButton
+            className="@lg:max-w-fit flex w-full gap-2"
+            size="sm"
+            variant="destructive"
+            onClick={handleResetApiKeyClick}
+          >
+            <LuAlertCircle className="text-lg" />
+            Reset Connect API Key
+          </BaseButton>
+        </div>
       </div>
     </div>
   );

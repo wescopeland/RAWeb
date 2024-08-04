@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { route } from 'ziggy-js';
 import { z } from 'zod';
 
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 
 import { useResettableGameAchievementsQuery } from './useResettableGameAchievementsQuery';
 import { useResettableGamesQuery } from './useResettableGamesQuery';
@@ -129,7 +129,7 @@ export function useResetGameProgressForm() {
         ? { gameId: formValues.gameId }
         : { achievementId: formValues.achievementId };
 
-    toast.promise(mutation.mutateAsync(payload), {
+    toastMessage.promise(mutation.mutateAsync(payload), {
       loading: 'Resetting progress...',
       success: 'Progress was reset successfully.',
       error: 'Something went wrong.',

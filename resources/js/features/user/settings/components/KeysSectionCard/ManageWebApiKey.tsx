@@ -8,7 +8,7 @@ import { useCopyToClipboard } from 'react-use';
 import { route } from 'ziggy-js';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
-import { toast } from '@/common/components/+vendor/BaseToaster';
+import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 import {
   BaseTooltip,
   BaseTooltipContent,
@@ -39,7 +39,7 @@ export const ManageWebApiKey: FC = () => {
 
   const handleCopyApiKeyClick = () => {
     copyToClipboard(currentWebApiKey);
-    toast.success('Copied your web API key!');
+    toastMessage.success('Copied your web API key!');
   };
 
   const handleResetApiKeyClick = () => {
@@ -47,7 +47,7 @@ export const ManageWebApiKey: FC = () => {
       return;
     }
 
-    toast.promise(mutation.mutateAsync(), {
+    toastMessage.promise(mutation.mutateAsync(), {
       loading: 'Resetting...',
       success: 'Your web API key has been reset.',
       error: 'Something went wrong.',
@@ -55,43 +55,46 @@ export const ManageWebApiKey: FC = () => {
   };
 
   return (
-    <div className="grid w-full grid-cols-4">
-      <p className="w-48 text-menu-link">Web API Key</p>
+    <div className="@container">
+      <div className="@lg:grid @lg:grid-cols-4 flex w-full flex-col">
+        <p className="w-48 text-menu-link">Web API Key</p>
 
-      <div className="col-span-3 flex w-full flex-col gap-2">
-        <BaseTooltip>
-          <BaseTooltipTrigger asChild>
-            <BaseButton className="flex gap-2" onClick={handleCopyApiKeyClick}>
-              <LuCopy />
-              <span className="font-mono">{safeFormatApiKey(currentWebApiKey)}</span>
-            </BaseButton>
-          </BaseTooltipTrigger>
+        <div className="col-span-3 flex w-full flex-col gap-2">
+          <BaseTooltip>
+            <BaseTooltipTrigger asChild>
+              <BaseButton className="flex gap-2" onClick={handleCopyApiKeyClick}>
+                <LuCopy />
+                <span className="font-mono">{safeFormatApiKey(currentWebApiKey)}</span>
+              </BaseButton>
+            </BaseTooltipTrigger>
 
-          <BaseTooltipContent>Copy to clipboard</BaseTooltipContent>
-        </BaseTooltip>
+            <BaseTooltipContent>Copy to clipboard</BaseTooltipContent>
+          </BaseTooltip>
 
-        <div>
-          <p>
-            This is your <span className="italic">personal</span> web API key. Handle it with care.
-          </p>
-          <p>
-            The RetroAchievements API documentation can be found{' '}
-            <a href="https://api-docs.retroachievements.org" target="_blank" rel="noreferrer">
-              here
-            </a>
-            .
-          </p>
+          <div>
+            <p>
+              This is your <span className="italic">personal</span> web API key. Handle it with
+              care.
+            </p>
+            <p>
+              The RetroAchievements API documentation can be found{' '}
+              <a href="https://api-docs.retroachievements.org" target="_blank" rel="noreferrer">
+                here
+              </a>
+              .
+            </p>
+          </div>
+
+          <BaseButton
+            className="@lg:max-w-fit flex w-full gap-2"
+            size="sm"
+            variant="destructive"
+            onClick={handleResetApiKeyClick}
+          >
+            <LuAlertCircle className="text-lg" />
+            Reset Web API Key
+          </BaseButton>
         </div>
-
-        <BaseButton
-          className="flex max-w-fit gap-2"
-          size="sm"
-          variant="destructive"
-          onClick={handleResetApiKeyClick}
-        >
-          <LuAlertCircle className="text-lg" />
-          Reset Web API Key
-        </BaseButton>
       </div>
     </div>
   );

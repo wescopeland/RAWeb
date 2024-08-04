@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports -- allow imports from @radix-ui */
+
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import * as React from 'react';
 import { LuCheck } from 'react-icons/lu';
