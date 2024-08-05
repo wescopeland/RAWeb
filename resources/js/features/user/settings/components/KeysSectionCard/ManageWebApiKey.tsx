@@ -21,7 +21,7 @@ export const ManageWebApiKey: FC = () => {
   const [, copyToClipboard] = useCopyToClipboard();
 
   // Hide the copy button's tooltip on mobile.
-  const isXs = useMedia('(max-width: 640px)');
+  const isXs = useMedia('(max-width: 640px)', true);
 
   const [currentWebApiKey, setCurrentWebApiKey] = useState(user.apiKey);
 

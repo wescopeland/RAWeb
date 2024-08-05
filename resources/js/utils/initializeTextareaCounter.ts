@@ -30,4 +30,6 @@ export function initializeTextareaCounter() {
   }
 }
 
-window.addEventListener('load', initializeTextareaCounter);
+if (typeof window !== 'undefined') {
+  window.addEventListener('load', initializeTextareaCounter);
+}
