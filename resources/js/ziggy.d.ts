@@ -291,7 +291,8 @@ declare module 'ziggy-js' {
     "user.comment.destroyAll": [
         {
             "name": "user",
-            "required": true
+            "required": true,
+            "binding": "User"
         }
     ],
     "message.store": [],
@@ -350,7 +351,7 @@ declare module 'ziggy-js' {
             "required": true
         }
     ],
-    "settings": [],
+    "settings.show": [],
     "settings.profile.update": [],
     "settings.preferences.update": [],
     "settings.password.update": [],

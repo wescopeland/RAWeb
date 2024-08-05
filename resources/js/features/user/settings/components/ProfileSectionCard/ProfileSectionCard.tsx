@@ -2,6 +2,7 @@ import { usePage } from '@inertiajs/react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import type { FC } from 'react';
+import { useId } from 'react';
 import { LuAlertCircle } from 'react-icons/lu';
 import { route } from 'ziggy-js';
 
@@ -36,10 +37,12 @@ export const ProfileSectionCard: FC = () => {
   });
 
   const deleteAllCommentsMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       return axios.delete(route('user.comment.destroyAll', auth?.user.username));
     },
   });
+
+  const visibleRoleFieldId = useId();
 
   const handleDeleteAllCommentsClick = () => {
     if (!confirm('Are you sure you want to permanently delete all comments on your wall?')) {
@@ -60,10 +63,14 @@ export const ProfileSectionCard: FC = () => {
       onSubmit={onSubmit}
       isSubmitting={formMutation.isPending}
     >
-      <div className="@container @xl:gap-5 flex flex-col gap-7">
-        <div className="@xl:flex-row @xl:items-center flex w-full flex-col">
-          <p className="@xl:w-2/5 text-menu-link">Visible Role</p>
-          <p>{user.visibleRole ? `${user.visibleRole}` : <span className="italic">none</span>}</p>
+      <div className="flex flex-col gap-7 @container @xl:gap-5">
+        <div className="flex w-full flex-col @xl:flex-row @xl:items-center">
+          <label id={visibleRoleFieldId} className="text-menu-link @xl:w-2/5">
+            Visible Role
+          </label>
+          <p aria-labelledby={visibleRoleFieldId}>
+            {user.visibleRole ? `${user.visibleRole}` : <span className="italic">none</span>}
+          </p>
         </div>
 
         <BaseFormField
@@ -71,8 +78,8 @@ export const ProfileSectionCard: FC = () => {
           name="motto"
           disabled={!can.updateMotto}
           render={({ field }) => (
-            <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
-              <BaseFormLabel className="@xl:w-2/5 text-menu-link">User Motto</BaseFormLabel>
+            <BaseFormItem className="flex w-full flex-col gap-1 @xl:flex-row @xl:items-center">
+              <BaseFormLabel className="text-menu-link @xl:w-2/5">User Motto</BaseFormLabel>
 
               <div className="flex flex-grow flex-col gap-1">
                 <BaseFormControl>
@@ -98,8 +105,8 @@ export const ProfileSectionCard: FC = () => {
           control={form.control}
           name="userWallActive"
           render={({ field }) => (
-            <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
-              <BaseFormLabel className="@xl:w-2/5 text-menu-link">
+            <BaseFormItem className="flex w-full flex-col gap-1 @xl:flex-row @xl:items-center">
+              <BaseFormLabel className="text-menu-link @xl:w-2/5">
                 Allow Comments on My User Wall
               </BaseFormLabel>
 
@@ -111,7 +118,7 @@ export const ProfileSectionCard: FC = () => {
         />
 
         <BaseButton
-          className="@lg:max-w-fit flex w-full gap-2"
+          className="flex w-full gap-2 @lg:max-w-fit"
           type="button"
           size="sm"
           variant="destructive"

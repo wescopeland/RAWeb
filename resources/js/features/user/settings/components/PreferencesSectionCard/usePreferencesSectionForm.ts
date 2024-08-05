@@ -3,26 +3,19 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { route } from 'ziggy-js';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 import { toastMessage } from '@/common/components/+vendor/BaseToaster';
-import { StringifiedUserPreference } from '@/common/utils/generatedAppConstants';
 
 import { convertObjectToWebsitePrefs } from '../../utils/convertObjectToWebsitePrefs';
 import { convertWebsitePrefsToObject } from '../../utils/convertWebsitePrefsToObject';
+import { websitePrefsFormSchema } from '../../utils/websitePrefsFormSchema';
 
-const settingsFormSchema = z.object({
-  [StringifiedUserPreference.Site_SuppressMatureContentWarning]: z.boolean(),
-  [StringifiedUserPreference.Forum_ShowAbsoluteDates]: z.boolean(),
-  [StringifiedUserPreference.Game_HideMissableIndicators]: z.boolean(),
-  [StringifiedUserPreference.User_OnlyContactFromFollowing]: z.boolean(),
-});
-
-export type FormValues = z.infer<typeof settingsFormSchema>;
+export type FormValues = z.infer<typeof websitePrefsFormSchema>;
 
 export function usePreferencesSectionForm(websitePrefs: number) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(settingsFormSchema),
+    resolver: zodResolver(websitePrefsFormSchema),
     defaultValues: convertWebsitePrefsToObject(websitePrefs),
   });
 

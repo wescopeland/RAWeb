@@ -6,7 +6,7 @@
 
 return [
     'output' => [
-        'path' => 'resources/js/types',
+        'path' => 'resources/js',
     ],
     'except' => [
         'demo.*',

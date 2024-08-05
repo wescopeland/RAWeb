@@ -9,7 +9,7 @@ import { route } from 'ziggy-js';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { toastMessage } from '@/common/components/+vendor/BaseToaster';
-import { SimpleTooltip } from '@/common/components/SimpleTooltip/SimpleTooltip';
+import { SimpleTooltip } from '@/common/components/SimpleTooltip';
 
 import type { SettingsPageProps } from '../../models';
 
@@ -55,7 +55,7 @@ export const ManageWebApiKey: FC = () => {
 
   return (
     <div className="@container">
-      <div className="@lg:grid @lg:grid-cols-4 flex w-full flex-col">
+      <div className="flex w-full flex-col @lg:grid @lg:grid-cols-4">
         <p className="w-48 text-menu-link">Web API Key</p>
 
         <div className="col-span-3 flex w-full flex-col gap-2">
@@ -85,7 +85,7 @@ export const ManageWebApiKey: FC = () => {
           </div>
 
           <BaseButton
-            className="@lg:max-w-fit flex w-full gap-2"
+            className="flex w-full gap-2 @lg:max-w-fit"
             size="sm"
             variant="destructive"
             onClick={handleResetApiKeyClick}

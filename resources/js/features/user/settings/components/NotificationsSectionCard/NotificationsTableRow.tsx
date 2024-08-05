@@ -30,7 +30,9 @@ export const NotificationsTableRow: FC<NotificationsTableRowProps> = ({
 
   return (
     <tr>
-      <th className="w-[40%]">{label}</th>
+      <th scope="row" className="w-[40%]">
+        {label}
+      </th>
 
       <td>
         <div className="flex items-center gap-2">
@@ -45,6 +47,7 @@ export const NotificationsTableRow: FC<NotificationsTableRowProps> = ({
                       id={emailId}
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      data-testid={`email-checkbox-${label.replace(/\s+/g, '-').toLowerCase()}`}
                     />
                   </BaseFormControl>
 
@@ -69,6 +72,7 @@ export const NotificationsTableRow: FC<NotificationsTableRowProps> = ({
                       id={siteId}
                       checked={field.value}
                       onCheckedChange={field.onChange}
+                      data-testid={`site-checkbox-${label.replace(/\s+/g, '-').toLowerCase()}`}
                     />
                   </BaseFormControl>
 

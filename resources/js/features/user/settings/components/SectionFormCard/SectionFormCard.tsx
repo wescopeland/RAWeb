@@ -12,7 +12,7 @@ import {
 } from '@/common/components/+vendor/BaseCard';
 import { BaseFormProvider } from '@/common/components/+vendor/BaseForm';
 
-interface SectionFormCardProps {
+export interface SectionFormCardProps {
   headingLabel: string;
   children: ReactNode;
   formMethods: UseFormReturn<any>;

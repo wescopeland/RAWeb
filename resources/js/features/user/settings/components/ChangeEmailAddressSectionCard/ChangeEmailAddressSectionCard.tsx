@@ -1,5 +1,5 @@
 import { usePage } from '@inertiajs/react';
-import { type FC, useState } from 'react';
+import { type FC, useId, useState } from 'react';
 
 import {
   BaseFormControl,
@@ -23,6 +23,8 @@ export const ChangeEmailAddressSectionCard: FC = () => {
 
   const { form, mutation, onSubmit } = useChangeEmailAddressForm({ setCurrentEmailAddress });
 
+  const visibleEmailFieldId = useId();
+
   return (
     <SectionFormCard
       headingLabel="Change Email"
@@ -32,18 +34,20 @@ export const ChangeEmailAddressSectionCard: FC = () => {
     >
       <div className="@container">
         <div className="flex flex-col gap-5">
-          <div className="@xl:flex-row @xl:items-center flex w-full flex-col">
-            <p className="@xl:w-2/5 text-menu-link">Current Email Address</p>
-            <p>{currentEmailAddress}</p>
+          <div className="flex w-full flex-col @xl:flex-row @xl:items-center">
+            <label id={visibleEmailFieldId} className="text-menu-link @xl:w-2/5">
+              Current Email Address
+            </label>
+            <p aria-labelledby={visibleEmailFieldId}>{currentEmailAddress}</p>
           </div>
 
-          <div className="@xl:gap-2 flex flex-col gap-5">
+          <div className="flex flex-col gap-5 @xl:gap-2">
             <BaseFormField
               control={form.control}
               name="newEmail"
               render={({ field }) => (
-                <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
-                  <BaseFormLabel className="@xl:w-2/5 text-menu-link">
+                <BaseFormItem className="flex w-full flex-col gap-1 @xl:flex-row @xl:items-center">
+                  <BaseFormLabel className="text-menu-link @xl:w-2/5">
                     New Email Address
                   </BaseFormLabel>
 
@@ -67,8 +71,8 @@ export const ChangeEmailAddressSectionCard: FC = () => {
               control={form.control}
               name="confirmEmail"
               render={({ field }) => (
-                <BaseFormItem className="@xl:flex-row @xl:items-center flex w-full flex-col gap-1">
-                  <BaseFormLabel className="@xl:w-2/5 text-menu-link">
+                <BaseFormItem className="flex w-full flex-col gap-1 @xl:flex-row @xl:items-center">
+                  <BaseFormLabel className="text-menu-link @xl:w-2/5">
                     Confirm New Email Address
                   </BaseFormLabel>
 

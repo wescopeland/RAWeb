@@ -56,7 +56,7 @@ export const NotificationsSectionCard: FC = () => {
       isSubmitting={mutation.isPending}
     >
       <div className="@container">
-        <div className="@xl:hidden flex flex-col gap-5">
+        <div className="flex flex-col gap-5 @xl:hidden">
           {notificationSettings.map((setting) => (
             <NotificationsSmallRow
               key={setting.label}
@@ -67,7 +67,15 @@ export const NotificationsSectionCard: FC = () => {
           ))}
         </div>
 
-        <table className="@xl:table hidden">
+        <table className="hidden @xl:table">
+          <thead className="sr-only">
+            <tr>
+              <th scope="col">Notification type</th>
+              <th scope="col">Email notifications</th>
+              <th scope="col">Site notifications</th>
+            </tr>
+          </thead>
+
           <tbody className="[&>tr>td]:!px-0 [&>tr>td]:py-2 [&>tr>th]:!px-0 [&>tr]:!bg-embed">
             {notificationSettings.map((setting) => (
               <NotificationsTableRow
