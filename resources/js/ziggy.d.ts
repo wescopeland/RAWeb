@@ -248,6 +248,7 @@ declare module 'ziggy-js' {
     "claims.expiring": [],
     "claims.completed": [],
     "claims.active": [],
+    "pulse": [],
     "game.hashes.index": [
         {
             "name": "game",
@@ -292,6 +293,13 @@ declare module 'ziggy-js' {
             "binding": "ID"
         }
     ],
+    "api.user-game-list.index": [],
+    "api.user-game-list.destroy": [
+        {
+            "name": "game",
+            "required": true
+        }
+    ],
     "forum.recent-posts": [],
     "user.posts.index": [
         {
@@ -307,6 +315,7 @@ declare module 'ziggy-js' {
             "required": true
         }
     ],
+    "game-list.play.index": [],
     "message.store": [],
     "message-thread.destroy": [
         {

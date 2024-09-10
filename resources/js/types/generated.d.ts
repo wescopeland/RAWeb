@@ -2,6 +2,15 @@ declare namespace App.Community.Data {
   export type RecentPostsPageProps<TItems = App.Data.ForumTopic> = {
     paginatedTopics: App.Data.PaginatedData<TItems>;
   };
+  export type UserGameListEntry = {
+    id: number;
+    game?: App.Platform.Data.Game;
+    playerGame?: App.Platform.Data.PlayerGame | null;
+  };
+  export type UserGameListPageProps<TItems = App.Community.Data.UserGameListEntry> = {
+    paginatedGameListEntries: App.Data.PaginatedData<TItems>;
+    filterableSystemOptions: Array<App.Platform.Data.System>;
+  };
   export type UserRecentPostsPageProps<TItems = App.Data.ForumTopic> = {
     targetUser: App.Data.User;
     paginatedTopics: App.Data.PaginatedData<TItems>;
@@ -121,8 +130,16 @@ declare namespace App.Platform.Data {
   export type Game = {
     id: number;
     title: string;
+    achievementsPublished?: number;
     badgeUrl?: string;
     forumTopicId?: number;
+    lastUpdated?: string;
+    numLeaderboardsVisible?: number;
+    numUnresolvedTickets?: number;
+    pointsTotal?: number;
+    pointsWeighted?: number;
+    releasedAt?: string;
+    releasedAtGranularity?: App.Platform.Enums.ReleasedAtGranularity;
     system?: App.Platform.Data.System;
   };
   export type GameHash = {
@@ -140,6 +157,18 @@ declare namespace App.Platform.Data {
     game: App.Platform.Data.Game;
     hashes: Array<App.Platform.Data.GameHash>;
     can: App.Data.UserPermissions;
+  };
+  export type PlayerGame = {
+    id: number;
+    achievementsUnlocked: number;
+    achievementsUnlockedHardcore: number | null;
+    achievementsUnlockedSoftcore: number | null;
+    beatenAt: string | null;
+    beatenHardcoreAt: string | null;
+    completedAt: string | null;
+    completedHardcoreAt: string | null;
+    points: number | null;
+    pointsHardcore: number | null;
   };
   export type PlayerResettableGameAchievement = {
     id: number;
@@ -159,8 +188,10 @@ declare namespace App.Platform.Data {
     name: string;
     nameFull?: string;
     nameShort?: string;
+    iconUrl?: string;
   };
 }
 declare namespace App.Platform.Enums {
   export type GameSetType = 'hub' | 'similar-games';
+  export type ReleasedAtGranularity = 'day' | 'month' | 'year';
 }

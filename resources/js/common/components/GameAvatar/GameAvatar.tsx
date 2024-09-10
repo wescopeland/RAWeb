@@ -3,6 +3,8 @@ import type { FC } from 'react';
 import { useCardTooltip } from '@/common/hooks/useCardTooltip';
 import type { AvatarSize } from '@/common/models';
 
+import { GameTitle } from '../GameTitle';
+
 interface GameAvatarProps {
   id: number;
 
@@ -38,12 +40,12 @@ export const GameAvatar: FC<GameAvatarProps> = ({
           width={size}
           height={size}
           src={badgeUrl}
-          title={title ?? 'Game'}
+          alt={title ?? 'Game'}
           className="rounded-sm"
         />
       ) : null}
 
-      {title && showTitle !== false ? <span>{title}</span> : null}
+      {title && showTitle !== false ? <GameTitle title={title} /> : null}
     </a>
   );
 };

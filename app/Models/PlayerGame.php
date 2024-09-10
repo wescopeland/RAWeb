@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Models\User;
 use App\Support\Database\Eloquent\BasePivot;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -82,5 +83,14 @@ class PlayerGame extends BasePivot
     public function scopeForGame(Builder $query, Game $game): Builder
     {
         return $query->where('game_id', $game->id);
+    }
+
+    /**
+     * @param Builder<PlayerGame> $query
+     * @return Builder<PlayerGame>
+     */
+    public function scopeForUser(Builder $query, User $user): Builder
+    {
+        return $query->where('user_id', $user->id);
     }
 }
