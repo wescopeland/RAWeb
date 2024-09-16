@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use App\Community\Actions\GetUserGameListAction;
-use App\Community\Data\UserGameListEntryData;
 use App\Community\Data\UserGameListPagePropsData;
 use App\Community\Enums\UserGameListType;
-use App\Data\PaginatedData;
 use App\Http\Controller;
 use App\Models\UserGameListEntry;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Platform\Actions\BuildGameListAction;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use App\Platform\Data\SystemData;
+use App\Platform\Enums\GameListType;
 
 class UserGameListController extends Controller
 {
@@ -25,7 +23,6 @@ class UserGameListController extends Controller
         // TODO authorize
         // TODO redirect
         // TODO want to dev games, separate controller?
-        // TODO page meta
         // TODO request object validation
         // TODO prefetching on pagination hover too often
         // TODO remember user's previous state somehow
@@ -45,7 +42,8 @@ class UserGameListController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $paginatedData = (new GetUserGameListAction())->execute(
+        $paginatedData = (new BuildGameListAction())->execute(
+            GameListType::UserPlay,
             user: $user,
             page: $request->input('page', 1),
         );

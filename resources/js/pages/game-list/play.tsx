@@ -7,8 +7,8 @@ import { WantToPlayGamesRoot } from '@/features/game-list/components/WantToPlayG
 const WantToPlayGames: AppPage = () => {
   return (
     <>
-      <Head title="TODO">
-        <meta name="description" content="TODO" />
+      <Head title="Want to Play Games">
+        <meta name="description" content="A list of your Want to Play Games" />
       </Head>
 
       <div className="container">

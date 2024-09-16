@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Models\User;
+use App\Community\Enums\AwardType;
 use App\Support\Database\Eloquent\BasePivot;
+use Database\Factories\PlayerGameFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,6 +17,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PlayerGame extends BasePivot
 {
     use SoftDeletes;
+    /** @use HasFactory<PlayerGameFactory> */
+    use HasFactory;
 
     protected $table = 'player_games';
 
@@ -36,6 +41,11 @@ class PlayerGame extends BasePivot
         'metrics_updated_at' => 'datetime',
     ];
 
+    protected static function newFactory(): PlayerGameFactory
+    {
+        return PlayerGameFactory::new();
+    }
+
     // == accessors
 
     // == mutators
@@ -48,6 +58,15 @@ class PlayerGame extends BasePivot
     public function achievements(): HasMany
     {
         return $this->hasMany(Achievement::class, 'GameID', 'game_id');
+    }
+
+    /**
+     * @return HasMany<PlayerBadge>
+     */
+    public function badges(): HasMany
+    {
+        return $this->hasMany(PlayerBadge::class, 'AwardData', 'game_id')
+            ->whereIn('AwardType', [AwardType::GameBeaten, AwardType::Mastery]);
     }
 
     /**

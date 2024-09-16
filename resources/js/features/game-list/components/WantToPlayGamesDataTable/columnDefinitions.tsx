@@ -135,15 +135,15 @@ export const columns: ColumnDef<App.Community.Data.UserGameListEntry>[] = [
     },
   },
   {
-    id: 'numLeaderboardsVisible',
+    id: 'numVisibleLeaderboards',
     accessorKey: 'game',
     meta: { label: 'Leaderboards', align: 'right' },
     header: ({ column }) => <DataTableColumnHeader column={column} sortLabelVariant="more-less" />,
     cell: ({ row }) => {
-      const numLeaderboardsVisible = row.original.game?.numLeaderboardsVisible ?? 0;
+      const numVisibleLeaderboards = row.original.game?.numVisibleLeaderboards ?? 0;
 
       return (
-        <p className={numLeaderboardsVisible === 0 ? 'text-muted' : ''}>{numLeaderboardsVisible}</p>
+        <p className={numVisibleLeaderboards === 0 ? 'text-muted' : ''}>{numVisibleLeaderboards}</p>
       );
     },
   },

@@ -10,6 +10,7 @@ use App\Community\Contracts\HasComments;
 use App\Platform\Enums\AchievementFlag;
 use App\Support\Database\Eloquent\BaseModel;
 use Database\Factories\GameFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,6 +21,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 use Spatie\Activitylog\LogOptions;
+use App\Models\PlayerGame;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
@@ -86,6 +88,7 @@ class Game extends BaseModel implements HasComments, HasMedia
     protected $casts = [
         'released_at' => 'datetime',
         'released_at_granularity' => ReleasedAtGranularity::class,
+        'last_achievement_update' => 'datetime',
     ];
 
     protected $visible = [
@@ -248,9 +251,7 @@ class Game extends BaseModel implements HasComments, HasMedia
 
     public function getLastUpdatedAttribute(): Carbon
     {
-        $lastAchievementUpdate = $this->lastAchievementUpdate?->DateModified;
-
-        return $lastAchievementUpdate ? Carbon::parse($lastAchievementUpdate) : $this->Updated;
+        return $this->last_achievement_update ?? $this->Updated;
     }
 
     public function getPermalinkAttribute(): string
@@ -432,6 +433,14 @@ class Game extends BaseModel implements HasComments, HasMedia
     }
 
     /**
+     * @return HasMany<UserGameListEntry>
+     */
+    public function gameListEntries(): HasMany
+    {
+        return $this->hasMany(UserGameListEntry::class, 'GameID', 'ID');
+    }
+
+    /**
      * @return HasMany<GameHash>
      */
     public function hashes(): HasMany
@@ -464,4 +473,18 @@ class Game extends BaseModel implements HasComments, HasMedia
     }
 
     // == scopes
+
+    /**
+     * @param Builder<Game> $query
+     * @return Builder<Game>
+     */
+    public function scopeWithLastAchievementUpdate(Builder $query): Builder
+    {
+        return $query->addSelect([
+            'last_achievement_update' => Achievement::select('DateModified')
+                ->whereColumn('Achievements.GameID', 'GameData.ID')
+                ->orderBy('DateModified', 'desc')
+                ->limit(1),
+        ]);
+    }
 }

@@ -45,7 +45,7 @@ export const WantToPlayGamesDataTable = () => {
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     lastUpdated: true, // set to false
-    numLeaderboardsVisible: true, // set to false
+    numVisibleLeaderboards: true, // set to false
   });
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

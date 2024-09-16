@@ -142,17 +142,17 @@ declare namespace App.Platform.Data {
   export type Game = {
     id: number;
     title: string;
-    achievementsPublished?: number;
     badgeUrl?: string;
     forumTopicId?: number;
-    lastUpdated?: string;
-    numLeaderboardsVisible?: number;
-    numUnresolvedTickets?: number;
+    system?: App.Platform.Data.System;
+    achievementsPublished?: number;
     pointsTotal?: number;
     pointsWeighted?: number;
-    releasedAt?: string;
-    releasedAtGranularity?: App.Platform.Enums.ReleasedAtGranularity;
-    system?: App.Platform.Data.System;
+    releasedAt?: string | null;
+    releasedAtGranularity?: string | null;
+    lastUpdated?: string;
+    numVisibleLeaderboards?: number;
+    numUnresolvedTickets?: number;
   };
   export type GameHash = {
     id: number;
@@ -170,9 +170,19 @@ declare namespace App.Platform.Data {
     hashes: Array<App.Platform.Data.GameHash>;
     can: App.Data.UserPermissions;
   };
+  export type GameListEntry = {
+    game: App.Platform.Data.Game;
+    playerGame: App.Platform.Data.PlayerGame | null;
+    isInBacklog: boolean | null;
+  };
+  export type PlayerBadge = {
+    awardType: number;
+    awardData: number;
+    awardDataExtra: number;
+    awardDate: string;
+  };
   export type PlayerGame = {
-    id: number;
-    achievementsUnlocked: number;
+    achievementsUnlocked: number | null;
     achievementsUnlockedHardcore: number | null;
     achievementsUnlockedSoftcore: number | null;
     beatenAt: string | null;
@@ -181,6 +191,7 @@ declare namespace App.Platform.Data {
     completedHardcoreAt: string | null;
     points: number | null;
     pointsHardcore: number | null;
+    highestAward?: App.Platform.Data.PlayerBadge | null;
   };
   export type PlayerResettableGameAchievement = {
     id: number;

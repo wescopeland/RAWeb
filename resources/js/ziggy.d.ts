@@ -16,6 +16,7 @@ declare module 'ziggy-js' {
         }
     ],
     "demo": [],
+    "playground.index": [],
     "home": [],
     "tickets.index": [],
     "ranking.beaten-games": [],

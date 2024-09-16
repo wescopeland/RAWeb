@@ -2,9 +2,10 @@
 
 namespace App\Community\Controllers\Api;
 
-use App\Community\Actions\GetUserGameListAction;
 use App\Http\Controller;
 use App\Models\UserGameListEntry;
+use App\Platform\Actions\BuildGameListAction;
+use App\Platform\Enums\GameListType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,8 @@ class UserGameListApiController extends Controller
             $sortParam = ltrim($sortParam, '-'); // "-title" -> "title"
         }
 
-        $paginatedData = (new GetUserGameListAction())->execute(
+        $paginatedData = (new BuildGameListAction())->execute(
+            GameListType::UserPlay,
             user: $request->user(),
             page: $request->input('page', 1),
             filters: $this->extractFiltersFromRequest($request),
