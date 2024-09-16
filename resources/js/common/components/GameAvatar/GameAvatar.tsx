@@ -1,27 +1,18 @@
 import type { FC } from 'react';
 
 import { useCardTooltip } from '@/common/hooks/useCardTooltip';
-import type { AvatarSize } from '@/common/models';
+import type { BaseAvatarProps } from '@/common/models';
 
 import { GameTitle } from '../GameTitle';
 
-interface GameAvatarProps {
-  id: number;
-
-  badgeUrl?: string;
-  hasTooltip?: boolean;
-  showBadge?: boolean;
-  showTitle?: boolean;
-  size?: AvatarSize;
-  title?: string;
-}
+type GameAvatarProps = BaseAvatarProps & App.Platform.Data.Game;
 
 export const GameAvatar: FC<GameAvatarProps> = ({
   id,
   badgeUrl,
-  showBadge,
-  showTitle,
   title,
+  showImage = true,
+  showLabel = true,
   size = 32,
   hasTooltip = true,
 }) => {
@@ -33,7 +24,7 @@ export const GameAvatar: FC<GameAvatarProps> = ({
       className="flex items-center gap-2"
       {...(hasTooltip ? cardTooltipProps : undefined)}
     >
-      {showBadge !== false ? (
+      {showImage ? (
         <img
           loading="lazy"
           decoding="async"
@@ -45,7 +36,7 @@ export const GameAvatar: FC<GameAvatarProps> = ({
         />
       ) : null}
 
-      {title && showTitle !== false ? <GameTitle title={title} /> : null}
+      {title && showLabel ? <GameTitle title={title} /> : null}
     </a>
   );
 };

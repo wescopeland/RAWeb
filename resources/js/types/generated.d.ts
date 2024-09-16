@@ -20,6 +20,9 @@ declare namespace App.Community.Data {
     can: App.Data.UserPermissions;
   };
 }
+declare namespace App.Community.Enums {
+  export type TicketType = 1 | 2;
+}
 declare namespace App.Data {
   export type ForumTopicComment = {
     id: number;
@@ -127,6 +130,15 @@ declare namespace App.Models {
     | 'developer-veteran';
 }
 declare namespace App.Platform.Data {
+  export type Achievement = {
+    id: number;
+    title: string;
+    badgeUnlockedUrl?: string;
+    badgeLockedUrl?: string;
+    game?: App.Platform.Data.Game;
+    unlockedAt?: string;
+    unlockedHardcoreAt?: string;
+  };
   export type Game = {
     id: number;
     title: string;
@@ -183,6 +195,12 @@ declare namespace App.Platform.Data {
     numAwarded: number;
     numPossible: number;
   };
+  export type ReportAchievementIssuePageProps = {
+    achievement: App.Platform.Data.Achievement;
+    hasSession: boolean;
+    ticketType: number;
+    extra: string | null;
+  };
   export type System = {
     id: number;
     name: string;
@@ -192,6 +210,14 @@ declare namespace App.Platform.Data {
   };
 }
 declare namespace App.Platform.Enums {
+  export type AchievementSetType =
+    | 'core'
+    | 'bonus'
+    | 'specialty'
+    | 'exclusive'
+    | 'will_be_bonus'
+    | 'will_be_specialty'
+    | 'will_be_exclusive';
   export type GameSetType = 'hub' | 'similar-games';
   export type ReleasedAtGranularity = 'day' | 'month' | 'year';
 }
