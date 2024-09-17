@@ -20,24 +20,16 @@ class UserGameListController extends Controller
 {
     public function index(Request $request): InertiaResponse
     {
-        // TODO authorize
-        // TODO redirect
-        // TODO want to dev games, separate controller?
         // TODO request object validation
-        // TODO prefetching on pagination hover too often
-        // TODO remember user's previous state somehow
         // TODO tests
-        // TODO invalidate cache on sort, remove, etc
-        // TODO N+1 problem for leaderboard counts
         // TODO remember the user's state settings somehow, Laravel session + redis ?
         // TODO reset table to default button
         // TODO test light mode
-        // TODO doing the same sort over and over causes the rows to change order
         // TODO filter by tags
-        // TODO rename "Want to Play Games" to "Backlog"
         // TODO long loading
-        // TODO two fetches on every sort
-        // TODO white space before game title labels when all columns enabled
+        // TODO column pinning on mobile
+        // TODO genericize the table
+        // TODO don't duplicate state in the WantToPlayGamesRoot SSR hydration
 
         /** @var User $user */
         $user = $request->user();

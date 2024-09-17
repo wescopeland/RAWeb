@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import type {
   ColumnFiltersState,
   PaginationState,
@@ -7,7 +7,6 @@ import type {
 } from '@tanstack/react-table';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import axios from 'axios';
-import { useAtom } from 'jotai';
 import { useState } from 'react';
 
 import {
@@ -24,7 +23,6 @@ import { cn } from '@/utils/cn';
 import { buildFilterParams } from './buildFilterParams';
 import { buildSortParam } from './buildSortParam';
 import { columns } from './columnDefinitions';
-import { hasInteractedAtom } from './data-table.state';
 import { DataTableFacetedFilter } from './DataTableFacetedFilter';
 import { DataTablePagination } from './DataTablePagination';
 import { DataTableViewOptions } from './DataTableViewOptions';
@@ -33,9 +31,6 @@ export const WantToPlayGamesDataTable = () => {
   const { paginatedGameListEntries, filterableSystemOptions } =
     usePageProps<App.Community.Data.UserGameListPageProps>();
 
-  console.log(paginatedGameListEntries);
-
-  // TODO messing up when auto reset page index is enabled. maybe move to jotai?
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: paginatedGameListEntries.currentPage - 1,
     pageSize: paginatedGameListEntries.perPage,
@@ -50,13 +45,9 @@ export const WantToPlayGamesDataTable = () => {
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const [hasInteracted, setHasInteracted] = useAtom(hasInteractedAtom);
-
-  const queryClient = useQueryClient();
-
-  const dataQuery = useQuery({
+  const dataQuery = useQuery<App.Data.PaginatedData<App.Community.Data.UserGameListEntry>>({
     queryKey: ['data', pagination, sorting, columnFilters],
-    // staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 1 * 60 * 1000, // 1 minute
     queryFn: async () => {
       const response = await axios.get<
         App.Data.PaginatedData<App.Community.Data.UserGameListEntry>
@@ -70,41 +61,29 @@ export const WantToPlayGamesDataTable = () => {
 
       return response.data;
     },
-    enabled: hasInteracted,
+    // initialData: paginatedGameListEntries,
     placeholderData: keepPreviousData,
   });
 
   const table = useReactTable({
     columns,
-    data: dataQuery.data?.items ?? paginatedGameListEntries.items ?? [],
+    data: dataQuery.data?.items ?? [],
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
-    // autoResetPageIndex: true,
-    rowCount: dataQuery.data?.total ?? paginatedGameListEntries.total,
-    pageCount: dataQuery.data?.lastPage ?? paginatedGameListEntries.lastPage,
+    rowCount: dataQuery.data?.total,
+    pageCount: dataQuery.data?.lastPage,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnFiltersChange: (updateOrValue) => {
-      if (!hasInteracted) {
-        setHasInteracted(true);
-      }
+      table.setPageIndex(0);
 
       setColumnFilters(updateOrValue);
     },
     onPaginationChange: (newPaginationValue) => {
-      if (!hasInteracted) {
-        setHasInteracted(true);
-      }
-
       setPagination(newPaginationValue);
     },
     onSortingChange: (newSortingValue) => {
-      if (!hasInteracted) {
-        setHasInteracted(true);
-      }
-
-      // Don't show the user stale data from the client-side cache.
-      queryClient.invalidateQueries({ queryKey: ['data'] });
+      table.setPageIndex(0);
 
       setSorting(newSortingValue);
     },

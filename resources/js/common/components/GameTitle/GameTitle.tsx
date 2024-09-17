@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, Fragment } from 'react';
 
 interface GameTitleProps {
   title: string;
@@ -16,17 +16,23 @@ export const GameTitle: FC<GameTitleProps> = ({ title, showTags = true }) => {
       {showTags ? (
         <>
           {nonSubsetTags.map((tag) => (
-            <span key={tag} className="tag ml-1.5">
-              <span>{tag}</span>
-            </span>
+            <Fragment key={`${strippedTitle}-${tag}`}>
+              {' '}
+              <span className="tag">
+                <span>{tag}</span>
+              </span>
+            </Fragment>
           ))}
 
           {subsetKind ? (
-            <span className="tag ml-1.5">
-              <span className="tag-label">Subset</span>
-              <span className="tag-arrow" />
-              <span>{subsetKind}</span>
-            </span>
+            <>
+              {' '}
+              <span className="tag">
+                <span className="tag-label">Subset</span>
+                <span className="tag-arrow" />
+                <span>{subsetKind}</span>
+              </span>
+            </>
           ) : null}
         </>
       ) : null}

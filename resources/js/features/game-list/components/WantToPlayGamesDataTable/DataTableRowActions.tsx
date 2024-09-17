@@ -1,6 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
 import type { Row } from '@tanstack/react-table';
-import { useAtom } from 'jotai';
 import { RxDotsHorizontal } from 'react-icons/rx';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
@@ -13,8 +12,6 @@ import {
 import { toastMessage } from '@/common/components/+vendor/BaseToaster';
 import { useRemoveFromBacklogMutation } from '@/common/hooks/useRemoveFromBacklogMutation';
 
-import { hasInteractedAtom } from './data-table.state';
-
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
@@ -24,11 +21,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
 
   const removeFromBacklogMutation = useRemoveFromBacklogMutation();
 
-  const [, setHasInteracted] = useAtom(hasInteractedAtom);
-
   const handleRemoveFromBacklogClick = () => {
-    setHasInteracted(true);
-
     const rowData = row.original as { game?: App.Platform.Data.Game };
 
     const gameId = rowData?.game?.id;

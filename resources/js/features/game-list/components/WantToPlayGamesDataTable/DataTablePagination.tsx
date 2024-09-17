@@ -13,14 +13,19 @@ interface DataTablePaginationProps<TData> {
 }
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>): ReactNode {
-  const { pagination, sorting } = table.getState();
+  const { columnFilters, pagination, sorting } = table.getState();
 
   const queryClient = useQueryClient();
 
   const prefetchPage = (newPageIndex: number) => {
     queryClient.prefetchQuery({
-      queryKey: ['data', { pageIndex: newPageIndex, pageSize: pagination.pageSize }, sorting],
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      queryKey: [
+        'data',
+        { pageIndex: newPageIndex, pageSize: pagination.pageSize },
+        sorting,
+        columnFilters,
+      ],
+      staleTime: 1 * 60 * 1000, // 1 minute
       queryFn: async () => {
         const response = await axios.get<
           App.Data.PaginatedData<App.Community.Data.UserGameListEntry>

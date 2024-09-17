@@ -1,5 +1,6 @@
 import type { Column } from '@tanstack/react-table';
 import type { HTMLAttributes, ReactNode } from 'react';
+import type { IconType } from 'react-icons/lib';
 import { RxArrowDown, RxArrowUp, RxCaretSort, RxEyeNone } from 'react-icons/rx';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
@@ -12,13 +13,20 @@ import {
 } from '@/common/components/+vendor/BaseDropdownMenu';
 import { cn } from '@/utils/cn';
 
+type SortLabelVariant = 'asc-desc' | 'more-less';
+
 interface DataTableColumnHeaderProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
 
   ascLabel?: string;
   descLabel?: string;
-  sortLabelVariant?: 'asc-desc' | 'more-less';
+  sortLabelVariant?: SortLabelVariant;
 }
+
+const iconMap: Record<SortLabelVariant, { AscIcon: IconType; DescIcon: IconType }> = {
+  'asc-desc': { AscIcon: RxArrowUp, DescIcon: RxArrowDown },
+  'more-less': { AscIcon: RxArrowDown, DescIcon: RxArrowUp },
+};
 
 export function DataTableColumnHeader<TData, TValue>({
   className,
@@ -28,6 +36,8 @@ export function DataTableColumnHeader<TData, TValue>({
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{column.columnDef.meta?.label}</div>;
   }
+
+  const { AscIcon, DescIcon } = iconMap[sortLabelVariant];
 
   return (
     <div
@@ -48,9 +58,9 @@ export function DataTableColumnHeader<TData, TValue>({
             <span>{column.columnDef.meta?.label}</span>
 
             {column.getIsSorted() === 'desc' ? (
-              <RxArrowDown className="ml-2 h-4 w-4" />
+              <DescIcon className="ml-2 h-4 w-4" />
             ) : column.getIsSorted() === 'asc' ? (
-              <RxArrowUp className="ml-2 h-4 w-4" />
+              <AscIcon className="ml-2 h-4 w-4" />
             ) : (
               <RxCaretSort className="ml-2 h-4 w-4" />
             )}
@@ -61,12 +71,12 @@ export function DataTableColumnHeader<TData, TValue>({
           {sortLabelVariant === 'asc-desc' ? (
             <>
               <BaseDropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                <RxArrowUp className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
+                <AscIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
                 Asc
               </BaseDropdownMenuItem>
 
               <BaseDropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                <RxArrowDown className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
+                <DescIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
                 Desc
               </BaseDropdownMenuItem>
             </>
@@ -75,12 +85,12 @@ export function DataTableColumnHeader<TData, TValue>({
           {sortLabelVariant === 'more-less' ? (
             <>
               <BaseDropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                <RxArrowUp className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
+                <DescIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
                 More
               </BaseDropdownMenuItem>
 
               <BaseDropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                <RxArrowDown className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
+                <AscIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
                 Less
               </BaseDropdownMenuItem>
             </>
