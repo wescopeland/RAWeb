@@ -6,30 +6,35 @@ namespace App\Community\Controllers;
 
 use App\Community\Data\UserGameListPagePropsData;
 use App\Community\Enums\UserGameListType;
+use App\Data\UserPermissionsData;
 use App\Http\Controller;
-use App\Models\UserGameListEntry;
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\UserGameListEntry;
 use App\Platform\Actions\BuildGameListAction;
-use Inertia\Inertia;
-use Inertia\Response as InertiaResponse;
 use App\Platform\Data\SystemData;
 use App\Platform\Enums\GameListType;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 class UserGameListController extends Controller
 {
     public function index(Request $request): InertiaResponse
     {
-        // TODO request object validation
         // TODO tests
-        // TODO remember the user's state settings somehow, Laravel session + redis ?
-        // TODO reset table to default button
         // TODO test light mode
-        // TODO filter by tags
+        // TODO filter by tags (use same types as beaten game leaderboard)
         // TODO long loading
         // TODO column pinning on mobile
         // TODO genericize the table
         // TODO don't duplicate state in the WantToPlayGamesRoot SSR hydration
+        // TODO show user progress
+        // TODO filter by user progress
+        // TODO gate tickets column behind develop ability
+
+        // NEXT STEPS:
+        // TODO allow for url params
+        // TODO remember the user's state settings somehow, Laravel session + redis ?
 
         /** @var User $user */
         $user = $request->user();
@@ -37,7 +42,7 @@ class UserGameListController extends Controller
         $paginatedData = (new BuildGameListAction())->execute(
             GameListType::UserPlay,
             user: $user,
-            page: $request->input('page', 1),
+            page: 1,
         );
 
         // Only allow filtering by systems the user has games on their list for.
@@ -46,13 +51,16 @@ class UserGameListController extends Controller
             ->get()
             ->pluck('game.system')
             ->unique('id')
-            ->map(fn($system) => SystemData::fromSystem($system))
+            ->map(fn ($system) => SystemData::fromSystem($system))
             ->values()
             ->all();
-                        
+
+        $can = UserPermissionsData::fromUser($user)->include('develop');
+
         $props = new UserGameListPagePropsData(
             paginatedGameListEntries: $paginatedData,
             filterableSystemOptions: $filterableSystemOptions,
+            can: $can,
         );
 
         return Inertia::render('game-list/play', $props);

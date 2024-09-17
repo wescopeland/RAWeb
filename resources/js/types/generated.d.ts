@@ -10,6 +10,7 @@ declare namespace App.Community.Data {
   export type UserGameListPageProps<TItems = App.Community.Data.UserGameListEntry> = {
     paginatedGameListEntries: App.Data.PaginatedData<TItems>;
     filterableSystemOptions: Array<App.Platform.Data.System>;
+    can: App.Data.UserPermissions;
   };
   export type UserRecentPostsPageProps<TItems = App.Data.ForumTopic> = {
     targetUser: App.Data.User;
@@ -76,6 +77,7 @@ declare namespace App.Data {
     websitePrefs?: number | null;
   };
   export type UserPermissions = {
+    develop?: boolean;
     manageGameHashes?: boolean;
     manipulateApiKeys?: boolean;
     updateAvatar?: boolean;

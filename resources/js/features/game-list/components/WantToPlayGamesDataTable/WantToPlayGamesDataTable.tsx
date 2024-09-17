@@ -7,7 +7,7 @@ import type {
 } from '@tanstack/react-table';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import axios from 'axios';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import {
   BaseTable,
@@ -20,15 +20,14 @@ import {
 import { usePageProps } from '@/common/hooks/usePageProps';
 import { cn } from '@/utils/cn';
 
+import { buildColumnDefinitions } from './buildColumnDefinitions';
 import { buildFilterParams } from './buildFilterParams';
 import { buildSortParam } from './buildSortParam';
-import { columns } from './columnDefinitions';
-import { DataTableFacetedFilter } from './DataTableFacetedFilter';
 import { DataTablePagination } from './DataTablePagination';
-import { DataTableViewOptions } from './DataTableViewOptions';
+import { WantToPlayGamesDataTableToolbar } from './WantToPlayGamesDataTableToolbar';
 
 export const WantToPlayGamesDataTable = () => {
-  const { paginatedGameListEntries, filterableSystemOptions } =
+  const { paginatedGameListEntries, can } =
     usePageProps<App.Community.Data.UserGameListPageProps>();
 
   const [pagination, setPagination] = useState<PaginationState>({
@@ -39,8 +38,8 @@ export const WantToPlayGamesDataTable = () => {
   const [sorting, setSorting] = useState<SortingState>([{ id: 'title', desc: false }]);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    lastUpdated: true, // set to false
-    numVisibleLeaderboards: true, // set to false
+    lastUpdated: false,
+    numVisibleLeaderboards: false,
   });
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -61,12 +60,14 @@ export const WantToPlayGamesDataTable = () => {
 
       return response.data;
     },
-    // initialData: paginatedGameListEntries,
     placeholderData: keepPreviousData,
   });
 
   const table = useReactTable({
-    columns,
+    columns: useMemo(
+      () => buildColumnDefinitions({ canSeeOpenTicketsColumn: can.develop ?? false }),
+      [can.develop],
+    ),
     data: dataQuery.data?.items ?? [],
     manualPagination: true,
     manualSorting: true,
@@ -93,19 +94,7 @@ export const WantToPlayGamesDataTable = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex w-full justify-between">
-        <div>
-          <DataTableFacetedFilter
-            column={table.getColumn('system')}
-            title="System"
-            options={filterableSystemOptions
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((system) => ({ label: system.name, value: String(system.id) }))}
-          />
-        </div>
-
-        <DataTableViewOptions table={table} />
-      </div>
+      <WantToPlayGamesDataTableToolbar table={table} />
 
       <BaseTable containerClassName="rounded-md bg-embed border-neutral-700 border">
         <BaseTableHeader>
@@ -143,7 +132,10 @@ export const WantToPlayGamesDataTable = () => {
             ))
           ) : (
             <BaseTableRow>
-              <BaseTableCell colSpan={columns.length} className="h-24 text-center">
+              <BaseTableCell
+                colSpan={table.getAllColumns().length}
+                className="h-24 bg-embed text-center"
+              >
                 No results.
               </BaseTableCell>
             </BaseTableRow>

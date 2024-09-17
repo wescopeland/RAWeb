@@ -256,7 +256,7 @@ class RouteServiceProvider extends ServiceProvider
                  * game lists
                  */
                 Route::group([
-                    'middleware' => ['auth', 'inertia']
+                    'middleware' => ['auth', 'inertia'],
                 ], function () {
                     Route::get('game-list/play', [UserGameListController::class, 'index'])->name('game-list.play.index');
                 });

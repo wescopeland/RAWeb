@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { LuArrowLeft, LuArrowLeftToLine, LuArrowRight, LuArrowRightToLine } from 'react-icons/lu';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
+import { BasePagination, BasePaginationContent } from '@/common/components/+vendor/BasePagination';
 
 import { buildSortParam } from './buildSortParam';
 
@@ -72,47 +73,49 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
           Page {pagination.pageIndex + 1} of {table.getPageCount()}
         </p>
 
-        <div className="flex items-center gap-2">
-          <BaseButton
-            className="h-8 w-8 p-0"
-            onClick={() => handlePageChange(0, false)}
-            onMouseEnter={() => prefetchPage(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <span className="sr-only">Go to first page</span>
-            <LuArrowLeftToLine className="h-4 w-4" />
-          </BaseButton>
+        <BasePagination>
+          <BasePaginationContent className="gap-2">
+            <BaseButton
+              className="h-8 w-8 p-0"
+              onClick={() => handlePageChange(0, false)}
+              onMouseEnter={() => prefetchPage(0)}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <span className="sr-only">Go to first page</span>
+              <LuArrowLeftToLine className="h-4 w-4" />
+            </BaseButton>
 
-          <BaseButton
-            className="h-8 w-8 p-0"
-            onClick={() => handlePageChange(pagination.pageIndex - 1, false)}
-            onMouseEnter={() => prefetchPage(pagination.pageIndex - 1)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <span className="sr-only">Go to previous page</span>
-            <LuArrowLeft className="h-4 w-4" />
-          </BaseButton>
+            <BaseButton
+              className="h-8 w-8 p-0"
+              onClick={() => handlePageChange(pagination.pageIndex - 1, false)}
+              onMouseEnter={() => prefetchPage(pagination.pageIndex - 1)}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <span className="sr-only">Go to previous page</span>
+              <LuArrowLeft className="h-4 w-4" />
+            </BaseButton>
 
-          <BaseButton
-            className="h-8 w-8 p-0"
-            onClick={() => handlePageChange(pagination.pageIndex + 1, true)}
-            onMouseEnter={() => prefetchPage(pagination.pageIndex + 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <span className="sr-only">Go to next page</span>
-            <LuArrowRight className="h-4 w-4" />
-          </BaseButton>
+            <BaseButton
+              className="h-8 w-8 p-0"
+              onClick={() => handlePageChange(pagination.pageIndex + 1, true)}
+              onMouseEnter={() => prefetchPage(pagination.pageIndex + 1)}
+              disabled={!table.getCanNextPage()}
+            >
+              <span className="sr-only">Go to next page</span>
+              <LuArrowRight className="h-4 w-4" />
+            </BaseButton>
 
-          <BaseButton
-            className="h-8 w-8 p-0"
-            onClick={() => handlePageChange(table.getPageCount() - 1, true)}
-            onMouseEnter={() => prefetchPage(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <span className="sr-only">Go to last page</span>
-            <LuArrowRightToLine className="h-4 w-4" />
-          </BaseButton>
-        </div>
+            <BaseButton
+              className="h-8 w-8 p-0"
+              onClick={() => handlePageChange(table.getPageCount() - 1, true)}
+              onMouseEnter={() => prefetchPage(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}
+            >
+              <span className="sr-only">Go to last page</span>
+              <LuArrowRightToLine className="h-4 w-4" />
+            </BaseButton>
+          </BasePaginationContent>
+        </BasePagination>
       </div>
     </div>
   );
