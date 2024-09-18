@@ -2,12 +2,7 @@ declare namespace App.Community.Data {
   export type RecentPostsPageProps<TItems = App.Data.ForumTopic> = {
     paginatedTopics: App.Data.PaginatedData<TItems>;
   };
-  export type UserGameListEntry = {
-    id: number;
-    game?: App.Platform.Data.Game;
-    playerGame?: App.Platform.Data.PlayerGame | null;
-  };
-  export type UserGameListPageProps<TItems = App.Community.Data.UserGameListEntry> = {
+  export type UserGameListPageProps<TItems = App.Platform.Data.GameListEntry> = {
     paginatedGameListEntries: App.Data.PaginatedData<TItems>;
     filterableSystemOptions: Array<App.Platform.Data.System>;
     can: App.Data.UserPermissions;

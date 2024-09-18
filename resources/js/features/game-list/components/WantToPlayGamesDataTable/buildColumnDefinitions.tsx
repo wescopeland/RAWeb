@@ -13,8 +13,8 @@ dayjs.extend(utc);
 
 export function buildColumnDefinitions(options: {
   canSeeOpenTicketsColumn: boolean;
-}): ColumnDef<App.Community.Data.UserGameListEntry>[] {
-  const columnDefinitions: ColumnDef<App.Community.Data.UserGameListEntry>[] = [
+}): ColumnDef<App.Platform.Data.GameListEntry>[] {
+  const columnDefinitions: ColumnDef<App.Platform.Data.GameListEntry>[] = [
     {
       id: 'title',
       accessorKey: 'game',

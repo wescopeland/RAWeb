@@ -1,6 +1,8 @@
 import type { ColumnFiltersState } from '@tanstack/react-table';
 
-export function buildFilterParams(columnFilters: ColumnFiltersState): Record<string, string> {
+export function buildGameListQueryFilterParams(
+  columnFilters: ColumnFiltersState,
+): Record<string, string> {
   const params: Record<string, string> = {};
 
   for (const columnFilter of columnFilters) {

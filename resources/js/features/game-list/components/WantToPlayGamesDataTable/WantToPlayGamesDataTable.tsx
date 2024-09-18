@@ -1,4 +1,3 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import type {
   ColumnFiltersState,
   PaginationState,
@@ -6,7 +5,6 @@ import type {
   VisibilityState,
 } from '@tanstack/react-table';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import axios from 'axios';
 import { useMemo, useState } from 'react';
 
 import {
@@ -17,12 +15,11 @@ import {
   BaseTableHeader,
   BaseTableRow,
 } from '@/common/components/+vendor/BaseTable';
+import { useGameListQuery } from '@/common/hooks/useGameListQuery';
 import { usePageProps } from '@/common/hooks/usePageProps';
 import { cn } from '@/utils/cn';
 
 import { buildColumnDefinitions } from './buildColumnDefinitions';
-import { buildFilterParams } from './buildFilterParams';
-import { buildSortParam } from './buildSortParam';
 import { DataTablePagination } from './DataTablePagination';
 import { WantToPlayGamesDataTableToolbar } from './WantToPlayGamesDataTableToolbar';
 
@@ -45,36 +42,19 @@ export const WantToPlayGamesDataTable = () => {
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const dataQuery = useQuery<App.Data.PaginatedData<App.Community.Data.UserGameListEntry>>({
-    queryKey: ['data', pagination, sorting, columnFilters],
-    staleTime: 1 * 60 * 1000, // 1 minute
-    queryFn: async () => {
-      const response = await axios.get<
-        App.Data.PaginatedData<App.Community.Data.UserGameListEntry>
-      >(
-        route('api.user-game-list.index', {
-          page: pagination.pageIndex + 1,
-          sort: buildSortParam(sorting),
-          ...buildFilterParams(columnFilters),
-        }),
-      );
-
-      return response.data;
-    },
-    placeholderData: keepPreviousData,
-  });
+  const gameListQuery = useGameListQuery({ columnFilters, pagination, sorting });
 
   const table = useReactTable({
     columns: useMemo(
       () => buildColumnDefinitions({ canSeeOpenTicketsColumn: can.develop ?? false }),
       [can.develop],
     ),
-    data: dataQuery.data?.items ?? [],
+    data: gameListQuery.data?.items ?? [],
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
-    rowCount: dataQuery.data?.total,
-    pageCount: dataQuery.data?.lastPage,
+    rowCount: gameListQuery.data?.total,
+    pageCount: gameListQuery.data?.lastPage,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnFiltersChange: (updateOrValue) => {
       table.setPageIndex(0);

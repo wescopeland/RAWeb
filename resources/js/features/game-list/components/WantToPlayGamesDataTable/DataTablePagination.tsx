@@ -28,9 +28,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
       ],
       staleTime: 1 * 60 * 1000, // 1 minute
       queryFn: async () => {
-        const response = await axios.get<
-          App.Data.PaginatedData<App.Community.Data.UserGameListEntry>
-        >(
+        const response = await axios.get<App.Data.PaginatedData<App.Platform.Data.GameListEntry>>(
           route('api.user-game-list.index', {
             page: newPageIndex + 1,
             sort: buildSortParam(sorting),

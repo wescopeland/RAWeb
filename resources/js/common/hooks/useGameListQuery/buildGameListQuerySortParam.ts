@@ -1,6 +1,6 @@
 import type { SortingState } from '@tanstack/react-table';
 
-export function buildSortParam(sorting: SortingState): string | null {
+export function buildGameListQuerySortParam(sorting: SortingState): string | null {
   if (!sorting.length) {
     return null;
   }
