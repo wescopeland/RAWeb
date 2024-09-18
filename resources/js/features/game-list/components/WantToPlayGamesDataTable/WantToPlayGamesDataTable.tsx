@@ -40,6 +40,7 @@ export const WantToPlayGamesDataTable = () => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     lastUpdated: false,
     numVisibleLeaderboards: false,
+    numUnresolvedTickets: false,
   });
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -96,7 +97,7 @@ export const WantToPlayGamesDataTable = () => {
     <div className="flex flex-col gap-3">
       <WantToPlayGamesDataTableToolbar table={table} />
 
-      <BaseTable containerClassName="rounded-md lg:rounded-sm bg-embed border-neutral-700 border overflow-auto lg:overflow-visible">
+      <BaseTable containerClassName="overflow-auto rounded-md border border-neutral-700 bg-embed light:border-neutral-300 lg:overflow-visible lg:rounded-sm">
         <BaseTableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <BaseTableRow

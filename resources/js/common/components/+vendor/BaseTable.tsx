@@ -50,7 +50,10 @@ const BaseTableRow = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tr
     ref={ref}
-    className={cn('data-[state=selected]:bg-muted border-b border-neutral-700', className)}
+    className={cn(
+      'data-[state=selected]:bg-muted border-b border-neutral-700 light:border-neutral-300',
+      className,
+    )}
     {...props}
   />
 ));

@@ -16,7 +16,11 @@ export const WantToPlayGamesRoot: FC = () => {
 
   const queryClient = new QueryClient();
   queryClient.setQueryData(
-    // TODO these state values should be lifted up from the table, not duplicated
+    /**
+     * TODO
+     * These state values should be lifted up from the table somehow, not duplicated.
+     * They really shouldn't be passed down to the table as props though. Maybe use jotai?
+     */
     ['data', { pageIndex: 0, pageSize: 25 }, [{ id: 'title', desc: false }], []],
     paginatedGameListEntries,
   );

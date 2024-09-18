@@ -10,7 +10,7 @@ export const SystemChip: FC<SystemChipProps> = ({ system }) => {
   }
 
   return (
-    <span className="flex max-w-fit items-center gap-1 rounded-full bg-zinc-950/60 px-2.5 py-0.5 text-xs">
+    <span className="flex max-w-fit items-center gap-1 rounded-full bg-zinc-950/60 px-2.5 py-0.5 text-xs light:bg-neutral-50">
       <img src={system.iconUrl} alt={system.nameShort} width={18} height={18} />
       {system.nameShort}
     </span>

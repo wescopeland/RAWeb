@@ -34,10 +34,10 @@ export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps
 
   return (
     <BaseInput
-      placeholder="Filter games..."
+      placeholder="Search games..."
       value={rawInputValue}
       onChange={(event) => setRawInputValue(event.target.value)}
-      className="h-8 w-[150px] lg:w-[250px]"
+      className="h-8 sm:w-[150px] lg:w-[250px]"
     />
   );
 }

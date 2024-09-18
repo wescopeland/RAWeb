@@ -11,6 +11,7 @@ use App\Models\Achievement;
 use App\Models\Game;
 use App\Models\Leaderboard;
 use App\Models\PlayerGame;
+use App\Models\Role;
 use App\Models\System;
 use App\Models\Ticket;
 use App\Models\User;
@@ -355,10 +356,39 @@ class BuildGameListActionTest extends TestCase
         $this->assertEquals(3, $firstItem->game->numVisibleLeaderboards->resolve());
     }
 
-    public function testItCanSortByNumUnresolvedTickets(): void
+    public function testItDoesntQueryForOpenTicketCountsForNonDevelopers(): void
     {
         // Arrange
         $user = User::factory()->create();
+
+        $this->seedGamesForLists();
+        $this->addGameIdsToUserPlayList($user, gameIds: [1000, 1001, 1002, 1003, 1004, 1005]);
+
+        $achievement1001 = Achievement::factory()->create(['GameID' => 1001, 'Flags' => AchievementFlag::OfficialCore]);
+        $achievement1003 = Achievement::factory()->create(['GameID' => 1003, 'Flags' => AchievementFlag::OfficialCore]);
+
+        Ticket::factory()->count(3)->create(['AchievementID' => $achievement1001->id, 'ReportState' => TicketState::Open]);
+        Ticket::factory()->count(27)->create(['AchievementID' => $achievement1003->id, 'ReportState' => TicketState::Closed]);
+
+        // Act
+        $result = (new BuildGameListAction())->execute(
+            GameListType::UserPlay,
+            $user,
+        );
+
+        $firstItem = $result->items[0];
+
+        // Assert
+        $this->assertFalse(property_exists($firstItem->game, 'numUnresolvedTickets'));
+    }
+
+    public function testItCanSortByNumUnresolvedTickets(): void
+    {
+        // Arrange
+        Role::create(['name' => Role::DEVELOPER, 'display' => 0]);
+
+        $user = User::factory()->create();
+        $user->assignRole(Role::DEVELOPER);
 
         $this->seedGamesForLists();
         $this->addGameIdsToUserPlayList($user, gameIds: [1000, 1001, 1002, 1003, 1004, 1005]);
@@ -461,7 +491,7 @@ class BuildGameListActionTest extends TestCase
         $result = (new BuildGameListAction())->execute(
             GameListType::UserPlay,
             $user,
-            filters: ['hasAchievementsPublished' => ['has']]
+            filters: ['achievementsPublished' => ['has']]
         );
 
         // Assert
@@ -481,7 +511,7 @@ class BuildGameListActionTest extends TestCase
         $result = (new BuildGameListAction())->execute(
             GameListType::UserPlay,
             $user,
-            filters: ['hasAchievementsPublished' => ['none']]
+            filters: ['achievementsPublished' => ['none']]
         );
 
         // Assert

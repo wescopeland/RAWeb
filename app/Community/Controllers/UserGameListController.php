@@ -8,6 +8,7 @@ use App\Community\Data\UserGameListPagePropsData;
 use App\Community\Enums\UserGameListType;
 use App\Data\UserPermissionsData;
 use App\Http\Controller;
+use App\Models\System;
 use App\Models\User;
 use App\Models\UserGameListEntry;
 use App\Platform\Actions\BuildGameListAction;
@@ -22,16 +23,13 @@ class UserGameListController extends Controller
     public function index(Request $request): InertiaResponse
     {
         // TODO tests, both for UI and BuildGameListAction modifications
-        // TODO test light mode
-        // TODO don't duplicate state in the WantToPlayGamesRoot SSR hydration
-        // TODO remember the user's state settings somehow, Laravel session + redis ? -- at the very least, remember their columns
-        // TODO mobile ux, especially around toolbar
 
         // LATER:
         // TODO allow for url params
         // TODO filter by tags (use same types as beaten game leaderboard)
         // TODO show user progress
         // TODO filter by user progress
+        // TODO remember the user's state settings somehow, Laravel session + redis ? -- at the very least, remember their columns
 
         /** @var User $user */
         $user = $request->user();
@@ -43,11 +41,12 @@ class UserGameListController extends Controller
         );
 
         // Only allow filtering by systems the user has games on their list for.
-        $filterableSystemOptions = $user->gameListEntries(UserGameListType::Play)
-            ->with('game.system')
+        $filterableSystemIds = $user->gameListEntries(UserGameListType::Play)
+            ->join('GameData', 'SetRequest.GameID', '=', 'GameData.ID')
+            ->distinct()
+            ->pluck('GameData.ConsoleID');
+        $filterableSystemOptions = System::whereIn('ID', $filterableSystemIds)
             ->get()
-            ->pluck('game.system')
-            ->unique('id')
             ->map(fn ($system) => SystemData::fromSystem($system))
             ->values()
             ->all();

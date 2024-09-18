@@ -20,12 +20,13 @@ export function WantToPlayGamesDataTableToolbar<TData>({
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
-    <div className="flex w-full justify-between">
-      <div className="flex flex-1 items-center gap-x-2">
+    <div className="flex w-full flex-col justify-between gap-2 md:flex-row">
+      <div className="flex w-full flex-col items-center gap-2 sm:flex-1 sm:flex-row">
         <DataTableSearchInput table={table} />
 
         {table.getColumn('system') ? (
           <DataTableFacetedFilter
+            className="w-full sm:w-auto"
             column={table.getColumn('system')}
             title="System"
             options={filterableSystemOptions
@@ -36,6 +37,7 @@ export function WantToPlayGamesDataTableToolbar<TData>({
 
         {table.getColumn('achievementsPublished') ? (
           <DataTableFacetedFilter
+            className="w-full sm:w-auto"
             column={table.getColumn('achievementsPublished')}
             title="Has achievements"
             options={[
@@ -58,9 +60,9 @@ export function WantToPlayGamesDataTableToolbar<TData>({
         ) : null}
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3 md:justify-normal">
         <p className="text-neutral-200 light:text-neutral-900">
-          {table.options.rowCount} {table.options.rowCount === 1 ? 'row' : 'rows'}
+          {table.options.rowCount} {table.options.rowCount === 1 ? 'game' : 'games'}
         </p>
 
         <DataTableViewOptions table={table} />

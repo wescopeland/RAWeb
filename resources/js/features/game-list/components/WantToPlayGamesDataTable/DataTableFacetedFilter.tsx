@@ -27,6 +27,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
     icon?: React.ComponentType<{ className?: string }>;
   }>;
 
+  className?: string;
   column?: Column<TData, TValue>;
   isSearchable?: boolean;
   title?: string;
@@ -36,6 +37,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
   column,
   title,
+  className,
   isSearchable = true,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
@@ -44,7 +46,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   return (
     <BasePopover>
       <BasePopoverTrigger asChild>
-        <BaseButton size="sm" className="border-dashed">
+        <BaseButton size="sm" className={cn('border-dashed', className)}>
           <RxPlusCircled className="mr-2 h-4 w-4" />
 
           {title}

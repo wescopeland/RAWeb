@@ -61,7 +61,7 @@ class BuildGameListAction
             ? $this->getBacklogGames($user, $entries->pluck('id'))
             : collect();
 
-        $transformedEntries = $entries->getCollection()->map(function (Game $game) use ($playerGames, $backlogGames): GameListEntryData {
+        $transformedEntries = $entries->getCollection()->map(function (Game $game) use ($user, $playerGames, $backlogGames): GameListEntryData {
             $playerGame = $playerGames->get($game->id);
 
             return new GameListEntryData(
@@ -76,7 +76,7 @@ class BuildGameListAction
                     'releasedAtGranularity',
                     'lastUpdated',
                     'numVisibleLeaderboards',
-                    'numUnresolvedTickets',
+                    $user?->can('develop') ? 'numUnresolvedTickets' : '',
                 ),
                 playerGame: $playerGame
                     ? PlayerGameData::fromPlayerGame($playerGame)->include('highestAward')
