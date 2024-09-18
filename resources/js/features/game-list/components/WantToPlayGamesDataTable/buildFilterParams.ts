@@ -5,9 +5,12 @@ export function buildFilterParams(columnFilters: ColumnFiltersState): Record<str
 
   for (const columnFilter of columnFilters) {
     const filterKey = `filter[${columnFilter.id}]`;
-    const filterValue = (columnFilter.value as unknown[]).join(',');
 
-    params[filterKey] = filterValue;
+    if (Array.isArray(columnFilter.value)) {
+      params[filterKey] = columnFilter.value.join(',');
+    } else {
+      params[filterKey] = columnFilter.value as string;
+    }
   }
 
   return params;

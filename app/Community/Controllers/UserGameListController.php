@@ -21,20 +21,17 @@ class UserGameListController extends Controller
 {
     public function index(Request $request): InertiaResponse
     {
-        // TODO tests
+        // TODO tests, both for UI and BuildGameListAction modifications
         // TODO test light mode
-        // TODO filter by tags (use same types as beaten game leaderboard)
-        // TODO long loading
-        // TODO column pinning on mobile
-        // TODO genericize the table
         // TODO don't duplicate state in the WantToPlayGamesRoot SSR hydration
+        // TODO remember the user's state settings somehow, Laravel session + redis ? -- at the very least, remember their columns
+        // TODO mobile ux, especially around toolbar
+
+        // LATER:
+        // TODO allow for url params
+        // TODO filter by tags (use same types as beaten game leaderboard)
         // TODO show user progress
         // TODO filter by user progress
-        // TODO gate tickets column behind develop ability
-
-        // NEXT STEPS:
-        // TODO allow for url params
-        // TODO remember the user's state settings somehow, Laravel session + redis ?
 
         /** @var User $user */
         $user = $request->user();

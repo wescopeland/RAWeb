@@ -96,10 +96,13 @@ export const WantToPlayGamesDataTable = () => {
     <div className="flex flex-col gap-3">
       <WantToPlayGamesDataTableToolbar table={table} />
 
-      <BaseTable containerClassName="rounded-md bg-embed border-neutral-700 border">
+      <BaseTable containerClassName="rounded-md lg:rounded-sm bg-embed border-neutral-700 border overflow-auto lg:overflow-visible">
         <BaseTableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <BaseTableRow key={headerGroup.id} className="do-not-highlight">
+            <BaseTableRow
+              key={headerGroup.id}
+              className="do-not-highlight bg-embed lg:sticky lg:top-[41px] lg:z-10"
+            >
               {headerGroup.headers.map((header) => {
                 return (
                   <BaseTableHead key={header.id}>

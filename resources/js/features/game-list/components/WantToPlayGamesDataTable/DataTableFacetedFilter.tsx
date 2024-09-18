@@ -28,6 +28,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   }>;
 
   column?: Column<TData, TValue>;
+  isSearchable?: boolean;
   title?: string;
 }
 
@@ -35,6 +36,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
   column,
   title,
+  isSearchable = true,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
@@ -86,7 +88,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 
       <BasePopoverContent className="min-w-[200px] p-0" align="start">
         <BaseCommand>
-          <BaseCommandInput placeholder={title} />
+          {isSearchable ? <BaseCommandInput placeholder={title} /> : null}
 
           <BaseCommandList>
             <BaseCommandEmpty>

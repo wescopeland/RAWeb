@@ -104,13 +104,19 @@ class BuildGameListAction
                 'num_visible_leaderboards' => Leaderboard::selectRaw('COUNT(*)')
                     ->whereColumn('LeaderboardDef.GameID', 'GameData.ID')
                     ->where('LeaderboardDef.DisplayOrder', '>=', 0),
+            ]);
 
+        // Only attempt to fetch the "Open Tickets" column counts if the user
+        // is a dev. Otherwise, skip it.
+        if ($user?->can('develop')) {
+            $query->addSelect([
                 'num_unresolved_tickets' => Ticket::selectRaw('COUNT(*)')
                     ->join('Achievements', 'Ticket.AchievementID', '=', 'Achievements.ID')
                     ->whereColumn('Achievements.GameID', 'GameData.ID')
                     ->where('Achievements.Flags', AchievementFlag::OfficialCore)
                     ->whereIn('Ticket.ReportState', [TicketState::Open, TicketState::Request]),
             ]);
+        }
 
         switch ($listType) {
             case GameListType::UserPlay:
@@ -142,6 +148,15 @@ class BuildGameListAction
         foreach ($filters as $filterKey => $filterValues) {
             switch ($filterKey) {
                 /*
+                 * only show games matching a specific game title pattern
+                 */
+                case 'title':
+                    if (!empty($filterValues[0])) {
+                        $query->where('GameData.Title', 'LIKE', '%' . $filterValues[0] . '%');
+                    }
+                    break;
+
+                /*
                  * only show games matching a specific list of system IDs
                  */
                 case 'system':
@@ -160,8 +175,8 @@ class BuildGameListAction
                 /*
                  * only show games based on whether they have achievements published
                  */
-                case 'hasAchievementsPublished':
-                    $this->applyHasAchievementsPublishedFilter($query, $filterValues);
+                case 'achievementsPublished':
+                    $this->applyAchievementsPublishedFilter($query, $filterValues);
                     break;
 
                 default:
@@ -420,10 +435,10 @@ class BuildGameListAction
      *
      * @param Builder<Game> $query
      */
-    private function applyHasAchievementsPublishedFilter(Builder $query, array $filterValues): void
+    private function applyAchievementsPublishedFilter(Builder $query, array $filterValues): void
     {
-        // Bail early if necessary.
-        if (empty($filterValues)) {
+        // Bail early if necessary. If the user gives both options, it's the "either" case.
+        if (empty($filterValues) || count($filterValues) === 2) {
             return;
         }
 

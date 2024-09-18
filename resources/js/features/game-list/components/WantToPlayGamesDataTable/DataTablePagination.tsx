@@ -62,11 +62,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
 
   return (
     <div className="flex items-center justify-between">
-      <div>
-        <p className="text-neutral-200 light:text-neutral-900">
-          {table.options.rowCount} {table.options.rowCount === 1 ? 'row' : 'rows'}
-        </p>
-      </div>
+      <div />
 
       <div className="flex items-center gap-6 lg:gap-8">
         <p className="text-neutral-200 light:text-neutral-900">

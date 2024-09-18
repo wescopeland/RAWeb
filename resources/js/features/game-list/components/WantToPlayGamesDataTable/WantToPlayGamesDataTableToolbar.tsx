@@ -5,6 +5,7 @@ import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { usePageProps } from '@/common/hooks/usePageProps';
 
 import { DataTableFacetedFilter } from './DataTableFacetedFilter';
+import { DataTableSearchInput } from './DataTableSearchInput';
 import { DataTableViewOptions } from './DataTableViewOptions';
 
 interface WantToPlayGamesDataTableToolbarProps<TData> {
@@ -21,6 +22,8 @@ export function WantToPlayGamesDataTableToolbar<TData>({
   return (
     <div className="flex w-full justify-between">
       <div className="flex flex-1 items-center gap-x-2">
+        <DataTableSearchInput table={table} />
+
         {table.getColumn('system') ? (
           <DataTableFacetedFilter
             column={table.getColumn('system')}
@@ -28,6 +31,18 @@ export function WantToPlayGamesDataTableToolbar<TData>({
             options={filterableSystemOptions
               .sort((a, b) => a.name.localeCompare(b.name))
               .map((system) => ({ label: system.name, value: String(system.id) }))}
+          />
+        ) : null}
+
+        {table.getColumn('achievementsPublished') ? (
+          <DataTableFacetedFilter
+            column={table.getColumn('achievementsPublished')}
+            title="Has achievements"
+            options={[
+              { label: 'Yes', value: 'has' },
+              { label: 'No', value: 'none' },
+            ]}
+            isSearchable={false}
           />
         ) : null}
 
@@ -43,7 +58,13 @@ export function WantToPlayGamesDataTableToolbar<TData>({
         ) : null}
       </div>
 
-      <DataTableViewOptions table={table} />
+      <div className="flex items-center gap-3">
+        <p className="text-neutral-200 light:text-neutral-900">
+          {table.options.rowCount} {table.options.rowCount === 1 ? 'row' : 'rows'}
+        </p>
+
+        <DataTableViewOptions table={table} />
+      </div>
     </div>
   );
 }
