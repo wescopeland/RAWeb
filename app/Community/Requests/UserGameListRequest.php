@@ -16,7 +16,7 @@ class UserGameListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => 'integer|min:1',
+            'page.number' => 'integer|min:1',
             'sort' => 'string|in:title,system,achievementsPublished,pointsTotal,retroRatio,lastUpdated,releasedAt,numVisibleLeaderboards,numUnresolvedTickets,progress,-title,-system,-achievementsPublished,-pointsTotal,-retroRatio,-lastUpdated,-releasedAt,-numVisibleLeaderboards,-numUnresolvedTickets,-progress',
             'filter.*' => 'string',
         ];
@@ -24,7 +24,7 @@ class UserGameListRequest extends FormRequest
 
     public function getPage(): int
     {
-        return (int) $this->input('page', 1);
+        return (int) $this->input('page.number', 1);
     }
 
     public function getSort(): array

@@ -21,7 +21,12 @@ export const WantToPlayGamesRoot: FC = () => {
      * These state values should be lifted up from the table somehow, not duplicated.
      * They really shouldn't be passed down to the table as props though. Maybe use jotai?
      */
-    ['data', { pageIndex: 0, pageSize: 25 }, [{ id: 'title', desc: false }], []],
+    [
+      'data',
+      { pageIndex: paginatedGameListEntries.currentPage - 1, pageSize: 25 },
+      [{ id: 'title', desc: false }],
+      [], // TODO populate initial filters ... this really seems like it should be jotai
+    ],
     paginatedGameListEntries,
   );
 

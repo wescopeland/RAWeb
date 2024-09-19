@@ -6,6 +6,7 @@ namespace App\Community\Controllers;
 
 use App\Community\Data\UserGameListPagePropsData;
 use App\Community\Enums\UserGameListType;
+use App\Community\Requests\UserGameListRequest;
 use App\Data\UserPermissionsData;
 use App\Http\Controller;
 use App\Models\System;
@@ -20,10 +21,8 @@ use Inertia\Response as InertiaResponse;
 
 class UserGameListController extends Controller
 {
-    public function index(Request $request): InertiaResponse
+    public function index(UserGameListRequest $request): InertiaResponse
     {
-        // TODO tests, both for UI and BuildGameListAction modifications
-
         // LATER:
         // TODO allow for url params
         // TODO filter by tags (use same types as beaten game leaderboard)
@@ -37,7 +36,9 @@ class UserGameListController extends Controller
         $paginatedData = (new BuildGameListAction())->execute(
             GameListType::UserPlay,
             user: $user,
-            page: 1,
+            page: $request->getPage(),
+            filters: $request->getFilters(),
+            sort: $request->getSort(),
         );
 
         // Only allow filtering by systems the user has games on their list for.

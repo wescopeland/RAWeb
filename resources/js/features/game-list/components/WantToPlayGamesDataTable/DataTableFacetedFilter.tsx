@@ -46,7 +46,11 @@ export function DataTableFacetedFilter<TData, TValue>({
   return (
     <BasePopover>
       <BasePopoverTrigger asChild>
-        <BaseButton size="sm" className={cn('border-dashed', className)}>
+        <BaseButton
+          size="sm"
+          className={cn('border-dashed', className)}
+          data-testid={`filter-${title}`}
+        >
           <RxPlusCircled className="mr-2 h-4 w-4" />
 
           {title}

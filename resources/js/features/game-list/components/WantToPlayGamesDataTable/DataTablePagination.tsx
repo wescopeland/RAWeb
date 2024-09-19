@@ -6,8 +6,8 @@ import { LuArrowLeft, LuArrowLeftToLine, LuArrowRight, LuArrowRightToLine } from
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { BasePagination, BasePaginationContent } from '@/common/components/+vendor/BasePagination';
-
-import { buildSortParam } from './buildSortParam';
+import { buildGameListQueryFilterParams } from '@/common/hooks/useGameListQuery/buildGameListQueryFilterParams';
+import { buildGameListQuerySortParam } from '@/common/utils/buildGameListQuerySortParam';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -30,8 +30,9 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
       queryFn: async () => {
         const response = await axios.get<App.Data.PaginatedData<App.Platform.Data.GameListEntry>>(
           route('api.user-game-list.index', {
-            page: newPageIndex + 1,
-            sort: buildSortParam(sorting),
+            'page[number]': newPageIndex + 1,
+            sort: buildGameListQuerySortParam(sorting),
+            ...buildGameListQueryFilterParams(columnFilters),
           }),
         );
 

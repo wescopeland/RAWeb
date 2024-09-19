@@ -9,6 +9,7 @@ interface DataTableSearchInputProps<TData> {
 }
 
 export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps<TData>) {
+  const [isMounted, setIsMounted] = useState(false);
   const [rawInputValue, setRawInputValue] = useState(
     (table.getColumn('title')?.getFilterValue() as string) ?? '',
   );
@@ -26,18 +27,33 @@ export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps
 
   useDebounce(
     () => {
-      table.getColumn('title')?.setFilterValue(rawInputValue);
+      if (rawInputValue.length === 0 && !isMounted) {
+        setIsMounted(true);
+
+        return;
+      }
+
+      if (rawInputValue.length >= 3 || rawInputValue.length === 0) {
+        table.getColumn('title')?.setFilterValue(rawInputValue);
+      }
     },
     200,
     [rawInputValue],
   );
 
   return (
-    <BaseInput
-      placeholder="Search games..."
-      value={rawInputValue}
-      onChange={(event) => setRawInputValue(event.target.value)}
-      className="h-8 sm:w-[150px] lg:w-[250px]"
-    />
+    <div>
+      <label htmlFor="search-field" className="sr-only">
+        Search games
+      </label>
+
+      <BaseInput
+        id="search-field"
+        placeholder="Search games..."
+        value={rawInputValue}
+        onChange={(event) => setRawInputValue(event.target.value)}
+        className="h-8 sm:w-[150px] lg:w-[250px]"
+      />
+    </div>
   );
 }
