@@ -23,8 +23,9 @@ class UserGameListController extends Controller
 {
     public function index(UserGameListRequest $request): InertiaResponse
     {
+        // TODO if page number param given greater than pages, it should go to max page
+
         // LATER:
-        // TODO allow for url params
         // TODO filter by tags (use same types as beaten game leaderboard)
         // TODO show user progress
         // TODO filter by user progress

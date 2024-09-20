@@ -48,6 +48,14 @@ class BuildGameListAction
         // We'll override its `total` value with the correct one.
         $total = $query->count('GameData.ID');
 
+        // Determine the last page.
+        $lastPage = (int) ceil($total / $perPage);
+
+        // Adjust the current page if it exceeds the last page.
+        if ($page > $lastPage) {
+            $page = $lastPage;
+        }
+
         /** @var LengthAwarePaginator<Game> $entries */
         $entries = $query->paginate($perPage, ['*'], 'page', $page);
 

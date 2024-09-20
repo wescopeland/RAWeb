@@ -5,7 +5,8 @@ import type {
   VisibilityState,
 } from '@tanstack/react-table';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { type Dispatch, type FC, type SetStateAction } from 'react';
+import { useMemo } from 'react';
 
 import {
   BaseTable,
@@ -23,24 +24,28 @@ import { buildColumnDefinitions } from './buildColumnDefinitions';
 import { DataTablePagination } from './DataTablePagination';
 import { WantToPlayGamesDataTableToolbar } from './WantToPlayGamesDataTableToolbar';
 
-export const WantToPlayGamesDataTable = () => {
-  const { paginatedGameListEntries, can } =
-    usePageProps<App.Community.Data.UserGameListPageProps>();
+interface WantToPlayGamesDataTableProps {
+  columnFilters: ColumnFiltersState;
+  columnVisibility: VisibilityState;
+  pagination: PaginationState;
+  setColumnFilters: Dispatch<SetStateAction<ColumnFiltersState>>;
+  setColumnVisibility: Dispatch<SetStateAction<VisibilityState>>;
+  setPagination: Dispatch<SetStateAction<PaginationState>>;
+  setSorting: Dispatch<SetStateAction<SortingState>>;
+  sorting: SortingState;
+}
 
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: paginatedGameListEntries.currentPage - 1,
-    pageSize: paginatedGameListEntries.perPage,
-  });
-
-  const [sorting, setSorting] = useState<SortingState>([{ id: 'title', desc: false }]);
-
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    lastUpdated: false,
-    numVisibleLeaderboards: false,
-    numUnresolvedTickets: false,
-  });
-
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+export const WantToPlayGamesDataTable: FC<WantToPlayGamesDataTableProps> = ({
+  columnFilters,
+  columnVisibility,
+  pagination,
+  setColumnFilters,
+  setColumnVisibility,
+  setPagination,
+  setSorting,
+  sorting,
+}) => {
+  const { can } = usePageProps<App.Community.Data.UserGameListPageProps>();
 
   const gameListQuery = useGameListQuery({ columnFilters, pagination, sorting });
 

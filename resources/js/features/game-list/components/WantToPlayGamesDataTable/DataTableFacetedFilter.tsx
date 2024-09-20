@@ -126,7 +126,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                           : 'opacity-50 [&_svg]:invisible',
                       )}
                     >
-                      <RxCheck className="h-4 w-4" />
+                      {isSelected ? <RxCheck className="h-4 w-4" /> : null}
                     </div>
 
                     {option.icon ? (

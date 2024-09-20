@@ -54,6 +54,7 @@ export function DataTableColumnHeader<TData, TValue>({
             variant="ghost"
             size="sm"
             className="data-[state=open]:bg-accent -ml-3 h-8 !transform-none focus-visible:!ring-0 focus-visible:!ring-offset-0"
+            data-testid={`column-header-${column.columnDef.meta?.label}`}
           >
             <span>{column.columnDef.meta?.label}</span>
 

@@ -8,6 +8,7 @@ import {
   createGameListEntry,
   createPaginatedData,
   createSystem,
+  createZiggyProps,
 } from '@/test/factories';
 
 import { WantToPlayGamesRoot } from './WantToPlayGamesRoot';
@@ -22,6 +23,7 @@ describe('Component: WantToPlayGamesRoot', () => {
           filterableSystemOptions: [],
           paginatedGameListEntries: createPaginatedData([]),
           can: { develop: false },
+          ziggy: createZiggyProps(),
         },
       },
     );
@@ -38,6 +40,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [],
         paginatedGameListEntries: createPaginatedData([]),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -73,6 +76,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [],
         paginatedGameListEntries: createPaginatedData([createGameListEntry({ game: mockGame })]),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -110,6 +114,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [],
         paginatedGameListEntries: createPaginatedData([createGameListEntry({ game: mockGame })]),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -129,6 +134,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [],
         paginatedGameListEntries: createPaginatedData([]),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -148,6 +154,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [],
         paginatedGameListEntries: createPaginatedData([]),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -168,6 +175,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [],
         paginatedGameListEntries: createPaginatedData([]),
         can: { develop: true },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -204,6 +212,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [],
         paginatedGameListEntries: createPaginatedData([createGameListEntry({ game: mockGame })]),
         can: { develop: true },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -225,6 +234,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [],
         paginatedGameListEntries: createPaginatedData([]),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -237,8 +247,8 @@ describe('Component: WantToPlayGamesRoot', () => {
         'api.user-game-list.index',
         {
           'filter[title]': 'dragon quest',
-          page: 1,
-          sort: 'title',
+          'page[number]': 1,
+          sort: null,
         },
       ]);
     });
@@ -256,6 +266,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
         paginatedGameListEntries: createPaginatedData([]),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -269,8 +280,8 @@ describe('Component: WantToPlayGamesRoot', () => {
         'api.user-game-list.index',
         {
           'filter[system]': '1',
-          page: 1,
-          sort: 'title',
+          'page[number]': 1,
+          sort: null,
         },
       ]);
     });
@@ -288,6 +299,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
         paginatedGameListEntries: createPaginatedData([]),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -301,11 +313,95 @@ describe('Component: WantToPlayGamesRoot', () => {
         'api.user-game-list.index',
         {
           'filter[achievementsPublished]': 'has',
-          page: 1,
-          sort: 'title',
+          'page[number]': 1,
+          sort: null,
         },
       ]);
     });
+  });
+
+  it('allows the user to sort by a string column', async () => {
+    // ARRANGE
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+
+    const getSpy = vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: createPaginatedData([]) });
+
+    render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
+      pageProps: {
+        auth: { user: createAuthenticatedUser() },
+        filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
+        paginatedGameListEntries: createPaginatedData([]),
+        can: { develop: false },
+        ziggy: createZiggyProps(),
+      },
+    });
+
+    // ACT
+    await userEvent.click(screen.getByTestId('column-header-System'));
+    await userEvent.click(screen.getByRole('menuitem', { name: /desc/i }));
+
+    // ASSERT
+    await waitFor(() => {
+      expect(getSpy).toHaveBeenCalledWith([
+        'api.user-game-list.index',
+        {
+          'page[number]': 1,
+          sort: '-system',
+        },
+      ]);
+    });
+  });
+
+  it('allows the user to sort by a numeric column', async () => {
+    // ARRANGE
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+
+    const getSpy = vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: createPaginatedData([]) });
+
+    render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
+      pageProps: {
+        auth: { user: createAuthenticatedUser() },
+        filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
+        paginatedGameListEntries: createPaginatedData([]),
+        can: { develop: false },
+        ziggy: createZiggyProps(),
+      },
+    });
+
+    // ACT
+    await userEvent.click(screen.getByTestId('column-header-Achievements'));
+    await userEvent.click(screen.getByRole('menuitem', { name: /less/i }));
+
+    // ASSERT
+    await waitFor(() => {
+      expect(getSpy).toHaveBeenCalledWith([
+        'api.user-game-list.index',
+        {
+          'page[number]': 1,
+          sort: 'achievementsPublished',
+        },
+      ]);
+    });
+  });
+
+  it('allows the user to hide a column via the column header button', async () => {
+    // ARRANGE
+    render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
+      pageProps: {
+        auth: { user: createAuthenticatedUser() },
+        filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
+        paginatedGameListEntries: createPaginatedData([]),
+        can: { develop: false },
+        ziggy: createZiggyProps(),
+      },
+    });
+
+    // ACT
+    await userEvent.click(screen.getByTestId('column-header-Achievements'));
+    await userEvent.click(screen.getByRole('menuitem', { name: /hide/i }));
+
+    // ASSERT
+    expect(screen.queryByTestId('column-header-Achievements')).not.toBeInTheDocument();
   });
 
   it('always displays the number of total games', () => {
@@ -316,6 +412,7 @@ describe('Component: WantToPlayGamesRoot', () => {
         filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
         paginatedGameListEntries: createPaginatedData([], { total: 300 }),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -337,6 +434,7 @@ describe('Component: WantToPlayGamesRoot', () => {
           perPage: 1,
         }),
         can: { develop: false },
+        ziggy: createZiggyProps(),
       },
     });
 
@@ -348,8 +446,8 @@ describe('Component: WantToPlayGamesRoot', () => {
       expect(getSpy).toHaveBeenCalledWith([
         'api.user-game-list.index',
         {
-          page: 2,
-          sort: 'title',
+          'page[number]': 2,
+          sort: null,
         },
       ]);
     });

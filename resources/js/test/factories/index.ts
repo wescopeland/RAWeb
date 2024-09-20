@@ -11,3 +11,4 @@ export * from './createPlayerResettableGame';
 export * from './createRecentActiveForumTopic';
 export * from './createSystem';
 export * from './createUser';
+export * from './createZiggyProps';
