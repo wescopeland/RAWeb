@@ -5,6 +5,7 @@ import utc from 'dayjs/plugin/utc';
 import { GameAvatar } from '@/common/components/GameAvatar';
 import { SystemChip } from '@/common/components/SystemChip/SystemChip';
 import { WeightedPointsContainer } from '@/common/components/WeightedPointsContainer';
+import { formatNumber } from '@/common/utils/l10n/formatNumber';
 
 import { DataTableColumnHeader } from './DataTableColumnHeader';
 import { DataTableRowActions } from './DataTableRowActions';
@@ -88,8 +89,8 @@ export function buildColumnDefinitions(options: {
 
         return (
           <p className="whitespace-nowrap">
-            {pointsTotal.toLocaleString()}{' '}
-            <WeightedPointsContainer>({pointsWeighted.toLocaleString()})</WeightedPointsContainer>
+            {formatNumber(pointsTotal)}{' '}
+            <WeightedPointsContainer>({formatNumber(pointsWeighted)})</WeightedPointsContainer>
           </p>
         );
       },
@@ -170,7 +171,7 @@ export function buildColumnDefinitions(options: {
         const playersTotal = row.original.game?.playersTotal ?? 0;
 
         return (
-          <p className={playersTotal === 0 ? 'text-muted' : ''}>{playersTotal.toLocaleString()}</p>
+          <p className={playersTotal === 0 ? 'text-muted' : ''}>{formatNumber(playersTotal)}</p>
         );
       },
     },

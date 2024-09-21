@@ -3,6 +3,7 @@ import { RxCross2 } from 'react-icons/rx';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { usePageProps } from '@/common/hooks/usePageProps';
+import { formatNumber } from '@/common/utils/l10n/formatNumber';
 
 import { DataTableFacetedFilter } from './DataTableFacetedFilter';
 import { DataTableSearchInput } from './DataTableSearchInput';
@@ -70,12 +71,12 @@ export function WantToPlayGamesDataTableToolbar<TData>({
         <p className="text-neutral-200 light:text-neutral-900">
           {unfilteredTotal ? (
             <>
-              {table.options.rowCount?.toLocaleString()} of {unfilteredTotal.toLocaleString()}{' '}
+              {formatNumber(table.options.rowCount ?? 0)} of {formatNumber(unfilteredTotal)}{' '}
               {unfilteredTotal === 1 ? 'game' : 'games'}
             </>
           ) : (
             <>
-              {table.options.rowCount?.toLocaleString()}{' '}
+              {formatNumber(table.options.rowCount ?? 0)}{' '}
               {table.options.rowCount === 1 ? 'game' : 'games'}
             </>
           )}
