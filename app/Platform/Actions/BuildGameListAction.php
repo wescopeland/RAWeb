@@ -48,10 +48,8 @@ class BuildGameListAction
         // We'll override its `total` value with the correct one.
         $total = $query->count('GameData.ID');
 
-        // Determine the last page.
-        $lastPage = (int) ceil($total / $perPage);
-
         // Adjust the current page if it exceeds the last page.
+        $lastPage = (int) ceil($total / $perPage);
         if ($page > $lastPage) {
             $page = $lastPage;
         }
@@ -82,6 +80,7 @@ class BuildGameListAction
                     'pointsWeighted',
                     'releasedAt',
                     'releasedAtGranularity',
+                    'playersTotal',
                     'lastUpdated',
                     'numVisibleLeaderboards',
                     $user?->can('develop') ? 'numUnresolvedTickets' : '',
@@ -208,6 +207,7 @@ class BuildGameListAction
             'retroRatio',
             'lastUpdated',
             'releasedAt',
+            'playersTotal',
             'numVisibleLeaderboards',
             'numUnresolvedTickets',
             'progress',
@@ -283,6 +283,13 @@ class BuildGameListAction
                  */
                 case 'releasedAt':
                     $this->applyReleasedAtSorting($query, $sortDirection);
+                    break;
+
+                /*
+                 * count of all players (softcore and hardcore) for the game
+                 */
+                case 'playersTotal':
+                    $query->orderBy('GameData.players_total', $sortDirection);
                     break;
 
                 /*
@@ -609,7 +616,8 @@ class BuildGameListAction
                         });
                         break;
 
-                    default: break;
+                    default:
+                        break;
                 }
             }
         });

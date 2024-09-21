@@ -42,7 +42,7 @@ export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps
   );
 
   return (
-    <div>
+    <div className="w-full sm:w-auto">
       <label htmlFor="search-field" className="sr-only">
         Search games
       </label>

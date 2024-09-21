@@ -13,6 +13,9 @@ import {
 
 import { WantToPlayGamesRoot } from './WantToPlayGamesRoot';
 
+// Suppress AggregateError invocations from unmocked fetch calls to the back-end.
+console.error = vi.fn();
+
 describe('Component: WantToPlayGamesRoot', () => {
   it('renders without crashing', () => {
     // ARRANGE
@@ -422,6 +425,7 @@ describe('Component: WantToPlayGamesRoot', () => {
 
   it('given there are multiple pages, allows the user to advance to the next page', async () => {
     // ARRANGE
+    window.scrollTo = vi.fn();
     const getSpy = vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: createPaginatedData([]) });
 
     render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {

@@ -379,7 +379,32 @@ class BuildGameListActionTest extends TestCase
         $firstItem = $result->items[0];
 
         // Assert
-        $this->assertFalse(property_exists($firstItem->game, 'numUnresolvedTickets'));
+        $this->assertArrayNotHasKey('numUnresolvedTickets', $firstItem->game->toArray());
+    }
+
+    public function testItCanSortByPlayersTotal(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+
+        $this->seedGamesForLists();
+        $this->addGameIdsToUserPlayList($user, gameIds: [1000, 1001, 1002, 1003, 1004, 1005]);
+
+        // Act
+        $result = (new BuildGameListAction())->execute(
+            GameListType::UserPlay,
+            $user,
+            sort: ['field' => 'playersTotal', 'direction' => 'asc'],
+        );
+
+        $firstItem = $result->items[0];
+        $lastItem = $result->items[count($result->items) - 1];
+
+        // Assert
+        $this->assertEquals(1004, $firstItem->game->id);
+        $this->assertEquals(0, $firstItem->game->playersTotal->resolve());
+        $this->assertEquals(1002, $lastItem->game->id);
+        $this->assertEquals(2856, $lastItem->game->playersTotal->resolve());
     }
 
     public function testItCanSortByNumUnresolvedTickets(): void

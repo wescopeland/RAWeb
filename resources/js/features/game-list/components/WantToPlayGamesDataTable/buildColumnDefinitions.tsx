@@ -151,6 +151,22 @@ export function buildColumnDefinitions(options: {
     },
 
     {
+      id: 'playersTotal',
+      accessorKey: 'game',
+      meta: { label: 'Players', align: 'right' },
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} sortLabelVariant="more-less" />
+      ),
+      cell: ({ row }) => {
+        const playersTotal = row.original.game?.playersTotal ?? 0;
+
+        return (
+          <p className={playersTotal === 0 ? 'text-muted' : ''}>{playersTotal.toLocaleString()}</p>
+        );
+      },
+    },
+
+    {
       id: 'numVisibleLeaderboards',
       accessorKey: 'game',
       meta: { label: 'Leaderboards', align: 'right' },

@@ -24,6 +24,7 @@ import { buildColumnDefinitions } from './buildColumnDefinitions';
 import { DataTablePagination } from './DataTablePagination';
 import { WantToPlayGamesDataTableToolbar } from './WantToPlayGamesDataTableToolbar';
 
+// These values are all generated from `useGameListState`.
 interface WantToPlayGamesDataTableProps {
   columnFilters: ColumnFiltersState;
   columnVisibility: VisibilityState;

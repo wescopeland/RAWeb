@@ -147,6 +147,7 @@ declare namespace App.Platform.Data {
     pointsWeighted?: number;
     releasedAt?: string | null;
     releasedAtGranularity?: string | null;
+    playersTotal?: number;
     lastUpdated?: string;
     numVisibleLeaderboards?: number;
     numUnresolvedTickets?: number;

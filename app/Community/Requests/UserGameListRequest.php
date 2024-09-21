@@ -17,7 +17,7 @@ class UserGameListRequest extends FormRequest
     {
         return [
             'page.number' => 'integer|min:1',
-            'sort' => 'string|in:title,system,achievementsPublished,pointsTotal,retroRatio,lastUpdated,releasedAt,numVisibleLeaderboards,numUnresolvedTickets,progress,-title,-system,-achievementsPublished,-pointsTotal,-retroRatio,-lastUpdated,-releasedAt,-numVisibleLeaderboards,-numUnresolvedTickets,-progress',
+            'sort' => 'string|in:title,system,achievementsPublished,pointsTotal,retroRatio,lastUpdated,releasedAt,playersTotal,numVisibleLeaderboards,numUnresolvedTickets,progress,-title,-system,-achievementsPublished,-pointsTotal,-retroRatio,-lastUpdated,-releasedAt,-playersTotal,-numVisibleLeaderboards,-numUnresolvedTickets,-progress',
             'filter.*' => 'string',
         ];
     }
