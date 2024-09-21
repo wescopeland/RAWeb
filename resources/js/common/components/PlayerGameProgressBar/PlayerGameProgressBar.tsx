@@ -42,6 +42,10 @@ export const PlayerGameProgressBar: FC<PlayerGameProgressBarProps> = ({ game, pl
 
   const isEventGame = getIsEventGame(game);
 
+  if (!achievementsPublished) {
+    return null;
+  }
+
   return (
     <BaseTooltip open={achievementsUnlocked === 0 ? false : undefined}>
       <BaseTooltipTrigger

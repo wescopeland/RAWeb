@@ -19,6 +19,7 @@ import {
   BasePopoverTrigger,
 } from '@/common/components/+vendor/BasePopover';
 import { BaseSeparator } from '@/common/components/+vendor/BaseSeparator';
+import { buildTrackingClassNames } from '@/common/utils/buildTrackingClassNames';
 import { cn } from '@/utils/cn';
 
 interface DataTableFacetedFilterProps<TData, TValue> {
@@ -61,7 +62,11 @@ export function DataTableFacetedFilter<TData, TValue>({
       <BasePopoverTrigger asChild>
         <BaseButton
           size="sm"
-          className={cn('border-dashed', className)}
+          className={cn(
+            'border-dashed',
+            buildTrackingClassNames(`Click ${title} Filter`),
+            className,
+          )}
           data-testid={`filter-${title}`}
         >
           <RxPlusCircled className="mr-2 h-4 w-4" />

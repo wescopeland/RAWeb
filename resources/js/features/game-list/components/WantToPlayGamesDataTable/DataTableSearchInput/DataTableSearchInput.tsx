@@ -12,10 +12,9 @@ interface DataTableSearchInputProps<TData> {
 }
 
 export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps<TData>) {
-  const [isMounted, setIsMounted] = useState(false);
-  const [rawInputValue, setRawInputValue] = useState(
-    (table.getColumn('title')?.getFilterValue() as string) ?? '',
-  );
+  const initialValue = (table.getColumn('title')?.getFilterValue() as string) ?? '';
+
+  const [rawInputValue, setRawInputValue] = useState(initialValue);
 
   const { hotkeyInputRef } = useSearchInputHotkey({ key: '/' });
 
@@ -35,12 +34,6 @@ export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps
    */
   useDebounce(
     () => {
-      if (rawInputValue.length === 0 && !isMounted) {
-        setIsMounted(true);
-
-        return;
-      }
-
       if (rawInputValue.length >= 3 || rawInputValue.length === 0) {
         table.getColumn('title')?.setFilterValue(rawInputValue);
       }

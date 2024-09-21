@@ -15,6 +15,16 @@ describe('Component: PlayerGameProgressBar', () => {
     expect(container).toBeTruthy();
   });
 
+  it('given the game has no published achievements, renders nothing', () => {
+    // ARRANGE
+    const game = createGame({ achievementsPublished: 0 });
+
+    render(<PlayerGameProgressBar game={game} playerGame={null} />);
+
+    // ASSERT
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+  });
+
   it('given the user has no progress on the game, renders a progress bar containing no progress', () => {
     // ARRANGE
     const game = createGame({ achievementsPublished: 33 });

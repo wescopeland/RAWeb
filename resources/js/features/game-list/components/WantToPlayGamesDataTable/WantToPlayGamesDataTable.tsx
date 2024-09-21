@@ -82,6 +82,8 @@ export const WantToPlayGamesDataTable: FC<WantToPlayGamesDataTableProps> = ({
     state: { columnFilters, columnVisibility, pagination, sorting },
   });
 
+  const visibleColumnCount = table.getVisibleFlatColumns().length;
+
   return (
     <div className="flex flex-col gap-3">
       <WantToPlayGamesDataTableToolbar
@@ -89,12 +91,27 @@ export const WantToPlayGamesDataTable: FC<WantToPlayGamesDataTableProps> = ({
         unfilteredTotal={gameListQuery.data?.unfilteredTotal ?? null}
       />
 
-      <BaseTable containerClassName="overflow-auto rounded-md border border-neutral-700/80 bg-embed light:border-neutral-300 lg:overflow-visible lg:rounded-sm">
+      <BaseTable
+        containerClassName={cn(
+          'overflow-auto rounded-md border border-neutral-700/80 bg-embed',
+          'light:border-neutral-300 lg:overflow-visible lg:rounded-sm',
+
+          // A sticky header cannot support this many columns. We have to drop stickiness.
+          visibleColumnCount > 8 ? 'lg:!overflow-x-scroll' : '',
+          visibleColumnCount > 10 ? 'xl:!overflow-x-scroll' : '',
+        )}
+      >
         <BaseTableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <BaseTableRow
               key={headerGroup.id}
-              className="do-not-highlight bg-embed lg:sticky lg:top-[41px] lg:z-10"
+              className={cn(
+                'do-not-highlight bg-embed lg:sticky lg:top-[41px] lg:z-10',
+
+                // A sticky header cannot support this many columns. We have to drop stickiness.
+                visibleColumnCount > 8 ? 'lg:!top-0' : '',
+                visibleColumnCount > 10 ? 'xl:!top-0' : '',
+              )}
             >
               {headerGroup.headers.map((header) => {
                 return (

@@ -23,12 +23,6 @@ class UserGameListController extends Controller
 {
     public function index(UserGameListRequest $request): InertiaResponse
     {
-        // LATER:
-        // TODO filter by tags (use same types as beaten game leaderboard)
-        // TODO show user progress
-        // TODO filter by user progress
-        // TODO remember the user's state settings somehow, Laravel session + redis ? -- at the very least, remember their columns
-
         /** @var User $user */
         $user = $request->user();
 
