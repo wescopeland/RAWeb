@@ -1,16 +1,20 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc';
 
 import { GameAvatar } from '@/common/components/GameAvatar';
+import { PlayerGameProgressBar } from '@/common/components/PlayerGameProgressBar';
 import { SystemChip } from '@/common/components/SystemChip/SystemChip';
 import { WeightedPointsContainer } from '@/common/components/WeightedPointsContainer';
+import { formatDate } from '@/common/utils/l10n/formatDate';
 import { formatNumber } from '@/common/utils/l10n/formatNumber';
 
 import { DataTableColumnHeader } from './DataTableColumnHeader';
 import { DataTableRowActions } from './DataTableRowActions';
 
 dayjs.extend(utc);
+dayjs.extend(localizedFormat);
 
 export function buildColumnDefinitions(options: {
   canSeeOpenTicketsColumn: boolean;
@@ -128,7 +132,7 @@ export function buildColumnDefinitions(options: {
       cell: ({ row }) => {
         const date = row.original.game?.lastUpdated ?? new Date();
 
-        return <p>{dayjs.utc(date).format('MMM DD, YYYY')}</p>;
+        return <p>{formatDate(dayjs.utc(date), 'll')}</p>;
       },
     },
 
@@ -147,13 +151,14 @@ export function buildColumnDefinitions(options: {
           return <p className="text-muted italic">unknown</p>;
         }
 
+        const dayjsDate = dayjs.utc(date);
         let formattedDate;
         if (granularity === 'day') {
-          formattedDate = dayjs.utc(date).format('MMM DD, YYYY');
+          formattedDate = formatDate(dayjsDate, 'll');
         } else if (granularity === 'month') {
-          formattedDate = dayjs.utc(date).format('MMM YYYY');
+          formattedDate = dayjsDate.format('MMM YYYY');
         } else {
-          formattedDate = dayjs.utc(date).format('YYYY');
+          formattedDate = dayjsDate.format('YYYY');
         }
 
         return <p>{formattedDate}</p>;
@@ -199,8 +204,7 @@ export function buildColumnDefinitions(options: {
     columnDefinitions.push({
       id: 'numUnresolvedTickets',
       accessorKey: 'game',
-
-      meta: { label: 'Open Tickets', align: 'right' },
+      meta: { label: 'Tickets', align: 'right' },
       header: ({ column, table }) => (
         <DataTableColumnHeader column={column} table={table} sortType="quantity" />
       ),
@@ -220,10 +224,28 @@ export function buildColumnDefinitions(options: {
     });
   }
 
-  columnDefinitions.push({
-    id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-  });
+  columnDefinitions.push(
+    ...([
+      {
+        id: 'progress',
+        accessorKey: 'game',
+        meta: { label: 'Progress', align: 'left' },
+        header: ({ column, table }) => (
+          <DataTableColumnHeader column={column} table={table} sortType="quantity" />
+        ),
+        cell: ({ row }) => {
+          const { game, playerGame } = row.original;
+
+          return <PlayerGameProgressBar game={game} playerGame={playerGame} />;
+        },
+      },
+
+      {
+        id: 'actions',
+        cell: ({ row }) => <DataTableRowActions row={row} />,
+      },
+    ] satisfies ColumnDef<App.Platform.Data.GameListEntry>[]),
+  );
 
   return columnDefinitions;
 }

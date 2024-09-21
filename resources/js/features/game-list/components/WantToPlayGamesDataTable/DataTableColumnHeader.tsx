@@ -97,7 +97,7 @@ export function DataTableColumnHeader<TData, TValue>({
             data-testid={`column-header-${column.columnDef.meta?.label}`}
           >
             <span>{column.columnDef.meta?.label}</span>
-            <SortIcon className="ml-2 h-4 w-4" />
+            <SortIcon className="ml-1 h-4 w-4" />
           </BaseButton>
         </BaseDropdownMenuTrigger>
 

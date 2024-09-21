@@ -17,6 +17,7 @@ declare namespace App.Community.Data {
   };
 }
 declare namespace App.Community.Enums {
+  export type AwardType = 1 | 2 | 3 | 6 | 7 | 8;
   export type TicketType = 1 | 2;
 }
 declare namespace App.Data {
