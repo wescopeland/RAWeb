@@ -20,7 +20,7 @@ export function buildColumnDefinitions(options: {
       accessorKey: 'game',
       meta: { label: 'Title' },
       enableHiding: false,
-      header: ({ column }) => <DataTableColumnHeader column={column} />,
+      header: ({ column, table }) => <DataTableColumnHeader column={column} table={table} />,
       cell: ({ row }) => {
         if (!row.original.game) {
           return null;
@@ -40,7 +40,7 @@ export function buildColumnDefinitions(options: {
       id: 'system',
       accessorKey: 'game',
       meta: { label: 'System' },
-      header: ({ column }) => <DataTableColumnHeader column={column} />,
+      header: ({ column, table }) => <DataTableColumnHeader column={column} table={table} />,
       cell: ({ row }) => {
         if (!row.original.game?.system) {
           return null;
@@ -54,8 +54,8 @@ export function buildColumnDefinitions(options: {
       id: 'achievementsPublished',
       accessorKey: 'game',
       meta: { label: 'Achievements', align: 'right' },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} sortLabelVariant="more-less" />
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} sortType="quantity" />
       ),
       cell: ({ row }) => {
         const achievementsPublished = row.original.game?.achievementsPublished ?? 0;
@@ -70,8 +70,8 @@ export function buildColumnDefinitions(options: {
       id: 'pointsTotal',
       accessorKey: 'game',
       meta: { label: 'Points', align: 'right' },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} sortLabelVariant="more-less" />
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} sortType="quantity" />
       ),
       cell: ({ row }) => {
         const pointsTotal = row.original.game?.pointsTotal ?? 0;
@@ -94,8 +94,8 @@ export function buildColumnDefinitions(options: {
       id: 'retroRatio',
       accessorKey: 'game',
       meta: { label: 'Rarity', align: 'right' },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} sortLabelVariant="more-less" />
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} sortType="quantity" />
       ),
       cell: ({ row }) => {
         const pointsTotal = row.original.game?.pointsTotal ?? 0;
@@ -116,7 +116,9 @@ export function buildColumnDefinitions(options: {
       id: 'lastUpdated',
       accessorKey: 'game',
       meta: { label: 'Last Updated' },
-      header: ({ column }) => <DataTableColumnHeader column={column} />,
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} sortType="date" />
+      ),
       cell: ({ row }) => {
         const date = row.original.game?.lastUpdated ?? new Date();
 
@@ -128,7 +130,9 @@ export function buildColumnDefinitions(options: {
       id: 'releasedAt',
       accessorKey: 'game',
       meta: { label: 'Release Date' },
-      header: ({ column }) => <DataTableColumnHeader column={column} />,
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} sortType="date" />
+      ),
       cell: ({ row }) => {
         const date = row.original.game?.releasedAt ?? null;
         const granularity = row.original.game?.releasedAtGranularity ?? 'day';
@@ -154,8 +158,8 @@ export function buildColumnDefinitions(options: {
       id: 'playersTotal',
       accessorKey: 'game',
       meta: { label: 'Players', align: 'right' },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} sortLabelVariant="more-less" />
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} sortType="quantity" />
       ),
       cell: ({ row }) => {
         const playersTotal = row.original.game?.playersTotal ?? 0;
@@ -170,8 +174,8 @@ export function buildColumnDefinitions(options: {
       id: 'numVisibleLeaderboards',
       accessorKey: 'game',
       meta: { label: 'Leaderboards', align: 'right' },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} sortLabelVariant="more-less" />
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} sortType="quantity" />
       ),
       cell: ({ row }) => {
         const numVisibleLeaderboards = row.original.game?.numVisibleLeaderboards ?? 0;
@@ -191,8 +195,8 @@ export function buildColumnDefinitions(options: {
       accessorKey: 'game',
 
       meta: { label: 'Open Tickets', align: 'right' },
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} sortLabelVariant="more-less" />
+      header: ({ column, table }) => (
+        <DataTableColumnHeader column={column} table={table} sortType="quantity" />
       ),
       cell: ({ row }) => {
         const numUnresolvedTickets = row.original.game?.numUnresolvedTickets ?? 0;

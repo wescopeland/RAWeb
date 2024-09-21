@@ -1,45 +1,22 @@
-import { useQueryClient } from '@tanstack/react-query';
 import type { Table } from '@tanstack/react-table';
-import axios from 'axios';
 import type { ReactNode } from 'react';
 import { LuArrowLeft, LuArrowLeftToLine, LuArrowRight, LuArrowRightToLine } from 'react-icons/lu';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
 import { BasePagination, BasePaginationContent } from '@/common/components/+vendor/BasePagination';
-import { buildGameListQueryFilterParams } from '@/common/hooks/useGameListQuery/buildGameListQueryFilterParams';
-import { buildGameListQuerySortParam } from '@/common/utils/buildGameListQuerySortParam';
+
+import { usePrefetchPagination } from '../../hooks/usePrefetchPagination';
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
 }
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>): ReactNode {
-  const { columnFilters, pagination, sorting } = table.getState();
+  const { pagination } = table.getState();
 
-  const queryClient = useQueryClient();
-
-  const prefetchPage = (newPageIndex: number) => {
-    queryClient.prefetchQuery({
-      queryKey: [
-        'data',
-        { pageIndex: newPageIndex, pageSize: pagination.pageSize },
-        sorting,
-        columnFilters,
-      ],
-      staleTime: 1 * 60 * 1000, // 1 minute
-      queryFn: async () => {
-        const response = await axios.get<App.Data.PaginatedData<App.Platform.Data.GameListEntry>>(
-          route('api.user-game-list.index', {
-            'page[number]': newPageIndex + 1,
-            sort: buildGameListQuerySortParam(sorting),
-            ...buildGameListQueryFilterParams(columnFilters),
-          }),
-        );
-
-        return response.data;
-      },
-    });
-  };
+  // Given the user hovers over a pagination button, it is very likely they will
+  // wind up clicking the button. Queries are cheap, so prefetch the destination page.
+  const { prefetchPagination } = usePrefetchPagination(table);
 
   const handlePageChange = (newPageIndex: number, isNext: boolean) => {
     table.setPageIndex(newPageIndex);
@@ -47,7 +24,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
 
     // Prefetch the next or previous page after setting the new page.
     if (nextPageIndex >= 0 && nextPageIndex < table.getPageCount()) {
-      prefetchPage(nextPageIndex);
+      prefetchPagination(nextPageIndex);
     }
 
     // Scroll the user to the top of the page.
@@ -73,7 +50,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             <BaseButton
               className="h-8 w-8 p-0"
               onClick={() => handlePageChange(0, false)}
-              onMouseEnter={() => prefetchPage(0)}
+              onMouseEnter={() => prefetchPagination(0)}
               disabled={!table.getCanPreviousPage()}
             >
               <span className="sr-only">Go to first page</span>
@@ -83,7 +60,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             <BaseButton
               className="h-8 w-8 p-0"
               onClick={() => handlePageChange(pagination.pageIndex - 1, false)}
-              onMouseEnter={() => prefetchPage(pagination.pageIndex - 1)}
+              onMouseEnter={() => prefetchPagination(pagination.pageIndex - 1)}
               disabled={!table.getCanPreviousPage()}
             >
               <span className="sr-only">Go to previous page</span>
@@ -93,7 +70,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             <BaseButton
               className="h-8 w-8 p-0"
               onClick={() => handlePageChange(pagination.pageIndex + 1, true)}
-              onMouseEnter={() => prefetchPage(pagination.pageIndex + 1)}
+              onMouseEnter={() => prefetchPagination(pagination.pageIndex + 1)}
               disabled={!table.getCanNextPage()}
             >
               <span className="sr-only">Go to next page</span>
@@ -103,7 +80,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             <BaseButton
               className="h-8 w-8 p-0"
               onClick={() => handlePageChange(table.getPageCount() - 1, true)}
-              onMouseEnter={() => prefetchPage(table.getPageCount() - 1)}
+              onMouseEnter={() => prefetchPagination(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
             >
               <span className="sr-only">Go to last page</span>

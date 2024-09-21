@@ -2,8 +2,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import type { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table';
 import axios from 'axios';
 
+import { buildGameListQueryFilterParams } from '../../utils/buildGameListQueryFilterParams';
 import { buildGameListQuerySortParam } from '../../utils/buildGameListQuerySortParam';
-import { buildGameListQueryFilterParams } from './buildGameListQueryFilterParams';
 
 const ONE_MINUTE = 1 * 60 * 1000;
 

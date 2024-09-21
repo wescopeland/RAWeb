@@ -1,5 +1,5 @@
-import type { Column } from '@tanstack/react-table';
-import type { HTMLAttributes, ReactNode } from 'react';
+import type { Column, Table } from '@tanstack/react-table';
+import type { FC, HTMLAttributes, ReactNode } from 'react';
 import type { IconType } from 'react-icons/lib';
 import { RxArrowDown, RxArrowUp, RxCaretSort, RxEyeNone } from 'react-icons/rx';
 
@@ -13,31 +13,71 @@ import {
 } from '@/common/components/+vendor/BaseDropdownMenu';
 import { cn } from '@/utils/cn';
 
-type SortLabelVariant = 'asc-desc' | 'more-less';
+import { usePrefetchSort } from '../../hooks/usePrefetchSort';
+
+type SortDirection = 'asc' | 'desc';
+type SortConfig = {
+  [key in SortDirection]: { label: string; icon?: IconType };
+};
+
+type SortConfigKind = 'default' | 'date' | 'quantity';
+
+/**
+ * The order of `asc` and `desc` determines the order they'll
+ * appear in the menu as menuitems.
+ */
+const sortConfigs: Record<SortConfigKind, SortConfig> = {
+  default: {
+    asc: { label: 'Ascending (A - Z)' },
+    desc: { label: 'Descending (Z - A)' },
+  },
+  date: {
+    asc: { label: 'Earliest' },
+    desc: { label: 'Latest' },
+  },
+  quantity: {
+    desc: { label: 'More', icon: RxArrowUp },
+    asc: { label: 'Less', icon: RxArrowDown },
+  },
+};
+
+const defaultIcons = { asc: RxArrowUp, desc: RxArrowDown };
 
 interface DataTableColumnHeaderProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
+  table: Table<TData>;
 
-  ascLabel?: string;
-  descLabel?: string;
-  sortLabelVariant?: SortLabelVariant;
+  sortType?: SortConfigKind;
 }
-
-const iconMap: Record<SortLabelVariant, { AscIcon: IconType; DescIcon: IconType }> = {
-  'asc-desc': { AscIcon: RxArrowUp, DescIcon: RxArrowDown },
-  'more-less': { AscIcon: RxArrowDown, DescIcon: RxArrowUp },
-};
 
 export function DataTableColumnHeader<TData, TValue>({
   className,
   column,
-  sortLabelVariant = 'asc-desc',
+  table,
+  sortType = 'default',
 }: DataTableColumnHeaderProps<TData, TValue>): ReactNode {
+  const { prefetchSort } = usePrefetchSort(table);
+
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{column.columnDef.meta?.label}</div>;
   }
 
-  const { AscIcon, DescIcon } = iconMap[sortLabelVariant];
+  const sortConfig = sortConfigs[sortType];
+
+  const getIcon = (direction: 'asc' | 'desc'): IconType =>
+    sortConfig[direction].icon || defaultIcons[direction];
+
+  const getCurrentSortIcon = (): IconType => {
+    const sortDirection = column.getIsSorted();
+
+    if (sortDirection === false) {
+      return RxCaretSort;
+    }
+
+    return getIcon(sortDirection);
+  };
+
+  const SortIcon = getCurrentSortIcon();
 
   return (
     <div
@@ -57,45 +97,21 @@ export function DataTableColumnHeader<TData, TValue>({
             data-testid={`column-header-${column.columnDef.meta?.label}`}
           >
             <span>{column.columnDef.meta?.label}</span>
-
-            {column.getIsSorted() === 'desc' ? (
-              <DescIcon className="ml-2 h-4 w-4" />
-            ) : column.getIsSorted() === 'asc' ? (
-              <AscIcon className="ml-2 h-4 w-4" />
-            ) : (
-              <RxCaretSort className="ml-2 h-4 w-4" />
-            )}
+            <SortIcon className="ml-2 h-4 w-4" />
           </BaseButton>
         </BaseDropdownMenuTrigger>
 
         <BaseDropdownMenuContent align="start">
-          {sortLabelVariant === 'asc-desc' ? (
-            <>
-              <BaseDropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                <AscIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
-                Asc
-              </BaseDropdownMenuItem>
-
-              <BaseDropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                <DescIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
-                Desc
-              </BaseDropdownMenuItem>
-            </>
-          ) : null}
-
-          {sortLabelVariant === 'more-less' ? (
-            <>
-              <BaseDropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                <DescIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
-                More
-              </BaseDropdownMenuItem>
-
-              <BaseDropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                <AscIcon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
-                Less
-              </BaseDropdownMenuItem>
-            </>
-          ) : null}
+          {(Object.keys(sortConfig) as SortDirection[]).map((direction) => (
+            <SortMenuItem
+              key={direction}
+              direction={direction}
+              icon={getIcon(direction)}
+              label={sortConfig[direction].label}
+              onClick={() => column.toggleSorting(direction === 'desc')}
+              onMouseEnter={() => prefetchSort(column.columnDef.id, direction)}
+            />
+          ))}
 
           {column.getCanHide() ? (
             <>
@@ -112,3 +128,21 @@ export function DataTableColumnHeader<TData, TValue>({
     </div>
   );
 }
+
+interface SortMenuItemProps {
+  direction: 'asc' | 'desc';
+  icon: IconType;
+  label: string;
+  onClick: () => void;
+
+  onMouseEnter?: () => void;
+}
+
+const SortMenuItem: FC<SortMenuItemProps> = ({ icon: Icon, label, onClick, onMouseEnter }) => {
+  return (
+    <BaseDropdownMenuItem onClick={onClick} onMouseEnter={onMouseEnter}>
+      <Icon className="text-muted-foreground/70 mr-2 h-3.5 w-3.5" />
+      {label}
+    </BaseDropdownMenuItem>
+  );
+};

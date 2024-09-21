@@ -1,4 +1,5 @@
 import type { Column } from '@tanstack/react-table';
+import type { FC } from 'react';
 import { RxCheck, RxPlusCircled } from 'react-icons/rx';
 
 import { BaseBadge } from '@/common/components/+vendor/BaseBadge';
@@ -42,6 +43,17 @@ export function DataTableFacetedFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
+
+  const handleOptionToggle = (optionValue: string) => {
+    if (selectedValues.has(optionValue)) {
+      selectedValues.delete(optionValue);
+    } else {
+      selectedValues.add(optionValue);
+    }
+
+    const filterValues = Array.from(selectedValues);
+    column?.setFilterValue(filterValues.length ? filterValues : undefined);
+  };
 
   return (
     <BasePopover>
@@ -108,15 +120,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 return (
                   <BaseCommandItem
                     key={option.value}
-                    onSelect={() => {
-                      if (isSelected) {
-                        selectedValues.delete(option.value);
-                      } else {
-                        selectedValues.add(option.value);
-                      }
-                      const filterValues = Array.from(selectedValues);
-                      column?.setFilterValue(filterValues.length ? filterValues : undefined);
-                    }}
+                    onSelect={() => handleOptionToggle(option.value)}
                   >
                     <div
                       className={cn(
@@ -146,17 +150,7 @@ export function DataTableFacetedFilter<TData, TValue>({
             </BaseCommandGroup>
 
             {selectedValues.size > 0 ? (
-              <div className="sticky bottom-0 bg-neutral-950">
-                <BaseCommandSeparator />
-                <BaseCommandGroup>
-                  <BaseCommandItem
-                    onSelect={() => column?.setFilterValue(undefined)}
-                    className="cursor-pointer justify-center text-center text-xs text-link transition hover:bg-neutral-900"
-                  >
-                    Clear filters
-                  </BaseCommandItem>
-                </BaseCommandGroup>
-              </div>
+              <ClearFiltersButton onClear={() => column?.setFilterValue(undefined)} />
             ) : null}
           </BaseCommandList>
         </BaseCommand>
@@ -164,3 +158,23 @@ export function DataTableFacetedFilter<TData, TValue>({
     </BasePopover>
   );
 }
+
+interface ClearFiltersButtonProps {
+  onClear: () => void;
+}
+
+const ClearFiltersButton: FC<ClearFiltersButtonProps> = ({ onClear }) => {
+  return (
+    <div className="sticky bottom-0 bg-neutral-950">
+      <BaseCommandSeparator />
+      <BaseCommandGroup>
+        <BaseCommandItem
+          onSelect={onClear}
+          className="cursor-pointer justify-center text-center text-xs text-link transition hover:bg-neutral-900"
+        >
+          Clear filters
+        </BaseCommandItem>
+      </BaseCommandGroup>
+    </div>
+  );
+};
