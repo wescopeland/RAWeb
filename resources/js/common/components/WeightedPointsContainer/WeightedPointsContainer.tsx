@@ -15,8 +15,8 @@ export const WeightedPointsContainer: FC<WeightedPointsContainerProps> = ({ chil
 
       <BaseTooltipContent>
         <div className="flex flex-col items-center text-center text-xs">
-          <p> RetroPoints: A measurement of rarity and estimated difficulty.</p>
-          <p> Derived from points, number of achievers, and number of players.</p>
+          <p>RetroPoints: A measurement of rarity and estimated difficulty.</p>
+          <p>Derived from points, number of achievers, and number of players.</p>
         </div>
       </BaseTooltipContent>
     </BaseTooltip>

@@ -1,22 +1,31 @@
 import type { FC } from 'react';
 
 import { useCardTooltip } from '@/common/hooks/useCardTooltip';
+import { usePageProps } from '@/common/hooks/usePageProps';
 import type { BaseAvatarProps } from '@/common/models';
 
 import { GameTitle } from '../GameTitle';
 
-type GameAvatarProps = BaseAvatarProps & App.Platform.Data.Game;
+type GameAvatarProps = BaseAvatarProps &
+  App.Platform.Data.Game & { showHoverCardProgressForUsername?: string };
 
 export const GameAvatar: FC<GameAvatarProps> = ({
   id,
   badgeUrl,
+  showHoverCardProgressForUsername,
   title,
   showImage = true,
   showLabel = true,
   size = 32,
   hasTooltip = true,
 }) => {
-  const { cardTooltipProps } = useCardTooltip({ dynamicType: 'game', dynamicId: id });
+  const { auth } = usePageProps();
+
+  const { cardTooltipProps } = useCardTooltip({
+    dynamicType: 'game',
+    dynamicId: id,
+    dynamicContext: showHoverCardProgressForUsername ?? auth?.user.displayName,
+  });
 
   return (
     <a

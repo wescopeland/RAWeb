@@ -52,7 +52,10 @@ export const WantToPlayGamesDataTable: FC<WantToPlayGamesDataTableProps> = ({
 
   const table = useReactTable({
     columns: useMemo(
-      () => buildColumnDefinitions({ canSeeOpenTicketsColumn: can.develop ?? false }),
+      () =>
+        buildColumnDefinitions({
+          canSeeOpenTicketsColumn: can.develop ?? false,
+        }),
       [can.develop],
     ),
     data: gameListQuery.data?.items ?? [],

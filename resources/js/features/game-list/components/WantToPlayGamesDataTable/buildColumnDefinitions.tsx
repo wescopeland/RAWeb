@@ -13,6 +13,7 @@ dayjs.extend(utc);
 
 export function buildColumnDefinitions(options: {
   canSeeOpenTicketsColumn: boolean;
+  forUsername?: string;
 }): ColumnDef<App.Platform.Data.GameListEntry>[] {
   const columnDefinitions: ColumnDef<App.Platform.Data.GameListEntry>[] = [
     {
@@ -29,7 +30,11 @@ export function buildColumnDefinitions(options: {
         return (
           <div className="max-w-fit">
             <div className="max-w-[400px]">
-              <GameAvatar {...row.original.game} size={32} />
+              <GameAvatar
+                {...row.original.game}
+                size={32}
+                showHoverCardProgressForUsername={options.forUsername}
+              />
             </div>
           </div>
         );
@@ -46,7 +51,7 @@ export function buildColumnDefinitions(options: {
           return null;
         }
 
-        return <SystemChip system={row.original.game.system} />;
+        return <SystemChip {...row.original.game.system} />;
       },
     },
 
