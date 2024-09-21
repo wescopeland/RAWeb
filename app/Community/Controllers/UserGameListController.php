@@ -23,8 +23,6 @@ class UserGameListController extends Controller
 {
     public function index(UserGameListRequest $request): InertiaResponse
     {
-        // TODO if page number param given greater than pages, it should go to max page
-
         // LATER:
         // TODO filter by tags (use same types as beaten game leaderboard)
         // TODO show user progress
@@ -49,7 +47,7 @@ class UserGameListController extends Controller
             ->pluck('GameData.ConsoleID');
         $filterableSystemOptions = System::whereIn('ID', $filterableSystemIds)
             ->get()
-            ->map(fn ($system) => SystemData::fromSystem($system))
+            ->map(fn ($system) => SystemData::fromSystem($system)->include('nameShort'))
             ->values()
             ->all();
 

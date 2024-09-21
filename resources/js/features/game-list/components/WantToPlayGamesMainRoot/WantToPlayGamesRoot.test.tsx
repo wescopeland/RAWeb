@@ -260,7 +260,6 @@ describe('Component: WantToPlayGamesRoot', () => {
   it('allows the user to filter by system/console', async () => {
     // ARRANGE
     window.HTMLElement.prototype.scrollIntoView = vi.fn();
-
     const getSpy = vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: createPaginatedData([]) });
 
     render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
@@ -287,6 +286,33 @@ describe('Component: WantToPlayGamesRoot', () => {
           sort: null,
         },
       ]);
+    });
+  });
+
+  it('given a filter is currently applied, shows both the filtered and unfiltered game totals', async () => {
+    // ARRANGE
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    vi.spyOn(axios, 'get').mockResolvedValueOnce({
+      data: createPaginatedData([], { total: 3, unfilteredTotal: 587 }),
+    });
+
+    render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
+      pageProps: {
+        auth: { user: createAuthenticatedUser() },
+        filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
+        paginatedGameListEntries: createPaginatedData([]),
+        can: { develop: false },
+        ziggy: createZiggyProps(),
+      },
+    });
+
+    // ACT
+    await userEvent.click(screen.getByTestId('filter-System'));
+    await userEvent.click(screen.getByRole('option', { name: /genesis/i }));
+
+    // ASSERT
+    await waitFor(() => {
+      expect(screen.getByText(/3 of 587 games/i)).toBeVisible();
     });
   });
 
@@ -326,7 +352,6 @@ describe('Component: WantToPlayGamesRoot', () => {
   it('allows the user to sort by a string column', async () => {
     // ARRANGE
     window.HTMLElement.prototype.scrollIntoView = vi.fn();
-
     const getSpy = vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: createPaginatedData([]) });
 
     render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
@@ -358,7 +383,6 @@ describe('Component: WantToPlayGamesRoot', () => {
   it('allows the user to sort by a numeric column', async () => {
     // ARRANGE
     window.HTMLElement.prototype.scrollIntoView = vi.fn();
-
     const getSpy = vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: createPaginatedData([]) });
 
     render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
@@ -382,6 +406,37 @@ describe('Component: WantToPlayGamesRoot', () => {
         {
           'page[number]': 1,
           sort: 'achievementsPublished',
+        },
+      ]);
+    });
+  });
+
+  it('allows the user to sort by a date column', async () => {
+    // ARRANGE
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+    const getSpy = vi.spyOn(axios, 'get').mockResolvedValueOnce({ data: createPaginatedData([]) });
+
+    render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
+      pageProps: {
+        auth: { user: createAuthenticatedUser() },
+        filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
+        paginatedGameListEntries: createPaginatedData([]),
+        can: { develop: false },
+        ziggy: createZiggyProps(),
+      },
+    });
+
+    // ACT
+    await userEvent.click(screen.getByTestId('column-header-Release Date'));
+    await userEvent.click(screen.getByRole('menuitem', { name: /earliest/i }));
+
+    // ASSERT
+    await waitFor(() => {
+      expect(getSpy).toHaveBeenCalledWith([
+        'api.user-game-list.index',
+        {
+          'page[number]': 1,
+          sort: 'releasedAt',
         },
       ]);
     });
@@ -455,5 +510,24 @@ describe('Component: WantToPlayGamesRoot', () => {
         },
       ]);
     });
+  });
+
+  it("given the user presses the '/' hotkey, focuses the search input", async () => {
+    // ARRANGE
+    render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
+      pageProps: {
+        auth: { user: createAuthenticatedUser() },
+        filterableSystemOptions: [createSystem({ id: 1, name: 'Genesis/Mega Drive' })],
+        paginatedGameListEntries: createPaginatedData([]),
+        can: { develop: false },
+        ziggy: createZiggyProps(),
+      },
+    });
+
+    // ACT
+    await userEvent.keyboard('/');
+
+    // ASSERT
+    expect(screen.getByRole('textbox', { name: /search/i })).toHaveFocus();
   });
 });

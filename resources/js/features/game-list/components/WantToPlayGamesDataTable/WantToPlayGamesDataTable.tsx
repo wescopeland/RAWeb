@@ -81,9 +81,12 @@ export const WantToPlayGamesDataTable: FC<WantToPlayGamesDataTableProps> = ({
 
   return (
     <div className="flex flex-col gap-3">
-      <WantToPlayGamesDataTableToolbar table={table} />
+      <WantToPlayGamesDataTableToolbar
+        table={table}
+        unfilteredTotal={gameListQuery.data?.unfilteredTotal ?? null}
+      />
 
-      <BaseTable containerClassName="overflow-auto rounded-md border border-neutral-700 bg-embed light:border-neutral-300 lg:overflow-visible lg:rounded-sm">
+      <BaseTable containerClassName="overflow-auto rounded-md border border-neutral-700/80 bg-embed light:border-neutral-300 lg:overflow-visible lg:rounded-sm">
         <BaseTableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <BaseTableRow

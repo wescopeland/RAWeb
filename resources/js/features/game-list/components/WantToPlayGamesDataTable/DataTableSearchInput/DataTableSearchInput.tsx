@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 
 import { BaseInput } from '@/common/components/+vendor/BaseInput';
+import { cn } from '@/utils/cn';
+
+import { useSearchInputHotkey } from './useSearchInputHotkey';
 
 interface DataTableSearchInputProps<TData> {
   table: Table<TData>;
@@ -13,6 +16,8 @@ export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps
   const [rawInputValue, setRawInputValue] = useState(
     (table.getColumn('title')?.getFilterValue() as string) ?? '',
   );
+
+  const { hotkeyInputRef } = useSearchInputHotkey({ key: '/' });
 
   /**
    * Listen for changes with column filter state and stay in sync. Otherwise,
@@ -25,6 +30,9 @@ export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps
     // eslint-disable-next-line react-hooks/exhaustive-deps -- this is a valid dependency array
   }, [table.getState().columnFilters]);
 
+  /**
+   * Wait until the user is done typing before we fetch from the back-end.
+   */
   useDebounce(
     () => {
       if (rawInputValue.length === 0 && !isMounted) {
@@ -47,13 +55,32 @@ export function DataTableSearchInput<TData>({ table }: DataTableSearchInputProps
         Search games
       </label>
 
-      <BaseInput
-        id="search-field"
-        placeholder="Search games..."
-        value={rawInputValue}
-        onChange={(event) => setRawInputValue(event.target.value)}
-        className="h-8 sm:w-[150px] lg:w-[250px]"
-      />
+      <div className="group relative flex items-center">
+        <BaseInput
+          id="search-field"
+          ref={hotkeyInputRef}
+          placeholder="Search games..."
+          value={rawInputValue}
+          onChange={(event) => setRawInputValue(event.target.value)}
+          className="peer h-8 sm:w-[150px] lg:w-[250px]"
+          aria-describedby="search-shortcut"
+        />
+
+        <kbd
+          id="search-shortcut"
+          className={cn(
+            'absolute right-2 hidden rounded-md border border-transparent bg-neutral-800/60 px-1.5 font-mono text-xs',
+            'text-neutral-400 peer-focus:opacity-0 light:bg-gray-200 light:text-gray-800',
+            'lg:block',
+          )}
+        >
+          /
+        </kbd>
+
+        <div aria-live="polite" className="sr-only">
+          Press / to focus the search field.
+        </div>
+      </div>
     </div>
   );
 }

@@ -10,10 +10,12 @@ import { DataTableViewOptions } from './DataTableViewOptions';
 
 interface WantToPlayGamesDataTableToolbarProps<TData> {
   table: Table<TData>;
+  unfilteredTotal: number | null;
 }
 
 export function WantToPlayGamesDataTableToolbar<TData>({
   table,
+  unfilteredTotal,
 }: WantToPlayGamesDataTableToolbarProps<TData>) {
   const { filterableSystemOptions } = usePageProps<App.Community.Data.UserGameListPageProps>();
 
@@ -31,7 +33,11 @@ export function WantToPlayGamesDataTableToolbar<TData>({
             title="System"
             options={filterableSystemOptions
               .sort((a, b) => a.name.localeCompare(b.name))
-              .map((system) => ({ label: system.name, value: String(system.id) }))}
+              .map((system) => ({
+                label: system.name,
+                selectedLabel: system.nameShort,
+                value: String(system.id),
+              }))}
           />
         ) : null}
 
@@ -62,7 +68,17 @@ export function WantToPlayGamesDataTableToolbar<TData>({
 
       <div className="flex items-center justify-between gap-3 md:justify-normal">
         <p className="text-neutral-200 light:text-neutral-900">
-          {table.options.rowCount} {table.options.rowCount === 1 ? 'game' : 'games'}
+          {unfilteredTotal ? (
+            <>
+              {table.options.rowCount?.toLocaleString()} of {unfilteredTotal.toLocaleString()}{' '}
+              {unfilteredTotal === 1 ? 'game' : 'games'}
+            </>
+          ) : (
+            <>
+              {table.options.rowCount?.toLocaleString()}{' '}
+              {table.options.rowCount === 1 ? 'game' : 'games'}
+            </>
+          )}
         </p>
 
         <DataTableViewOptions table={table} />
