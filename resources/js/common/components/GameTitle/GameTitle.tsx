@@ -48,20 +48,19 @@ function stripTagsFromTitle(rawTitle: string): {
   let subsetKind: string | null = null;
   const nonSubsetTags: string[] = [];
 
-  const decodedTitle = decodeURIComponent(rawTitle);
-  let strippedTitle = decodedTitle;
+  let strippedTitle = rawTitle;
 
   // Use a single regex operation to extract all tags in the format ~Tag~.
   const tagRegex = /~([^~]+)~/g;
   let match;
-  while ((match = tagRegex.exec(decodedTitle)) !== null) {
+  while ((match = tagRegex.exec(strippedTitle)) !== null) {
     nonSubsetTags.push(match[1]);
   }
   strippedTitle = strippedTitle.replace(tagRegex, '');
 
   // Use a single regex operation to extract the subset.
   const subsetRegex = /\s?\[Subset - (.+)\]/;
-  const subsetMatch = subsetRegex.exec(decodedTitle);
+  const subsetMatch = subsetRegex.exec(strippedTitle);
   if (subsetMatch) {
     subsetKind = subsetMatch[1];
     strippedTitle = strippedTitle.replace(subsetRegex, '');

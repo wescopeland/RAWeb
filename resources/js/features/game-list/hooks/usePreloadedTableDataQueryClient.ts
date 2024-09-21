@@ -18,7 +18,7 @@ interface UseSsrQueryClientHydrationProps<TData = unknown> {
   sorting: SortingState;
 }
 
-export function useSsrQueryClientHydration<TData = unknown>({
+export function usePreloadedTableDataQueryClient<TData = unknown>({
   columnFilters,
   paginatedData,
   pagination,

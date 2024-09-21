@@ -6,7 +6,7 @@ import { usePageProps } from '@/common/hooks/usePageProps';
 
 import { useAutoUpdatingQueryParams } from '../../hooks/useAutoUpdatingQueryParams';
 import { useGameListState } from '../../hooks/useGameListState';
-import { useSsrQueryClientHydration } from '../../hooks/useSsrQueryClientHydration';
+import { usePreloadedTableDataQueryClient } from '../../hooks/usePreloadedTableDataQueryClient';
 import { WantToPlayGamesDataTable } from '../WantToPlayGamesDataTable';
 
 export const WantToPlayGamesRoot: FC = () => {
@@ -24,7 +24,7 @@ export const WantToPlayGamesRoot: FC = () => {
     sorting,
   } = useGameListState(paginatedGameListEntries);
 
-  const { queryClientWithInitialData } = useSsrQueryClientHydration({
+  const { queryClientWithInitialData } = usePreloadedTableDataQueryClient({
     columnFilters,
     pagination,
     sorting,

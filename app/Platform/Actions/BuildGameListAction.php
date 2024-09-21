@@ -35,9 +35,20 @@ class BuildGameListAction
         array $sort = [],
         array $filters = [],
     ): PaginatedData {
+        /**
+         * 👉 Game lists, by design, have a lot of complexity and are tricky to maintain.
+         *    Try to keep the implementation details in execute() thin.
+         *    Try to extract new logic to a method. This makes the action easier to test.
+         *    Add tests for ALL new logic added in here. @see BuildGameListActionTest.php
+         */
+
         // Regardless of the list context, we'll build a common base query which can use
         // the reusable sorts and filters and then be passed to a datatable component.
         $query = $this->buildBaseQuery($listType, $user);
+
+        // Clone the common base query to calculate the unfiltered total.
+        // This lets us show something like "3 of 587 games" in the UI.
+        $unfilteredTotal = $this->getUnfilteredResultsCount($query, $filters);
 
         // After building the base query, tack on whatever filters and sort we need.
         // We support multiple filters, but only a single selected sort.
@@ -48,11 +59,12 @@ class BuildGameListAction
         // We'll override its `total` value with the correct one.
         $total = $query->count('GameData.ID');
 
-        // Adjust the current page if it exceeds the last page.
-        $lastPage = (int) ceil($total / $perPage);
-        if ($page > $lastPage) {
-            $page = $lastPage;
-        }
+        // Automatically adjust the current page if it exceeds the last page.
+        $page = $this->ensurePageWithinBounds(
+            total: $total,
+            page: $page,
+            perPage: $perPage,
+        );
 
         /** @var LengthAwarePaginator<Game> $entries */
         $entries = $query->paginate($perPage, ['*'], 'page', $page);
@@ -63,37 +75,55 @@ class BuildGameListAction
             ? $this->getPlayerGames($user, $entries->pluck('id'))
             : collect();
 
-        $backlogGames = $user
-            ? $this->getBacklogGames($user, $entries->pluck('id'))
-            : collect();
+        // If the user is authenticated, pull all their backlog records for the games in the list.
+        // Otherwise, call collect(), which is basically a noop.
+        // We also skip this query if the user is viewing their Want to Play Games List.
+        // In that case, we optimistically assume every game viewed is a "backlog game".
+        $backlogGames = collect();
+        if ($listType !== GameListType::UserPlay && $user) {
+            $backlogGames = $this->getBacklogGames($user, $entries->pluck('id'));
+        }
 
-        $transformedEntries = $entries->getCollection()->map(function (Game $game) use ($user, $playerGames, $backlogGames): GameListEntryData {
-            $playerGame = $playerGames->get($game->id);
+        $transformedEntries = $entries
+            ->getCollection()
+            ->map(function (Game $game) use (
+                $listType,
+                $user,
+                $playerGames,
+                $backlogGames
+            ): GameListEntryData {
+                $playerGame = $playerGames->get($game->id);
 
-            return new GameListEntryData(
-                game: GameData::from($game)->include(
-                    'system.nameShort',
-                    'system.iconUrl',
-                    'achievementsPublished',
-                    'badgeUrl',
-                    'pointsTotal',
-                    'pointsWeighted',
-                    'releasedAt',
-                    'releasedAtGranularity',
-                    'playersTotal',
-                    'lastUpdated',
-                    'numVisibleLeaderboards',
-                    $user?->can('develop') ? 'numUnresolvedTickets' : '',
-                ),
-                playerGame: $playerGame
-                    ? PlayerGameData::fromPlayerGame($playerGame)->include('highestAward')
-                    : null,
-                isInBacklog: $backlogGames->has($game->id),
-            );
-        });
+                return new GameListEntryData(
+                    game: GameData::from($game)->include(
+                        'system.nameShort',
+                        'system.iconUrl',
+                        'achievementsPublished',
+                        'badgeUrl',
+                        'pointsTotal',
+                        'pointsWeighted',
+                        'releasedAt',
+                        'releasedAtGranularity',
+                        'playersTotal',
+                        'lastUpdated',
+                        'numVisibleLeaderboards',
+                        $user?->can('develop') ? 'numUnresolvedTickets' : '',
+                    ),
+                    playerGame: $playerGame
+                        ? PlayerGameData::fromPlayerGame($playerGame)->include('highestAward')
+                        : null,
+                    isInBacklog: $listType === GameListType::UserPlay
+                        ? true
+                        : $backlogGames->has($game->id),
+                );
+            });
         $entries->setCollection($transformedEntries);
 
-        return PaginatedData::fromLengthAwarePaginator($entries, total: $total);
+        return PaginatedData::fromLengthAwarePaginator(
+            $entries,
+            total: $total,
+            unfilteredTotal: $unfilteredTotal,
+        );
     }
 
     /**
@@ -624,6 +654,21 @@ class BuildGameListAction
     }
 
     /**
+     * If the user provides a query param like ?page[number]=8 when there are
+     * only 5 pages, set the current page to 5.
+     */
+    private function ensurePageWithinBounds(int $total, int $page, int $perPage): int
+    {
+        // Automatically adjust the current page if it exceeds the last page.
+        $lastPage = (int) ceil($total / $perPage);
+        if ($page > $lastPage) {
+            $page = $lastPage;
+        }
+
+        return $page;
+    }
+
+    /**
      * @param Collection<int|string, mixed> $gameIds
      * @return Collection<int|string, int|string>
      */
@@ -650,5 +695,21 @@ class BuildGameListAction
             }])
             ->get()
             ->keyBy('game_id');
+    }
+
+    /**
+     * Clone the common base query to calculate the unfiltered total.
+     * This lets us show something like "3 of 587 games" in the UI.
+     *
+     * @param Builder<Game> $query
+     */
+    private function getUnfilteredResultsCount(Builder $query, array $filters): ?int
+    {
+        $unfilteredTotal = null;
+        if (!empty($filters)) {
+            $unfilteredTotal = (clone $query)->count('GameData.ID');
+        }
+
+        return $unfilteredTotal;
     }
 }

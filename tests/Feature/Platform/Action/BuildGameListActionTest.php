@@ -63,6 +63,28 @@ class BuildGameListActionTest extends TestCase
         $this->assertEquals(3, $result->lastPage);
     }
 
+    public function testItKeepsTheUserPageWithinBounds(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+
+        $this->seedGamesForLists();
+        $this->addGameIdsToUserPlayList($user, gameIds: [1000, 1001, 1002, 1003, 1004, 1005]);
+
+        // Act
+        $result = (new BuildGameListAction())->execute(
+            GameListType::UserPlay,
+            $user,
+            perPage: 1,
+            page: 25, // There should only be 6 pages. Try to exceed the bounds.
+        );
+
+        // Assert
+        $this->assertEquals(6, $result->total);
+        $this->assertEquals(6, $result->currentPage);
+        $this->assertEquals(6, $result->lastPage);
+    }
+
     // TODO once other list contexts are supported, use a different one for this test case
     public function testItReportsGamesAreInUserBacklog(): void
     {
@@ -464,6 +486,25 @@ class BuildGameListActionTest extends TestCase
         $this->assertEquals(1005, $result->items[2]->game->id);
     }
 
+    public function testItReturnsNoUnfilteredTotalIfFiltersArentApplied(): void
+    {
+        // Arrange
+        $user = User::factory()->create();
+
+        $this->seedGamesForLists();
+        $this->addGameIdsToUserPlayList($user, gameIds: [1000, 1001, 1002, 1003, 1004, 1005]);
+
+        // Act
+        $result = (new BuildGameListAction())->execute(
+            GameListType::UserPlay,
+            $user,
+            filters: [],
+        );
+
+        // Assert
+        $this->assertNull($result->unfilteredTotal);
+    }
+
     public function testItCanFilterByOneSystem(): void
     {
         // Arrange
@@ -480,6 +521,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(2, $result->total);
         $this->assertEquals(2, count($result->items));
     }
@@ -500,6 +542,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(6, $result->total);
         $this->assertEquals(6, count($result->items));
     }
@@ -520,6 +563,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(5, $result->total);
         $this->assertEquals(5, count($result->items));
     }
@@ -540,6 +584,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(1, $result->total);
         $this->assertEquals(1, count($result->items));
     }
@@ -565,6 +610,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(4, $result->total);
         $this->assertEquals(4, count($result->items));
     }
@@ -591,6 +637,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(4, $result->total);
         $this->assertEquals(4, count($result->items)); // These values can differ unless we override ->total.
     }
@@ -617,6 +664,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(2, $result->total);
         $this->assertEquals(2, count($result->items)); // These values can differ unless we override ->total.
     }
@@ -644,6 +692,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(1, $result->total);
         $this->assertEquals(1, count($result->items)); // These values can differ unless we override ->total.
     }
@@ -671,6 +720,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(1, $result->total);
         $this->assertEquals(1, count($result->items)); // These values can differ unless we override ->total.
     }
@@ -699,6 +749,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(2, $result->total);
         $this->assertEquals(2, count($result->items)); // These values can differ unless we override ->total.
     }
@@ -728,6 +779,7 @@ class BuildGameListActionTest extends TestCase
         );
 
         // Assert
+        $this->assertEquals(6, $result->unfilteredTotal);
         $this->assertEquals(3, $result->total);
         $this->assertEquals(3, count($result->items)); // These values can differ unless we override ->total.
     }

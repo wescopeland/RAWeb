@@ -45,6 +45,7 @@ declare namespace App.Data {
     lastPage: number;
     perPage: number;
     total: number;
+    unfilteredTotal: number | null;
     items: TItems[];
     links: {
       firstPageUrl: string | null;
