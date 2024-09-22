@@ -59,8 +59,12 @@ class UserGameListApiController extends Controller
     public function destroy(Request $request, int $gameId): JsonResponse
     {
         $user = $request->user();
+
+        $type = $request->input('userGameListType');
+
         $userGameListEntry = UserGameListEntry::where('user_id', $user->id)
             ->where('GameID', $gameId)
+            ->where('type', $type)
             ->first();
 
         if ($userGameListEntry) {

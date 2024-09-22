@@ -2,6 +2,7 @@ import userEvent from '@testing-library/user-event';
 import axios from 'axios';
 
 import { createAuthenticatedUser } from '@/common/models';
+import { UserGameListType } from '@/common/utils/generatedAppConstants';
 import { render, screen, waitFor } from '@/test';
 import {
   createGame,
@@ -128,6 +129,52 @@ describe('Component: WantToPlayGamesRoot', () => {
 
     // ASSERT
     expect(deleteSpy).toHaveBeenCalledWith(route('api.user-game-list.destroy', mockGame.id));
+  });
+
+  it('allows users to undo removing games from their backlog', async () => {
+    // ARRANGE
+    window.HTMLElement.prototype.setPointerCapture = vi.fn();
+
+    const deleteSpy = vi.spyOn(axios, 'delete').mockResolvedValueOnce({ success: true });
+    const postSpy = vi.spyOn(axios, 'post').mockResolvedValueOnce({ success: true });
+
+    const mockSystem = createSystem({
+      nameShort: 'MD',
+      iconUrl: 'https://retroachievements.org/test.png',
+    });
+
+    const mockGame = createGame({
+      title: 'Sonic the Hedgehog',
+      system: mockSystem,
+      achievementsPublished: 42,
+      pointsTotal: 500,
+      pointsWeighted: 1000,
+      releasedAt: '2006-08-24T00:56:00+00:00',
+      releasedAtGranularity: 'day',
+    });
+
+    render<App.Community.Data.UserGameListPageProps>(<WantToPlayGamesRoot />, {
+      pageProps: {
+        auth: { user: createAuthenticatedUser() },
+        filterableSystemOptions: [],
+        paginatedGameListEntries: createPaginatedData([createGameListEntry({ game: mockGame })]),
+        can: { develop: false },
+        ziggy: createZiggyProps(),
+      },
+    });
+
+    // ACT
+    await userEvent.click(screen.getByRole('button', { name: /remove/i }));
+
+    const undoButtonEl = await screen.findByRole('button', { name: /undo/i });
+    await userEvent.click(undoButtonEl);
+
+    // ASSERT
+    expect(deleteSpy).toHaveBeenCalledWith(route('api.user-game-list.destroy', mockGame.id));
+
+    expect(postSpy).toHaveBeenCalledWith(['api.user-game-list.store', mockGame.id], {
+      userGameListType: UserGameListType.Play,
+    });
   });
 
   it('allows users to toggle column visibility', async () => {

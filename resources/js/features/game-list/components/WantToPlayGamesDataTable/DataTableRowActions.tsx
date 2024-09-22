@@ -12,6 +12,11 @@ import {
 import { useAddToBacklogMutation } from '@/common/hooks/useAddToBacklogMutation';
 import { useRemoveFromBacklogMutation } from '@/common/hooks/useRemoveFromBacklogMutation';
 
+/**
+ * If the table row needs to have more than one action, it should go into a menu.
+ * @see https://ui.shadcn.com/examples/tasks
+ */
+
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
 }
