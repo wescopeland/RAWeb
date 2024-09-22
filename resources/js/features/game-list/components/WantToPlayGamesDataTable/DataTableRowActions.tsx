@@ -1,15 +1,15 @@
 import { useQueryClient } from '@tanstack/react-query';
 import type { Row } from '@tanstack/react-table';
-import { RxDotsHorizontal } from 'react-icons/rx';
+import { RxCross2 } from 'react-icons/rx';
 
 import { BaseButton } from '@/common/components/+vendor/BaseButton';
-import {
-  BaseDropdownMenu,
-  BaseDropdownMenuContent,
-  BaseDropdownMenuItem,
-  BaseDropdownMenuTrigger,
-} from '@/common/components/+vendor/BaseDropdownMenu';
 import { toastMessage } from '@/common/components/+vendor/BaseToaster';
+import {
+  BaseTooltip,
+  BaseTooltipContent,
+  BaseTooltipTrigger,
+} from '@/common/components/+vendor/BaseTooltip';
+import { useAddToBacklogMutation } from '@/common/hooks/useAddToBacklogMutation';
 import { useRemoveFromBacklogMutation } from '@/common/hooks/useRemoveFromBacklogMutation';
 
 interface DataTableRowActionsProps<TData> {
@@ -21,17 +21,38 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
 
   const removeFromBacklogMutation = useRemoveFromBacklogMutation();
 
-  const handleRemoveFromBacklogClick = () => {
-    const rowData = row.original as { game?: App.Platform.Data.Game };
+  const addToBacklogMutation = useAddToBacklogMutation();
 
-    const gameId = rowData?.game?.id;
+  const rowData = row.original as { game?: App.Platform.Data.Game };
+  const gameId = rowData?.game?.id ?? 0;
+  const gameTitle = rowData?.game?.title ?? '';
+
+  const handleRestoreToBacklogClick = () => {
+    toastMessage.promise(addToBacklogMutation.mutateAsync(gameId), {
+      loading: 'Removing...',
+      success: () => {
+        // Trigger a refetch of the current table page data and bust the entire cache.
+        queryClient.invalidateQueries({ queryKey: ['data'] });
+
+        return `Restored ${gameTitle}!`;
+      },
+      error: 'Something went wrong.',
+    });
+  };
+
+  const handleRemoveFromBacklogClick = () => {
     if (gameId) {
       toastMessage.promise(removeFromBacklogMutation.mutateAsync(gameId), {
+        action: {
+          label: 'Undo',
+          onClick: handleRestoreToBacklogClick,
+        },
         loading: 'Removing...',
         success: () => {
+          // Trigger a refetch of the current table page data and bust the entire cache.
           queryClient.invalidateQueries({ queryKey: ['data'] });
 
-          return 'Removed!';
+          return `Removed ${gameTitle}!`;
         },
         error: 'Something went wrong.',
       });
@@ -39,20 +60,21 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   };
 
   return (
-    <BaseDropdownMenu>
-      <BaseDropdownMenuTrigger asChild>
+    <BaseTooltip>
+      <BaseTooltipTrigger asChild>
         <BaseButton
           variant="ghost"
-          className="flex h-8 w-8 p-0 text-link data-[state=open]:bg-neutral-950/80 light:data-[state=open]:bg-neutral-400"
+          className="flex h-8 w-8 p-0 text-link"
+          onClick={handleRemoveFromBacklogClick}
         >
-          <RxDotsHorizontal className="h-4 w-4" />
-          <span className="sr-only">Open menu</span>
+          <RxCross2 className="h-4 w-4" />
+          <span className="sr-only">Remove from backlog</span>
         </BaseButton>
-      </BaseDropdownMenuTrigger>
+      </BaseTooltipTrigger>
 
-      <BaseDropdownMenuContent align="end" className="w-[160px]">
-        <BaseDropdownMenuItem onClick={handleRemoveFromBacklogClick}>Remove</BaseDropdownMenuItem>
-      </BaseDropdownMenuContent>
-    </BaseDropdownMenu>
+      <BaseTooltipContent>
+        <p>Remove</p>
+      </BaseTooltipContent>
+    </BaseTooltip>
   );
 }

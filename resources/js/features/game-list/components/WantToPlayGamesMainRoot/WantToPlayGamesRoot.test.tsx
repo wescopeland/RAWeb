@@ -77,7 +77,9 @@ describe('Component: WantToPlayGamesRoot', () => {
       pageProps: {
         auth: { user: createAuthenticatedUser() },
         filterableSystemOptions: [],
-        paginatedGameListEntries: createPaginatedData([createGameListEntry({ game: mockGame })]),
+        paginatedGameListEntries: createPaginatedData([
+          createGameListEntry({ game: mockGame, playerGame: null }),
+        ]),
         can: { develop: false },
         ziggy: createZiggyProps(),
       },
@@ -122,8 +124,7 @@ describe('Component: WantToPlayGamesRoot', () => {
     });
 
     // ACT
-    await userEvent.click(screen.getByRole('button', { name: /open menu/i }));
-    await userEvent.click(screen.getByRole('menuitem', { name: /remove/i }));
+    await userEvent.click(screen.getByRole('button', { name: /remove/i }));
 
     // ASSERT
     expect(deleteSpy).toHaveBeenCalledWith(route('api.user-game-list.destroy', mockGame.id));
@@ -184,10 +185,10 @@ describe('Component: WantToPlayGamesRoot', () => {
 
     // ACT
     await userEvent.click(screen.getByRole('button', { name: /view/i }));
-    await userEvent.click(screen.getByRole('menuitemcheckbox', { name: /open tickets/i }));
+    await userEvent.click(screen.getByRole('menuitemcheckbox', { name: /tickets/i }));
 
     // ASSERT
-    expect(screen.getByRole('columnheader', { name: /open tickets/i })).toBeVisible();
+    expect(screen.getByRole('columnheader', { name: /tickets/i })).toBeVisible();
   });
 
   it('given a game row has a non-zero amount of open tickets, the cell links to the tickets page', async () => {
@@ -221,7 +222,7 @@ describe('Component: WantToPlayGamesRoot', () => {
 
     // ACT
     await userEvent.click(screen.getByRole('button', { name: /view/i }));
-    await userEvent.click(screen.getByRole('menuitemcheckbox', { name: /open tickets/i }));
+    await userEvent.click(screen.getByRole('menuitemcheckbox', { name: /tickets/i }));
 
     // ASSERT
     expect(screen.getByRole('link', { name: '2' }));

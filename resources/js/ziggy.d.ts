@@ -295,6 +295,12 @@ declare module 'ziggy-js' {
         }
     ],
     "api.user-game-list.index": [],
+    "api.user-game-list.store": [
+        {
+            "name": "game",
+            "required": true
+        }
+    ],
     "api.user-game-list.destroy": [
         {
             "name": "game",

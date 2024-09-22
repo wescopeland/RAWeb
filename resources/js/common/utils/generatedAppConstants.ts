@@ -102,3 +102,10 @@ export const StringifiedTicketType = {
     DidNotTrigger: '2',
 } as const;
 
+
+export const UserGameListType = {
+    AchievementSetRequest: 'achievement_set_request',
+    Play: 'play',
+    Develop: 'develop',
+} as const;
+
