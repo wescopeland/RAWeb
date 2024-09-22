@@ -128,7 +128,9 @@ describe('Component: WantToPlayGamesRoot', () => {
     await userEvent.click(screen.getByRole('button', { name: /remove/i }));
 
     // ASSERT
-    expect(deleteSpy).toHaveBeenCalledWith(route('api.user-game-list.destroy', mockGame.id));
+    expect(deleteSpy).toHaveBeenCalledWith(['api.user-game-list.destroy', mockGame.id], {
+      data: { userGameListType: UserGameListType.Play },
+    });
   });
 
   it('allows users to undo removing games from their backlog', async () => {
@@ -170,7 +172,9 @@ describe('Component: WantToPlayGamesRoot', () => {
     await userEvent.click(undoButtonEl);
 
     // ASSERT
-    expect(deleteSpy).toHaveBeenCalledWith(route('api.user-game-list.destroy', mockGame.id));
+    expect(deleteSpy).toHaveBeenCalledWith(['api.user-game-list.destroy', mockGame.id], {
+      data: { userGameListType: UserGameListType.Play },
+    });
 
     expect(postSpy).toHaveBeenCalledWith(['api.user-game-list.store', mockGame.id], {
       userGameListType: UserGameListType.Play,
