@@ -4,12 +4,12 @@ namespace App\Community\Controllers\Api;
 
 use App\Community\Requests\UserGameListRequest;
 use App\Http\Controller;
+use App\Models\User;
 use App\Models\UserGameListEntry;
 use App\Platform\Actions\BuildGameListAction;
 use App\Platform\Enums\GameListType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class UserGameListApiController extends Controller
 {

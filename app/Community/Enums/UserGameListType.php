@@ -6,7 +6,7 @@ namespace App\Community\Enums;
 
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
-#[TypeScript(('UserGameListType'))]
+#[TypeScript('UserGameListType')]
 abstract class UserGameListType
 {
     public const AchievementSetRequest = 'achievement_set_request';
