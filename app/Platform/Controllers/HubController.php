@@ -72,7 +72,7 @@ class HubController extends Controller
             user: $user,
             filters: $request->getFilters(defaultAchievementsPublishedFilter: 'either'),
             sort: $request->getSort(),
-            perPage: $isMobile ? 100 : 25,
+            perPage: $isMobile ? 100 : $request->getPageSize(),
 
             /**
              * Ignore page params on mobile.
