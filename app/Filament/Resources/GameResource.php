@@ -14,9 +14,11 @@ use App\Filament\Resources\GameResource\RelationManagers\MemoryNotesRelationMana
 use App\Filament\Rules\ExistsInForumTopics;
 use App\Filament\Rules\IsAllowedGuideUrl;
 use App\Models\Game;
+use App\Models\Role;
 use App\Models\System;
 use App\Models\User;
 use App\Platform\Enums\ReleasedAtGranularity;
+use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
@@ -319,6 +321,61 @@ class GameResource extends Resource
                                         return Carbon::parse($releasedAt)->format('F j, Y');
                                 }
                             }),
+
+                        Forms\Components\TextInput::make('release_date_text')
+                            ->label('Pastable Release Date')
+                            ->helperText('Paste a date like "January 12, 1981", "January 1981", or "1981"')
+                            ->live(debounce: 800)
+                            ->afterStateUpdated(function (callable $set, $state) {
+                                $set('released_at', null);
+                                $set('released_at_granularity', null);
+
+                                $input = trim($state ?? "");
+                                if (empty($input)) {
+                                    return;
+                                }
+
+                                // Full date format (January 12, 1981).
+                                if (preg_match('/^([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})$/', $input)) {
+                                    try {
+                                        $date = Carbon::parse($input)->setTime(0, 0)->format('Y-m-d');
+                                        $set('released_at', $date);
+                                        $set('released_at_granularity', 'day');
+
+                                        return;
+                                    } catch (Exception $e) {
+                                        // ... continue to the next format ...
+                                    }
+                                }
+
+                                // Month-year format (January 1981).
+                                if (preg_match('/^([A-Za-z]+)\s+(\d{4})$/', $input)) {
+                                    try {
+                                        $date = Carbon::createFromFormat('F Y', $input)->startOfMonth();
+                                        $set('released_at', $date);
+                                        $set('released_at_granularity', 'month');
+
+                                        return;
+                                    } catch (Exception $e) {
+                                        // ... continue to the next format ...
+                                    }
+                                }
+
+                                // Year format (1981).
+                                if (preg_match('/^(\d{4})$/', $input)) {
+                                    try {
+                                        $date = Carbon::createFromFormat('Y', $input)->startOfYear();
+                                        $set('released_at', $date);
+                                        $set('released_at_granularity', 'year');
+
+                                        return;
+                                    } catch (Exception $e) {
+                                        // ... invalid year ...
+                                    }
+                                }
+                            })
+                            ->dehydrated(false)
+                            ->visible(fn () => $user->hasRole(Role::GAME_EDITOR)),
 
                         Forms\Components\DatePicker::make('released_at')
                             ->label('Earliest Release Date')
