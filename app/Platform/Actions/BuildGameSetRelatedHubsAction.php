@@ -8,16 +8,37 @@ use App\Models\GameSet;
 use App\Models\System;
 use App\Platform\Data\GameSetData;
 use App\Platform\Enums\GameSetType;
+use Illuminate\Support\Collection;
 
 class BuildGameSetRelatedHubsAction
 {
     /**
+     * Get both parent and child hubs for a game set, de-duped by ID.
+     *
      * @return GameSetData[]
      */
     public function execute(GameSet $gameSet): array
     {
-        return GameSet::whereHas('children', function ($query) use ($gameSet) {
-            $query->where('child_game_set_id', $gameSet->id);
+        $childHubs = $this->getHubsByRelation($gameSet, 'parents');
+        $parentHubs = $this->getHubsByRelation($gameSet, 'children');
+
+        // Merge and dedupe by ID.
+        return $childHubs->concat($parentHubs)
+            ->unique('id')
+            ->sortBy('title')
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Get hubs based on the specified relationship (parents or children).
+     *
+     * @return Collection<int, GameSetData>
+     */
+    private function getHubsByRelation(GameSet $gameSet, string $relation): Collection
+    {
+        return GameSet::whereHas($relation, function ($query) use ($gameSet, $relation) {
+            $query->where($relation === 'parents' ? 'parent_game_set_id' : 'child_game_set_id', $gameSet->id);
         })
             ->whereType(GameSetType::Hub)
             ->select([
@@ -39,8 +60,6 @@ class BuildGameSetRelatedHubsAction
             ])
             ->orderBy('title')
             ->get()
-            ->map(fn (GameSet $hub) => GameSetData::fromGameSetWithCounts($hub))
-            ->values()
-            ->all();
+            ->map(fn (GameSet $hub) => GameSetData::fromGameSetWithCounts($hub));
     }
 }
