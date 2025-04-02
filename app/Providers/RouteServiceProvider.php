@@ -97,10 +97,7 @@ class RouteServiceProvider extends ServiceProvider
              * protected routes, need an authenticated user with a verified email address
              * permissions are checked in controllers individually by authorizing abilities in the respective controller actions
              */
-            Route::group([
-                'middleware' => ['auth'],
-                'prefix' => 'internal-api',
-            ], function () {
+            Route::middleware('auth')->prefix('internal-api')->group(function () {
                 // Route::get('notifications', [NotificationsController::class, 'index'])->name('notification.index');
 
                 Route::put('user/forum-permissions', [UserApiController::class, 'updateForumPostPermissions'])->name('api.user.forum-permissions.update');

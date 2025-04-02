@@ -161,7 +161,7 @@ class FortifyServiceProvider extends ServiceProvider
 
     private function mapAuthRoutes(): void
     {
-        Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
+        Route::middleware(config('fortify.middleware', ['web']))->group(function () {
             Route::get('/login', [AuthenticatedSessionController::class, 'create'])
                 ->middleware(['guest:' . config('fortify.guard')])
                 ->name('login');
@@ -227,7 +227,7 @@ class FortifyServiceProvider extends ServiceProvider
 
     private function mapSettingsRoutes(): void
     {
-        Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
+        Route::middleware(config('fortify.middleware', ['web']))->group(function () {
             $twoFactorLimiter = config('fortify.limiters.two-factor');
 
             // Profile Information...

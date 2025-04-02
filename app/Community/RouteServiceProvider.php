@@ -71,7 +71,7 @@ class RouteServiceProvider extends ServiceProvider
                  * client-side api calls
                  */
                 Route::middleware(['auth'])->group(function () {
-                    Route::group(['prefix' => 'internal-api'], function () {
+                    Route::prefix('internal-api')->group(function () {
                         Route::post('achievement/{achievement}/comment', [AchievementCommentApiController::class, 'store'])->name('api.achievement.comment.store');
 
                         Route::post('shortcode-body/preview', [ShortcodeApiController::class, 'preview'])->name('api.shortcode-body.preview');
@@ -261,9 +261,7 @@ class RouteServiceProvider extends ServiceProvider
                  * protected routes, need an authenticated user with a verified email address
                  * permissions are checked in controllers individually by authorizing abilities in the respective controller actions
                  */
-                Route::group([
-                    'middleware' => ['auth', 'verified'],
-                ], function () {
+                Route::middleware('auth', 'verified')->group(function () {
                     Route::delete('user/{user}/comments', [UserCommentController::class, 'destroyAll'])->name('user.comment.destroyAll');
 
                 //     /*
@@ -346,18 +344,14 @@ class RouteServiceProvider extends ServiceProvider
                 /*
                  * game lists
                  */
-                Route::group([
-                    'middleware' => ['auth', 'inertia'],
-                ], function () {
+                Route::middleware('auth', 'inertia')->group(function () {
                     Route::get('game-list/play', [UserGameListController::class, 'index'])->name('game-list.play.index');
                 });
 
                 /*
                  * claims
                  */
-                Route::group([
-                    'middleware' => ['auth', 'verified'],
-                ], function () {
+                Route::middleware('auth', 'verified')->group(function () {
                     Route::post('game/{game}/claim/create', [AchievementSetClaimController::class, 'store'])->name('achievement-set-claim.create');
                     Route::post('game/{game}/claim/drop', [AchievementSetClaimController::class, 'delete'])->name('achievement-set-claim.delete');
                     Route::post('claim/{claim}/update', [AchievementSetClaimController::class, 'update'])->name('achievement-set-claim.update');
@@ -366,9 +360,7 @@ class RouteServiceProvider extends ServiceProvider
                 /*
                  * messages
                  */
-                Route::group([
-                    'middleware' => ['auth'], // TODO add 'verified' middleware
-                ], function () {
+                Route::middleware('auth')->group(function () {
                     Route::resource('message', MessageController::class)->only(['store']);
                     Route::resource('message-thread', MessageThreadController::class)->parameter('message-thread', 'messageThread')->only(['destroy']);
                 });
@@ -376,10 +368,7 @@ class RouteServiceProvider extends ServiceProvider
                 /*
                  * user settings
                  */
-                Route::group([
-                    'middleware' => ['auth'],
-                    'prefix' => 'internal-api/settings',
-                ], function () {
+                Route::middleware('auth')->prefix('internal-api/settings')->group(function () {
                     Route::patch('/preferences/content-warning', [UserSettingsController::class, 'enableSuppressMatureContentWarning'])
                         ->name('api.settings.preferences.suppress-mature-content-warning');
 
@@ -399,7 +388,7 @@ class RouteServiceProvider extends ServiceProvider
                 /*
                  * active players
                  */
-                Route::group(['prefix' => 'internal-api'], function () {
+                Route::prefix('internal-api')->group(function () {
                     Route::get('active-players', [ActivePlayersApiController::class, 'index'])->name('api.active-player.index');
                 });
             });
