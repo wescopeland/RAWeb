@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ForumFactory extends Factory
 {
-    protected $model = Forum::class;
-
     /**
      * @return array<string, mixed>
      */

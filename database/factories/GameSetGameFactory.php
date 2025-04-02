@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class GameSetGameFactory extends Factory
 {
-    protected $model = GameSetGame::class;
-
     /**
      * @return array<string, mixed>
      */

@@ -15,8 +15,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TriggerFactory extends Factory
 {
-    protected $model = Trigger::class;
-
     /**
      * @return array<string, mixed>
      */

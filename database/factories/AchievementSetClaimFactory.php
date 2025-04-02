@@ -20,9 +20,6 @@ use Illuminate\Support\Carbon;
 class AchievementSetClaimFactory extends Factory
 {
     use FakesUsername;
-
-    protected $model = AchievementSetClaim::class;
-
     /**
      * @return array<string, mixed>
      */

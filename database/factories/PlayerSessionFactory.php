@@ -15,8 +15,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PlayerSessionFactory extends Factory
 {
-    protected $model = PlayerSession::class;
-
     /**
      * @return array<string, mixed>
      */

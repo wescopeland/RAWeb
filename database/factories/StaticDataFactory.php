@@ -13,8 +13,6 @@ use Illuminate\Support\Carbon;
  */
 class StaticDataFactory extends Factory
 {
-    protected $model = StaticData::class;
-
     /**
      * @return array<string, mixed>
      */

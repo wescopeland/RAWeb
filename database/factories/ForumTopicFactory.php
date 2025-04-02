@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ForumTopicFactory extends Factory
 {
-    protected $model = ForumTopic::class;
-
     /**
      * @return array<string, mixed>
      */

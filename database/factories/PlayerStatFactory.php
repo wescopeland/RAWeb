@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PlayerStatFactory extends Factory
 {
-    protected $model = PlayerStat::class;
-
     /**
      * @return array<string, mixed>
      */

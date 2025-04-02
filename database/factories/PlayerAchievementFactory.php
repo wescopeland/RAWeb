@@ -13,8 +13,6 @@ use Illuminate\Support\Carbon;
  */
 class PlayerAchievementFactory extends Factory
 {
-    protected $model = PlayerAchievement::class;
-
     /**
      * @return array<string, mixed>
      */

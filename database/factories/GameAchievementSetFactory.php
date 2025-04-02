@@ -15,8 +15,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class GameAchievementSetFactory extends Factory
 {
-    protected $model = GameAchievementSet::class;
-
     public function definition(): array
     {
         return [

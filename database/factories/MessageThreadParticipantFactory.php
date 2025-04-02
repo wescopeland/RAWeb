@@ -15,8 +15,6 @@ use Illuminate\Support\Carbon;
  */
 class MessageThreadParticipantFactory extends Factory
 {
-    protected $model = MessageThreadParticipant::class;
-
     /**
      * @return array<string, mixed>
      */

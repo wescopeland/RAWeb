@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class UserGameAchievementSetPreferenceFactory extends Factory
 {
-    protected $model = UserGameAchievementSetPreference::class;
-
     public function definition(): array
     {
         return [

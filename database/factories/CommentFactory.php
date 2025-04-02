@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CommentFactory extends Factory
 {
-    protected $model = Comment::class;
-
     public function definition(): array
     {
         $user = User::inRandomOrder()->first();

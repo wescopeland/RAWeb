@@ -15,9 +15,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class UserActivityFactory extends Factory
 {
     use FakesUsername;
-
-    protected $model = UserActivity::class;
-
     /**
      * @return array<string, mixed>
      */

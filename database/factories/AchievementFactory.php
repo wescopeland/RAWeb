@@ -19,9 +19,6 @@ use Illuminate\Support\Carbon;
 class AchievementFactory extends Factory
 {
     use FakesUsername;
-
-    protected $model = Achievement::class;
-
     /**
      * @return array<string, mixed>
      */
