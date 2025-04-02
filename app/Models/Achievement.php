@@ -103,15 +103,6 @@ class Achievement extends BaseModel implements HasVersionedTrigger
         'trigger_id',
     ];
 
-    // TODO cast Flags to AchievementFlag if it isn't dropped from the table
-    protected $casts = [
-        'DateModified' => 'datetime',
-        'Flags' => 'integer',
-        'GameID' => 'integer',
-        'Points' => 'integer',
-        'TrueRatio' => 'integer',
-    ];
-
     protected $visible = [
         'BadgeName',
         'DateCreated',
@@ -179,6 +170,22 @@ class Achievement extends BaseModel implements HasVersionedTrigger
         static::restoring(function (Achievement $achievement) {
             $achievement->tickets()->restore();
         });
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'DateModified' => 'datetime',
+            'Flags' => 'integer',
+            'GameID' => 'integer',
+            'Points' => 'integer',
+            'TrueRatio' => 'integer',
+        ];
     }
 
     protected static function newFactory(): AchievementFactory

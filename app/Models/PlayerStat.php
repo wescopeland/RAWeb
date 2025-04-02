@@ -25,13 +25,16 @@ class PlayerStat extends BaseModel
         'stat_updated_at',
     ];
 
-    protected $casts = [
-        'user_id' => 'integer',
-        'system_id' => 'integer',
-        'last_game_id' => 'integer',
-        'stat_updated_at' => 'datetime',
-        'value' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'user_id' => 'integer',
+            'system_id' => 'integer',
+            'last_game_id' => 'integer',
+            'stat_updated_at' => 'datetime',
+            'value' => 'integer',
+        ];
+    }
 
     protected static function newFactory(): PlayerStatFactory
     {

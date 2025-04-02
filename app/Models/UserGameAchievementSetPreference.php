@@ -22,9 +22,12 @@ class UserGameAchievementSetPreference extends BaseModel
         'opted_in',
     ];
 
-    protected $casts = [
-        'opted_in' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'opted_in' => 'boolean',
+        ];
+    }
 
     protected static function newFactory(): UserGameAchievementSetPreferenceFactory
     {

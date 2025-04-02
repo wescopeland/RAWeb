@@ -48,9 +48,12 @@ class Ticket extends BaseModel
         'ReportNotes',
     ];
 
-    protected $casts = [
-        'ResolvedAt' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'ResolvedAt' => 'datetime',
+        ];
+    }
 
     protected static function newFactory(): TicketFactory
     {

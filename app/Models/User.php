@@ -194,25 +194,6 @@ class User extends Authenticatable implements CommunityMember, Developer, HasLoc
         'avatarUrl',
     ];
 
-    protected $casts = [
-        'appTokenExpiry' => 'datetime',
-        'banned_at' => 'datetime',
-        'ContribCount' => 'integer',
-        'ContribYield' => 'integer',
-        'DeleteRequested' => 'datetime',
-        'email_verified_at' => 'datetime',
-        'LastLogin' => 'datetime',
-        'muted_until' => 'datetime',
-        'password' => 'hashed',
-        'Permissions' => 'integer',
-        'RAPoints' => 'integer',
-        'RASoftcorePoints' => 'integer',
-        'RichPresenceMsgDate' => 'datetime',
-        'TrueRAPoints' => 'integer',
-        'unranked_at' => 'datetime',
-        'UserWallActive' => 'boolean',
-    ];
-
     public static function boot()
     {
         parent::boot();
@@ -251,6 +232,28 @@ class User extends Authenticatable implements CommunityMember, Developer, HasLoc
                     ->log('pivotDetached');
             }
         });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'appTokenExpiry' => 'datetime',
+            'banned_at' => 'datetime',
+            'ContribCount' => 'integer',
+            'ContribYield' => 'integer',
+            'DeleteRequested' => 'datetime',
+            'email_verified_at' => 'datetime',
+            'LastLogin' => 'datetime',
+            'muted_until' => 'datetime',
+            'password' => 'hashed',
+            'Permissions' => 'integer',
+            'RAPoints' => 'integer',
+            'RASoftcorePoints' => 'integer',
+            'RichPresenceMsgDate' => 'datetime',
+            'TrueRAPoints' => 'integer',
+            'unranked_at' => 'datetime',
+            'UserWallActive' => 'boolean',
+        ];
     }
 
     protected static function newFactory(): UserFactory

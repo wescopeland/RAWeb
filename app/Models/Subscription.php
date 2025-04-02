@@ -18,9 +18,12 @@ class Subscription extends BaseModel
         'state',
     ];
 
-    protected $casts = [
-        'state' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'state' => 'boolean',
+        ];
+    }
 
     // == accessors
 

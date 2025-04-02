@@ -24,11 +24,14 @@ class StaticData extends BaseModel
     public $incrementing = false;
     public $timestamps = false;
 
-    protected $casts = [
-        'LastAchievementEarnedAt' => 'datetime',
-        'LastRegisteredUserAt' => 'datetime',
-        'Event_AOTW_StartAt' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'LastAchievementEarnedAt' => 'datetime',
+            'LastRegisteredUserAt' => 'datetime',
+            'Event_AOTW_StartAt' => 'datetime',
+        ];
+    }
 
     protected static function newFactory(): StaticDataFactory
     {

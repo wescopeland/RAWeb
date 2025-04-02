@@ -31,10 +31,13 @@ class ForumTopicComment extends BaseModel
         'authorized_at',
     ];
 
-    protected $casts = [
-        'authorized_at' => 'datetime',
-        'is_authorized' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'authorized_at' => 'datetime',
+            'is_authorized' => 'boolean',
+        ];
+    }
 
     protected static function newFactory(): ForumTopicCommentFactory
     {

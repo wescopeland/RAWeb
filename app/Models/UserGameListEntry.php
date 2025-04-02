@@ -30,9 +30,12 @@ class UserGameListEntry extends BaseModel
         'GameID',
     ];
 
-    protected $casts = [
-        'GameID' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'GameID' => 'integer',
+        ];
+    }
 
     protected static function newFactory(): UserGameListEntryFactory
     {

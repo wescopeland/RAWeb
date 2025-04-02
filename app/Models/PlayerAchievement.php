@@ -35,10 +35,13 @@ class PlayerAchievement extends BasePivot
         'unlocker_id',
     ];
 
-    protected $casts = [
-        'unlocked_at' => 'datetime',
-        'unlocked_hardcore_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'unlocked_at' => 'datetime',
+            'unlocked_hardcore_at' => 'datetime',
+        ];
+    }
 
     // == accessors
 

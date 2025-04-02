@@ -32,9 +32,12 @@ class PlayerSession extends BasePivot
         'ip_address',
     ];
 
-    protected $casts = [
-        'rich_presence_updated_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'rich_presence_updated_at' => 'datetime',
+        ];
+    }
 
     protected static function newFactory(): PlayerSessionFactory
     {

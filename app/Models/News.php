@@ -47,12 +47,15 @@ class News extends BaseModel implements HasComments, HasMedia
         'pinned_at',
     ];
 
-    protected $casts = [
-        'category' => NewsCategory::class,
-        'publish_at' => 'datetime',
-        'unpublish_at' => 'datetime',
-        'pinned_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'category' => NewsCategory::class,
+            'publish_at' => 'datetime',
+            'unpublish_at' => 'datetime',
+            'pinned_at' => 'datetime',
+        ];
+    }
 
     // == search
 

@@ -47,10 +47,13 @@ class GameSet extends BaseModel
         'user_id',
     ];
 
-    protected $casts = [
-        'has_mature_content' => 'boolean',
-        'type' => GameSetType::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'has_mature_content' => 'boolean',
+            'type' => GameSetType::class,
+        ];
+    }
 
     protected static function newFactory(): GameSetFactory
     {

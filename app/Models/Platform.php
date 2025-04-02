@@ -18,9 +18,12 @@ class Platform extends BaseModel
         'order_column',
     ];
 
-    protected $casts = [
-        'execution_environment' => PlatformExecutionEnvironment::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'execution_environment' => PlatformExecutionEnvironment::class,
+        ];
+    }
 
     // == accessors
 

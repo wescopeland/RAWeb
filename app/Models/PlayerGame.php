@@ -21,24 +21,27 @@ class PlayerGame extends BasePivot
 
     protected $table = 'player_games';
 
-    protected $casts = [
-        'last_played_at' => 'datetime',
-        'beaten_at' => 'datetime',
-        'beaten_hardcore_at' => 'datetime',
-        'beaten_dates' => 'json',
-        'beaten_dates_hardcore' => 'json',
-        'completed_at' => 'datetime',
-        'completed_hardcore_at' => 'datetime',
-        'completion_dates' => 'json',
-        'completion_dates_hardcore' => 'json',
-        'last_unlock_at' => 'datetime',
-        'last_unlock_hardcore_at' => 'datetime',
-        'first_unlock_at' => 'datetime',
-        'first_unlock_hardcore_at' => 'datetime',
-        'started_at' => 'datetime',
-        'started_hardcore_at' => 'datetime',
-        'metrics_updated_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'last_played_at' => 'datetime',
+            'beaten_at' => 'datetime',
+            'beaten_hardcore_at' => 'datetime',
+            'beaten_dates' => 'json',
+            'beaten_dates_hardcore' => 'json',
+            'completed_at' => 'datetime',
+            'completed_hardcore_at' => 'datetime',
+            'completion_dates' => 'json',
+            'completion_dates_hardcore' => 'json',
+            'last_unlock_at' => 'datetime',
+            'last_unlock_hardcore_at' => 'datetime',
+            'first_unlock_at' => 'datetime',
+            'first_unlock_hardcore_at' => 'datetime',
+            'started_at' => 'datetime',
+            'started_hardcore_at' => 'datetime',
+            'metrics_updated_at' => 'datetime',
+        ];
+    }
 
     protected static function newFactory(): PlayerGameFactory
     {

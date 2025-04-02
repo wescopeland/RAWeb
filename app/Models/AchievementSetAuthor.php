@@ -29,9 +29,12 @@ class AchievementSetAuthor extends BaseModel
         'updated_at',
     ];
 
-    protected $casts = [
-        'task' => AchievementSetAuthorTask::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'task' => AchievementSetAuthorTask::class,
+        ];
+    }
 
     // == logging
 
