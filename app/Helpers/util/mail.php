@@ -168,7 +168,7 @@ function informAllSubscribersAboutActivity(
     int $articleID,
     string $activityAuthor,
     int $commentID,
-    ?string $onBehalfOfUser = null
+    ?string $onBehalfOfUser = null,
 ): void {
     $subscribers = [];
     $subjectAuthor = null;

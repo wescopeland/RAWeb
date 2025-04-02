@@ -14,7 +14,7 @@ class SyncEnable extends Command
     protected $description = 'Enable Sync';
 
     public function __construct(
-        private Settings $settings
+        private Settings $settings,
     ) {
         parent::__construct();
     }

@@ -18,7 +18,7 @@ class SyncGameHashes extends Command
     protected $description = 'Sync game hashes';
 
     public function __construct(
-        private readonly LinkHashToGameAction $linkHashToGameAction
+        private readonly LinkHashToGameAction $linkHashToGameAction,
     ) {
         parent::__construct();
     }
