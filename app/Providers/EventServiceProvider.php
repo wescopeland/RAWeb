@@ -6,12 +6,6 @@ namespace App\Providers;
 
 use App\Events\UserDeleted;
 use App\Listeners\SendUserRegistrationNotification;
-use App\Models\EventAchievement;
-use App\Models\GameSet;
-use App\Models\GameSetLink;
-use App\Observers\EventAchievementObserver;
-use App\Observers\GameSetLinkObserver;
-use App\Observers\GameSetObserver;
 use App\Platform\Events\SiteBadgeAwarded;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Registered;
@@ -72,10 +66,6 @@ class EventServiceProvider extends ServiceProvider
     {
         // User::observe(UserObserver::class);
 
-        EventAchievement::observe(EventAchievementObserver::class);
-
-        GameSetLink::observe(GameSetLinkObserver::class);
-        GameSet::observe(GameSetObserver::class);
     }
 
     /**

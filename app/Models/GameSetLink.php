@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\GameSetLinkObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Support\Database\Eloquent\BaseModel;
 use Database\Factories\GameSetLinkFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ObservedBy([GameSetLinkObserver::class])]
 class GameSetLink extends BaseModel
 {
     /** @use HasFactory<GameSetLinkFactory> */

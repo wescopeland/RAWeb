@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\GameSetObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Platform\Enums\GameSetType;
 use App\Support\Database\Eloquent\BaseModel;
 use Database\Factories\GameSetFactory;
@@ -18,6 +20,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 // TODO drop image_asset_path, migrate to media
+#[ObservedBy([GameSetObserver::class])]
 class GameSet extends BaseModel
 {
     use LogsActivity {
