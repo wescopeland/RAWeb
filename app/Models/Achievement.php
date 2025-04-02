@@ -463,7 +463,7 @@ class Achievement extends BaseModel implements HasVersionedTrigger
     /**
      * @return HasMany<Ticket>
      */
-    public function tickets()
+    public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class, 'AchievementID');
     }
