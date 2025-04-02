@@ -230,7 +230,7 @@ function getGamesListByDev(
     ?int $filter = 0,
     int $offset = 0,
     int $count = 0,
-    ?string $listType = null
+    ?string $listType = null,
 ): int {
     $dataOut = [];
     $numGamesFound = 0;
@@ -733,7 +733,7 @@ function submitNewGameTitleJSON(
     ?int $gameIDin,
     string $titleIn,
     int $consoleID,
-    ?string $description
+    ?string $description,
 ): array {
     $unsanitizedDescription = $description;
     sanitize_sql_inputs($username, $md5, $description);

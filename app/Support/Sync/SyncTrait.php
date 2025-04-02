@@ -204,7 +204,7 @@ trait SyncTrait
         ProgressBar &$bar,
         int $total,
         int &$entitiesStoredTotal,
-        int &$entitiesSkippedTotal
+        int &$entitiesSkippedTotal,
     ): void {
         // NOTE: MySQL buffers the entire resultset into memory when using cursor(), so this may consume a lot
         //       of memory if there are a lot of rows. see https://github.com/laravel/framework/issues/14919

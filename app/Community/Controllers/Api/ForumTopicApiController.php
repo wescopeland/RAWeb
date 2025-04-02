@@ -18,7 +18,7 @@ class ForumTopicApiController extends Controller
     public function store(
         ForumCategory $category,
         Forum $forum,
-        StoreForumTopicRequest $request
+        StoreForumTopicRequest $request,
     ): JsonResponse {
         $this->authorize('create', [ForumTopic::class, $forum]);
 
@@ -37,7 +37,7 @@ class ForumTopicApiController extends Controller
 
     public function update(
         ForumTopic $topic,
-        UpdateForumTopicRequest $request
+        UpdateForumTopicRequest $request,
     ): JsonResponse {
         $this->authorize('update', $topic);
 
@@ -58,7 +58,7 @@ class ForumTopicApiController extends Controller
 
     public function gate(
         ForumTopic $topic,
-        GateForumTopicRequest $request
+        GateForumTopicRequest $request,
     ): JsonResponse {
         $this->authorize('gate', $topic);
 

@@ -80,7 +80,7 @@ class NotifyMessageThreadParticipants
         User $userFrom,
         User $userTo,
         MessageThread $messageThread,
-        Message $message
+        Message $message,
     ): void {
         $message->body = Shortcode::stripAndClamp($message->body, 1850, preserveWhitespace: true);
 

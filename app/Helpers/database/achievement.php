@@ -25,7 +25,7 @@ function getAchievementsList(
     int $limit,
     int $offset,
     ?AchievementFlag $achievementFlag = null,
-    ?User $developer = null
+    ?User $developer = null,
 ): Collection {
     $bindings = [
         'offset' => $offset,
@@ -212,7 +212,7 @@ function UploadNewAchievement(
     int $flag,
     ?int &$idInOut,
     string $badge,
-    ?string &$errorOut
+    ?string &$errorOut,
 ): bool {
     $gameData = getGameData($gameID);
     $consoleID = $gameData['ConsoleID'];

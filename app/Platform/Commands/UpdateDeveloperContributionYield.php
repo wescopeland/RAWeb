@@ -14,7 +14,7 @@ class UpdateDeveloperContributionYield extends Command
     protected $description = 'Calculate developer contributions and badge tiers';
 
     public function __construct(
-        private readonly UpdateDeveloperContributionYieldAction $updateDeveloperContributionYield
+        private readonly UpdateDeveloperContributionYieldAction $updateDeveloperContributionYield,
     ) {
         parent::__construct();
     }

@@ -15,7 +15,7 @@ class SyncGameAchievementSets extends Command
     protected $description = 'Sync games and their attached achievements to formal sets';
 
     public function __construct(
-        protected UpsertGameCoreAchievementSetFromLegacyFlagsAction $upsertGameCoreAchievementSetFromLegacyFlags
+        protected UpsertGameCoreAchievementSetFromLegacyFlagsAction $upsertGameCoreAchievementSetFromLegacyFlags,
     ) {
         parent::__construct();
     }

@@ -96,7 +96,7 @@ class BuildClientPatchDataAction
         ?User $user,
         ?AchievementFlag $flag,
         ?string $richPresencePatch = null,
-        ?Game $titleGame = null
+        ?Game $titleGame = null,
     ): array {
         $gamePlayerCount = $this->calculateGamePlayerCount($game, $user);
 
