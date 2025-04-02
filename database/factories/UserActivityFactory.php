@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class UserActivityFactory extends Factory
 {
     use FakesUsername;
+
     /**
      * @return array<string, mixed>
      */

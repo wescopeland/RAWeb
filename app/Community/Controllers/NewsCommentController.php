@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\AddCommentAction;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Community\Requests\StoreCommentRequest;
@@ -14,6 +13,7 @@ use App\Models\NewsComment;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class NewsCommentController extends CommentController
 {

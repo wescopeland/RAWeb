@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\BuildDeveloperFeedDataAction;
 use App\Http\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 

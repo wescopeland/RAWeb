@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\BuildMessageThreadIndexPagePropsAction;
 use App\Community\Actions\BuildMessageThreadShowPagePropsAction;
 use App\Community\Actions\DeleteMessageThreadAction;
@@ -17,6 +16,7 @@ use App\Models\MessageThreadParticipant;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 

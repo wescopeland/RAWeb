@@ -2,7 +2,6 @@
 
 namespace App\Community\Controllers\Api;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Data\StoreCommentData;
 use App\Community\Enums\SubscriptionSubjectType;
 use App\Community\Requests\StoreCommentRequest;
@@ -12,6 +11,7 @@ use App\Models\GameComment;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class GameCommentApiController extends Controller
 {

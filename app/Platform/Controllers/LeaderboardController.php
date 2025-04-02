@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Models\Leaderboard;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class LeaderboardController extends Controller
 {

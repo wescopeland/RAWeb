@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Community\Concerns\IndexesComments;
 use App\Community\Data\CommentData;
@@ -21,6 +20,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class UserCommentController extends CommentController

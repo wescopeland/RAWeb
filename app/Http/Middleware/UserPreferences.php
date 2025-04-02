@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 use Closure;
 use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
 use Locale;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserPreferences extends Middleware
 {

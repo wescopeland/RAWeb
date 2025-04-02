@@ -2,7 +2,6 @@
 
 namespace App\Platform\Controllers\Api;
 
-use Illuminate\Support\Facades\Gate;
 use App\Actions\GetUserDeviceKindAction;
 use App\Http\Controller;
 use App\Models\Game;
@@ -13,6 +12,7 @@ use App\Platform\Enums\GameListType;
 use App\Platform\Requests\GameListRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class GameApiController extends Controller
 {

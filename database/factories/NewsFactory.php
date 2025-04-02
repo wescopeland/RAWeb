@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class NewsFactory extends Factory
 {
     use SeedsUsers;
+
     /**
      * @return array<string, mixed>
      */

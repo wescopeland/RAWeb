@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
     use FakesUsername;
+
     /**
      * @return array<string, mixed>
      * @throws Exception

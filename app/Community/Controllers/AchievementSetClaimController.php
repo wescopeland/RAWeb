@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\CreateGameClaimAction;
 use App\Community\Actions\DropGameClaimAction;
 use App\Community\Actions\UpdateGameClaimAction;
@@ -14,6 +13,7 @@ use App\Models\AchievementSetClaim;
 use App\Models\Game;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class AchievementSetClaimController extends Controller
 {

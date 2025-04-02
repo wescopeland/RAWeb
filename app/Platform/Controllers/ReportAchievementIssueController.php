@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Enums\TicketType;
 use App\Data\UserPermissionsData;
 use App\Http\Controller;
@@ -16,6 +15,7 @@ use App\Platform\Data\ReportAchievementIssuePagePropsData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 

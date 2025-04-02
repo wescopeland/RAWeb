@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
 class AchievementSetClaimFactory extends Factory
 {
     use FakesUsername;
+
     /**
      * @return array<string, mixed>
      */

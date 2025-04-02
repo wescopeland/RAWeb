@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Data\UserData;
 use App\Http\Controller;
 use App\Models\Game;
@@ -21,6 +20,7 @@ use App\Platform\Data\PlayerResettableGameData;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 

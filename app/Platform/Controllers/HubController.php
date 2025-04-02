@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Actions\GetUserDeviceKindAction;
 use App\Data\UserPermissionsData;
 use App\Http\Controller;
@@ -21,6 +20,7 @@ use App\Platform\Enums\GameListType;
 use App\Platform\Enums\GameSetType;
 use App\Platform\Requests\GameListRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 

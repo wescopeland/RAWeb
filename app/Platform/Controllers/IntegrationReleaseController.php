@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Models\IntegrationRelease;
 use App\Platform\Actions\LinkLatestIntegrationReleaseAction;
@@ -12,6 +11,7 @@ use App\Platform\Requests\IntegrationReleaseRequest;
 use App\Support\MediaLibrary\Actions\AddMediaAction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class IntegrationReleaseController extends Controller

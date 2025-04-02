@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Concerns\IndexesComments;
 use App\Community\Data\CommentData;
 use App\Community\Data\GameClaimsCommentsPagePropsData;
@@ -14,6 +13,7 @@ use App\Models\Comment;
 use App\Models\Game;
 use App\Platform\Data\GameData;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class GameClaimsCommentController extends CommentController

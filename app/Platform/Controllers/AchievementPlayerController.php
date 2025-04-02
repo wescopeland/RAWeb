@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Models\Achievement;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 
 class AchievementPlayerController extends Controller
 {

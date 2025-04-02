@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 class AchievementFactory extends Factory
 {
     use FakesUsername;
+
     /**
      * @return array<string, mixed>
      */

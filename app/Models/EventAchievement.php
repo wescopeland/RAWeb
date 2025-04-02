@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Observers\EventAchievementObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Support\Database\Eloquent\BaseModel;
 use Carbon\Carbon;
 use Database\Factories\EventAchievementFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

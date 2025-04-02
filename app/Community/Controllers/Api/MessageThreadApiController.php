@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers\Api;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\DeleteMessageThreadAction;
 use App\Http\Controller;
 use App\Models\MessageThread;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MessageThreadApiController extends Controller
 {

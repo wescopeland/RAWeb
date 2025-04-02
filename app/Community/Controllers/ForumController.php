@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Requests\ForumRequest;
 use App\Models\Forum;
 use App\Models\ForumCategory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ForumController extends \App\Http\Controller
 {

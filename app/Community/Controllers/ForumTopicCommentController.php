@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\AddCommentAction;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Community\Actions\ReplaceUserShortcodesWithUsernamesAction;
@@ -14,6 +13,7 @@ use App\Data\ForumTopicCommentData;
 use App\Models\ForumTopic;
 use App\Models\ForumTopicComment;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 

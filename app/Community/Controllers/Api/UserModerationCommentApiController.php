@@ -2,7 +2,6 @@
 
 namespace App\Community\Controllers\Api;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Data\StoreCommentData;
 use App\Community\Requests\StoreCommentRequest;
 use App\Http\Controller;
@@ -10,6 +9,7 @@ use App\Models\User;
 use App\Models\UserComment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UserModerationCommentApiController extends Controller
 {

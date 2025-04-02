@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers\Api;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Requests\GateForumTopicRequest;
 use App\Community\Requests\StoreForumTopicRequest;
 use App\Community\Requests\UpdateForumTopicRequest;
@@ -13,6 +12,7 @@ use App\Models\Forum;
 use App\Models\ForumCategory;
 use App\Models\ForumTopic;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class ForumTopicApiController extends Controller
 {

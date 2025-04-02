@@ -2,7 +2,6 @@
 
 namespace App\Community\Controllers\Api;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Data\SubscriptionData;
 use App\Community\Enums\SubscriptionSubjectType;
 use App\Http\Controller;
@@ -11,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class SubscriptionApiController extends Controller
 {

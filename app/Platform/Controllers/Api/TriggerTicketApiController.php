@@ -2,7 +2,6 @@
 
 namespace App\Platform\Controllers\Api;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Enums\TicketState;
 use App\Http\Controller;
 use App\Models\Ticket;
@@ -11,6 +10,7 @@ use App\Platform\Actions\CreateTriggerTicketAction;
 use App\Platform\Data\StoreTriggerTicketData;
 use App\Platform\Requests\StoreTriggerTicketRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class TriggerTicketApiController extends Controller
 {

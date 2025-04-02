@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Enums\TicketState;
 use App\Http\Controller;
 use App\Models\Achievement;
@@ -14,6 +13,7 @@ use App\Platform\Actions\BuildTicketCreationDataAction;
 use App\Support\Concerns\HandlesResources;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers\Api;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Requests\UpsertForumTopicCommentRequest;
 use App\Http\Controller;
 use App\Models\ForumTopic;
@@ -12,6 +11,7 @@ use App\Models\ForumTopicComment;
 use App\Models\User;
 use App\Support\Shortcode\Shortcode;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class ForumTopicCommentApiController extends Controller
 {

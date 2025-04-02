@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
-use Illuminate\Support\Facades\Gate;
 use App\Community\Enums\AwardType;
 use App\Data\PaginatedData;
 use App\Data\UserData;
@@ -16,6 +15,7 @@ use App\Platform\Data\PlayerBadgeData;
 use App\Platform\Data\RankedGameTopAchieverData;
 use App\Platform\Services\GameTopAchieversService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
