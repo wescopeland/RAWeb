@@ -22,12 +22,14 @@
 /reports
 /resources/views/pages-legacy/interceptor/
 /storage/*.key
+/storage/pail
 /storage/backup
 /storage/media-library
 /vendor
 /tmp
 /.fleet
 /.idea
+/.nova
 /.pnpm-store
 /.project
 /.settings
