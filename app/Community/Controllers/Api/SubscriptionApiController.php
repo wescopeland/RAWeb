@@ -2,6 +2,7 @@
 
 namespace App\Community\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Data\SubscriptionData;
 use App\Community\Enums\SubscriptionSubjectType;
 use App\Http\Controller;
@@ -19,7 +20,7 @@ class SubscriptionApiController extends Controller
 
     public function store(string $subjectType, int $subjectId): JsonResponse
     {
-        $this->authorize('create', [Subscription::class]);
+        Gate::authorize('create', [Subscription::class]);
 
         /** @var User $user */
         $user = Auth::user();
@@ -78,7 +79,7 @@ class SubscriptionApiController extends Controller
             return response()->noContent();
         }
 
-        $this->authorize('delete', $subscription);
+        Gate::authorize('delete', $subscription);
 
         $subscription->state = false;
         $subscription->save();

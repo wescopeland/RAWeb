@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\BuildDeveloperFeedDataAction;
 use App\Http\Controller;
 use App\Models\User;
@@ -43,7 +44,7 @@ class AchievementAuthorController extends Controller
     {
         abort_if($user->ContribCount === 0, 404);
 
-        $this->authorize('viewDeveloperFeed', $user);
+        Gate::authorize('viewDeveloperFeed', $user);
 
         $props = (new BuildDeveloperFeedDataAction())->execute($user);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Enums\TicketState;
 use App\Http\Controller;
 use App\Models\Achievement;
@@ -28,7 +29,7 @@ class TriggerTicketController extends Controller
 
     public function index(): View
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         return view('resource.index')
             ->with('resource', $this->resourceName());
@@ -42,7 +43,7 @@ class TriggerTicketController extends Controller
         Achievement $achievement,
         BuildTicketCreationDataAction $buildTicketCreationData,
     ): InertiaResponse|HttpResponse {
-        $this->authorize('createFor', [TriggerTicket::class, $achievement]);
+        Gate::authorize('createFor', [TriggerTicket::class, $achievement]);
 
         // A user can only have one ticket open at a time for a triggerable.
         // If they already have a ticket open, redirect them to the ticket's page.

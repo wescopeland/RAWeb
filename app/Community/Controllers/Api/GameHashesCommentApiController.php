@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Data\StoreCommentData;
 use App\Community\Requests\StoreCommentRequest;
 use App\Http\Controller;
@@ -22,7 +23,7 @@ class GameHashesCommentApiController extends Controller
 
     public function store(StoreCommentRequest $request): JsonResponse
     {
-        $this->authorize('manage', [GameHash::class]);
+        Gate::authorize('manage', [GameHash::class]);
 
         $data = StoreCommentData::fromRequest($request);
 
@@ -44,7 +45,7 @@ class GameHashesCommentApiController extends Controller
 
     public function destroy(Game $game, Comment $comment): JsonResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         /*
          * don't touch

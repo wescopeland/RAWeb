@@ -2,6 +2,7 @@
 
 namespace App\Platform\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Actions\GetUserDeviceKindAction;
 use App\Http\Controller;
 use App\Models\GameSet;
@@ -35,7 +36,7 @@ class HubApiController extends Controller
 
     public function games(GameListRequest $request, GameSet $gameSet): JsonResponse
     {
-        $this->authorize('view', $gameSet);
+        Gate::authorize('view', $gameSet);
 
         $isMobile = (new GetUserDeviceKindAction())->execute() === 'mobile';
 

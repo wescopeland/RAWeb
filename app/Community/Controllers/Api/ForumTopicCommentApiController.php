@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Requests\UpsertForumTopicCommentRequest;
 use App\Http\Controller;
 use App\Models\ForumTopic;
@@ -18,7 +19,7 @@ class ForumTopicCommentApiController extends Controller
         UpsertForumTopicCommentRequest $request,
         ForumTopic $topic,
     ): JsonResponse {
-        $this->authorize('create', [ForumTopicComment::class, $topic]);
+        Gate::authorize('create', [ForumTopicComment::class, $topic]);
 
         /** @var User $user */
         $user = $request->user();
@@ -33,7 +34,7 @@ class ForumTopicCommentApiController extends Controller
         UpsertForumTopicCommentRequest $request,
         ForumTopicComment $comment,
     ): JsonResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         // Take any RA links and convert them to relevant shortcodes.
         // eg: "https://retroachievements.org/game/1" --> "[game=1]"

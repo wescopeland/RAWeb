@@ -13,14 +13,12 @@ use App\Support\Concerns\HandlesResources;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class Supersearch extends Component
 {
-    use AuthorizesRequests;
     use HandlesResources;
 
     public bool $autoFocus = false;

@@ -2,6 +2,7 @@
 
 namespace App\Community\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Data\StoreCommentData;
 use App\Community\Enums\SubscriptionSubjectType;
 use App\Community\Requests\StoreCommentRequest;
@@ -19,7 +20,7 @@ class UserCommentApiController extends Controller
 
     public function store(StoreCommentRequest $request, User $user): JsonResponse
     {
-        $this->authorize('create', [UserComment::class, $user]);
+        Gate::authorize('create', [UserComment::class, $user]);
 
         $data = StoreCommentData::fromRequest($request);
 
@@ -51,7 +52,7 @@ class UserCommentApiController extends Controller
 
     public function destroy(User $user, UserComment $comment): JsonResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         /*
          * don't touch

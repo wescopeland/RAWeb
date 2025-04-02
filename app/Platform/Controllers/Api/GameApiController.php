@@ -2,6 +2,7 @@
 
 namespace App\Platform\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Actions\GetUserDeviceKindAction;
 use App\Http\Controller;
 use App\Models\Game;
@@ -17,7 +18,7 @@ class GameApiController extends Controller
 {
     public function index(GameListRequest $request): JsonResponse
     {
-        $this->authorize('viewAny', Game::class);
+        Gate::authorize('viewAny', Game::class);
 
         $isMobile = (new GetUserDeviceKindAction())->execute() === 'mobile';
 
@@ -51,7 +52,7 @@ class GameApiController extends Controller
 
     public function random(GameListRequest $request): JsonResponse
     {
-        $this->authorize('viewAny', Game::class);
+        Gate::authorize('viewAny', Game::class);
 
         $randomGame = (new GetRandomGameAction())->execute(
             GameListType::AllGames,
@@ -64,7 +65,7 @@ class GameApiController extends Controller
 
     public function generateOfficialForumTopic(Request $request, Game $game): JsonResponse
     {
-        $this->authorize('createForumTopic', $game);
+        Gate::authorize('createForumTopic', $game);
 
         /** @var User $user */
         $user = $request->user();

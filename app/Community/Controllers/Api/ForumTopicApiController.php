@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Requests\GateForumTopicRequest;
 use App\Community\Requests\StoreForumTopicRequest;
 use App\Community\Requests\UpdateForumTopicRequest;
@@ -20,7 +21,7 @@ class ForumTopicApiController extends Controller
         Forum $forum,
         StoreForumTopicRequest $request,
     ): JsonResponse {
-        $this->authorize('create', [ForumTopic::class, $forum]);
+        Gate::authorize('create', [ForumTopic::class, $forum]);
 
         $newForumTopicComment = submitNewTopic(
             $request->user(),
@@ -39,7 +40,7 @@ class ForumTopicApiController extends Controller
         ForumTopic $topic,
         UpdateForumTopicRequest $request,
     ): JsonResponse {
-        $this->authorize('update', $topic);
+        Gate::authorize('update', $topic);
 
         $topic->title = $request->input('title');
         $topic->save();
@@ -49,7 +50,7 @@ class ForumTopicApiController extends Controller
 
     public function destroy(ForumTopic $topic): JsonResponse
     {
-        $this->authorize('delete', $topic);
+        Gate::authorize('delete', $topic);
 
         $topic->delete();
 
@@ -60,7 +61,7 @@ class ForumTopicApiController extends Controller
         ForumTopic $topic,
         GateForumTopicRequest $request,
     ): JsonResponse {
-        $this->authorize('gate', $topic);
+        Gate::authorize('gate', $topic);
 
         $topic->required_permissions = $request->input('permissions');
         $topic->save();

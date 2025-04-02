@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Actions\GetUserDeviceKindAction;
 use App\Data\UserPermissionsData;
 use App\Http\Controller;
@@ -59,7 +60,7 @@ class HubController extends Controller
         // Return a 404 if this game set isn't actually for a hub.
         abort_if($gameSet->type !== GameSetType::Hub, 404);
 
-        $this->authorize('view', $gameSet);
+        Gate::authorize('view', $gameSet);
 
         /** @var ?User $user */
         $user = $request->user();

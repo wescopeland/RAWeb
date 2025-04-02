@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\AddToMessageThreadAction;
 use App\Community\Actions\CreateMessageThreadAction;
 use App\Community\Requests\MessageRequest;
@@ -19,7 +20,7 @@ class MessageController extends Controller
 {
     public function store(MessageRequest $request): RedirectResponse
     {
-        $this->authorize('create', Message::class);
+        Gate::authorize('create', Message::class);
 
         /** @var User $user */
         $user = request()->user();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Enums\AwardType;
 use App\Data\PaginatedData;
 use App\Data\UserData;
@@ -24,7 +25,7 @@ class GameTopAchieversController extends Controller
         Game $game,
         GameTopAchieversService $topAchieversService,
     ): InertiaResponse|RedirectResponse {
-        $this->authorize('viewAny', [$game]);
+        Gate::authorize('viewAny', [$game]);
 
         $perPage = 50;
         $currentPage = (int) request()->input('page', 1);

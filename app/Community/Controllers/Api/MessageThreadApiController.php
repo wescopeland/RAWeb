@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\DeleteMessageThreadAction;
 use App\Http\Controller;
 use App\Models\MessageThread;
@@ -15,7 +16,7 @@ class MessageThreadApiController extends Controller
 {
     public function destroy(Request $request, MessageThread $messageThread): JsonResponse
     {
-        $this->authorize('delete', $messageThread);
+        Gate::authorize('delete', $messageThread);
 
         /** @var User $user */
         $user = $request->user();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\CreateGameClaimAction;
 use App\Community\Actions\DropGameClaimAction;
 use App\Community\Actions\UpdateGameClaimAction;
@@ -20,11 +21,11 @@ class AchievementSetClaimController extends Controller
         Game $game,
         CreateGameClaimAction $action,
     ): RedirectResponse {
-        $this->authorize('create', [AchievementSetClaim::class]);
+        Gate::authorize('create', [AchievementSetClaim::class]);
 
         $claim = $action->execute($game);
 
-        if (!$game->ForumTopicID && $this->authorize('update', $game)) {
+        if (!$game->ForumTopicID && Gate::authorize('update', $game)) {
             generateGameForumTopic(Auth::user(), $game->ID);
         }
 
@@ -37,7 +38,7 @@ class AchievementSetClaimController extends Controller
         AchievementSetClaim $claim,
         UpdateGameClaimAction $action,
     ): RedirectResponse {
-        $this->authorize('manage', [AchievementSetClaim::class]);
+        Gate::authorize('manage', [AchievementSetClaim::class]);
 
         $action->execute($claim, $request->validated());
 
@@ -48,7 +49,7 @@ class AchievementSetClaimController extends Controller
         Game $game,
         DropGameClaimAction $action,
     ): RedirectResponse {
-        $this->authorize('manage', [AchievementSetClaim::class]);
+        Gate::authorize('manage', [AchievementSetClaim::class]);
 
         $claim = $action->execute($game);
 

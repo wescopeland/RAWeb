@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Actions\FindUserByIdentifierAction;
 use App\Http\Controller;
 use App\Models\PlayerGame;
@@ -22,7 +23,7 @@ class UserController extends Controller
 {
     public function index(): View
     {
-        $this->authorize('viewAny', User::class);
+        Gate::authorize('viewAny', User::class);
 
         return view('resource.index')
             ->with('resource', 'user');
@@ -30,7 +31,7 @@ class UserController extends Controller
 
     public function show(User $user): View
     {
-        $this->authorize('view', $user);
+        Gate::authorize('view', $user);
 
         $user->load(['lastGame']);
 
@@ -79,7 +80,7 @@ class UserController extends Controller
     {
         $user = (new FindUserByIdentifierAction())->execute($ulid);
 
-        $this->authorize('view', $user);
+        Gate::authorize('view', $user);
 
         return redirect(route('user.show', $user));
     }
@@ -89,7 +90,7 @@ class UserController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $this->authorize('updateAvatar', $user);
+        Gate::authorize('updateAvatar', $user);
 
         try {
             UploadAvatar($user->username, $request->imageData);
@@ -119,7 +120,7 @@ class UserController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $this->authorize('updateAvatar', $user);
+        Gate::authorize('updateAvatar', $user);
 
         removeAvatar($user->username);
 
@@ -131,7 +132,7 @@ class UserController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $this->authorize('update', $user);
+        Gate::authorize('update', $user);
 
         (new RequestAccountDeletionAction())->execute($user);
 
@@ -144,7 +145,7 @@ class UserController extends Controller
         $user = $request->user();
 
         /** @var User $user */
-        $this->authorize('update', $user);
+        Gate::authorize('update', $user);
 
         cancelDeleteRequest($user->username);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Data\UserRecentPostsPagePropsData;
 use App\Data\ForumTopicData;
 use App\Data\PaginatedData;
@@ -22,7 +23,7 @@ class UserForumTopicCommentController extends Controller
 {
     public function index(Request $request, User $user): InertiaResponse
     {
-        $this->authorize('view', $user);
+        Gate::authorize('view', $user);
 
         $offset = $request->input('page', 1) - 1;
         $count = 25;

@@ -2,6 +2,7 @@
 
 namespace App\Platform\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Enums\TicketState;
 use App\Http\Controller;
 use App\Models\Ticket;
@@ -23,7 +24,7 @@ class TriggerTicketApiController extends Controller
     ): JsonResponse {
         $data = StoreTriggerTicketData::fromRequest($request);
 
-        $this->authorize('create', [TriggerTicket::class, $data->ticketable]);
+        Gate::authorize('create', [TriggerTicket::class, $data->ticketable]);
 
         // If the user has an existing open ticket, don't create a duplicate.
         $existingTicket = Ticket::whereReporterId($request->user()->id)

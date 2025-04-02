@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\BuildMessageThreadIndexPagePropsAction;
 use App\Community\Actions\BuildMessageThreadShowPagePropsAction;
 use App\Community\Actions\DeleteMessageThreadAction;
@@ -23,7 +24,7 @@ class MessageThreadController extends Controller
 {
     public function index(Request $request): InertiaResponse|RedirectResponse
     {
-        $this->authorize('viewAny', MessageThread::class);
+        Gate::authorize('viewAny', MessageThread::class);
 
         /** @var User $user */
         $user = $request->user();
@@ -70,7 +71,7 @@ class MessageThreadController extends Controller
 
     public function create(Request $request): InertiaResponse
     {
-        $this->authorize('create', MessageThread::class);
+        Gate::authorize('create', MessageThread::class);
 
         $toUser = null;
         $toUserData = null;

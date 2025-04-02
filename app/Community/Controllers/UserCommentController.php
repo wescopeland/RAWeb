@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Community\Concerns\IndexesComments;
 use App\Community\Data\CommentData;
@@ -66,7 +67,7 @@ class UserCommentController extends CommentController
 
     public function edit(UserComment $comment): View
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->commentable->loadMissing('lastActivity');
 
@@ -79,7 +80,7 @@ class UserCommentController extends CommentController
         UserComment $comment,
         GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->fill($request->validated())->save();
 
@@ -89,7 +90,7 @@ class UserCommentController extends CommentController
 
     protected function destroy(UserComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 
@@ -106,7 +107,7 @@ class UserCommentController extends CommentController
     public function destroyAll(Request $request, int $targetUserId): JsonResponse
     {
         $targetUser = User::findOrFail($targetUserId);
-        $this->authorize('clearUserWall', $targetUser);
+        Gate::authorize('clearUserWall', $targetUser);
 
         Comment::where('ArticleType', ArticleType::User)
             ->where('ArticleID', $targetUser->id)

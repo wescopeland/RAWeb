@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Concerns\IndexesComments;
 use App\Community\Data\CommentData;
 use App\Community\Data\GameModificationsCommentsPagePropsData;
@@ -20,7 +21,7 @@ class GameModificationsCommentController extends CommentController
 
     public function index(Game $game): InertiaResponse|RedirectResponse
     {
-        $this->authorize('manage', [Game::class]);
+        Gate::authorize('manage', [Game::class]);
 
         return $this->handleCommentIndex(
             commentable: $game,

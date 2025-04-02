@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\AddCommentAction;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Community\Actions\ReplaceUserShortcodesWithUsernamesAction;
@@ -35,7 +36,7 @@ class ForumTopicCommentController extends CommentController
         AddCommentAction $addCommentAction,
         GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('create', [ForumTopicComment::class, $topic]);
+        Gate::authorize('create', [ForumTopicComment::class, $topic]);
 
         // TODO replace with ForumTopicComment, not a commentable morph anymore
         // $comment = $addCommentAction->execute($request, $topic);
@@ -50,7 +51,7 @@ class ForumTopicCommentController extends CommentController
 
     public function edit(ForumTopicComment $comment): InertiaResponse
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         // "[user=1]" -> "[user=Scott]"
         $comment->body = (new ReplaceUserShortcodesWithUsernamesAction())->execute($comment->body);
@@ -71,7 +72,7 @@ class ForumTopicCommentController extends CommentController
         ForumTopicComment $comment,
         GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         // $comment->fill($request->validated())->save();
 
@@ -83,7 +84,7 @@ class ForumTopicCommentController extends CommentController
 
     protected function destroy(ForumTopicComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 

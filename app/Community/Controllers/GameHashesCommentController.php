@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Concerns\IndexesComments;
 use App\Community\Data\CommentData;
 use App\Community\Data\GameHashesCommentsPagePropsData;
@@ -21,7 +22,7 @@ class GameHashesCommentController extends CommentController
 
     public function index(Game $game): InertiaResponse|RedirectResponse
     {
-        $this->authorize('manage', [GameHash::class]);
+        Gate::authorize('manage', [GameHash::class]);
 
         return $this->handleCommentIndex(
             commentable: $game,

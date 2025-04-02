@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Community\Concerns\IndexesComments;
 use App\Community\Data\CommentData;
@@ -58,7 +59,7 @@ class GameCommentController extends CommentController
 
     public function edit(GameComment $comment): View
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         return view('game.comment.edit')
             ->with('comment', $comment);
@@ -69,7 +70,7 @@ class GameCommentController extends CommentController
         GameComment $comment,
         GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->fill($request->validated())->save();
 
@@ -79,7 +80,7 @@ class GameCommentController extends CommentController
 
     protected function destroy(GameComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 
@@ -95,7 +96,7 @@ class GameCommentController extends CommentController
 
     public function destroyAll(Game $game): RedirectResponse
     {
-        $this->authorize('deleteComments', $game);
+        Gate::authorize('deleteComments', $game);
 
         $game->comments()->delete();
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Requests\ForumRequest;
 use App\Models\Forum;
 use App\Models\ForumCategory;
@@ -15,22 +16,22 @@ class ForumController extends \App\Http\Controller
 {
     public function index(): void
     {
-        $this->authorize('viewAny', Forum::class);
+        Gate::authorize('viewAny', Forum::class);
     }
 
     public function create(ForumCategory $forumCategory): void
     {
-        $this->authorize('store', [Forum::class, $forumCategory]);
+        Gate::authorize('store', [Forum::class, $forumCategory]);
     }
 
     public function store(Request $request, ForumCategory $forumCategory): void
     {
-        $this->authorize('store', [Forum::class, $forumCategory]);
+        Gate::authorize('store', [Forum::class, $forumCategory]);
     }
 
     public function show(Forum $forum, ?string $slug = null): View|RedirectResponse
     {
-        $this->authorize('view', $forum);
+        Gate::authorize('view', $forum);
 
         if (!$this->resolvesToSlug($forum->slug, $slug)) {
             return redirect($forum->canonicalUrl);
@@ -52,14 +53,14 @@ class ForumController extends \App\Http\Controller
 
     public function edit(Forum $forum): View
     {
-        $this->authorize('update', $forum);
+        Gate::authorize('update', $forum);
 
         return view('forum.edit')->with('forum', $forum);
     }
 
     public function update(ForumRequest $request, Forum $forum): RedirectResponse
     {
-        $this->authorize('update', $forum);
+        Gate::authorize('update', $forum);
 
         $forum->fill($request->validated())->save();
 
@@ -68,7 +69,7 @@ class ForumController extends \App\Http\Controller
 
     public function destroy(Forum $forum): void
     {
-        $this->authorize('delete', $forum);
+        Gate::authorize('delete', $forum);
 
         dd('implement');
     }

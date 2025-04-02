@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Models\Event;
 use App\Models\User;
@@ -21,7 +22,7 @@ class EventController extends Controller
         LoadEventWithRelationsAction $loadEventWithRelationsAction,
         BuildEventShowPagePropsAction $buildEventShowPagePropsAction,
     ): InertiaResponse {
-        $this->authorize('view', $event);
+        Gate::authorize('view', $event);
 
         /** @var ?User $user */
         $user = $request->user();

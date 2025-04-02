@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\AddCommentAction;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Community\Requests\StoreCommentRequest;
@@ -34,7 +35,7 @@ class NewsCommentController extends CommentController
         AddCommentAction $addCommentAction,
         GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('create', [NewsComment::class, $news]);
+        Gate::authorize('create', [NewsComment::class, $news]);
 
         /** @var false|Comment $comment */
         $comment = $addCommentAction->execute($request, $news);
@@ -49,7 +50,7 @@ class NewsCommentController extends CommentController
 
     public function edit(NewsComment $comment): View
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         return view('news.comment.edit')
             ->with('comment', $comment);
@@ -60,7 +61,7 @@ class NewsCommentController extends CommentController
         NewsComment $comment,
         GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->fill($request->validated())->save();
 
@@ -70,7 +71,7 @@ class NewsCommentController extends CommentController
 
     protected function destroy(NewsComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 
@@ -86,7 +87,7 @@ class NewsCommentController extends CommentController
 
     public function destroyAll(News $news): RedirectResponse
     {
-        $this->authorize('deleteComments', $news);
+        Gate::authorize('deleteComments', $news);
 
         $news->comments()->delete();
 

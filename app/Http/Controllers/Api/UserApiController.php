@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Http\Requests\UpdateForumPostPermissionsRequest;
 use App\Models\User;
@@ -14,7 +15,7 @@ class UserApiController extends Controller
     public function updateForumPostPermissions(
         UpdateForumPostPermissionsRequest $request,
     ): JsonResponse {
-        $this->authorize('manage', User::class);
+        Gate::authorize('manage', User::class);
 
         $sourceUser = $request->user();
         $targetUser = User::whereName($request->input('displayName'))->first();

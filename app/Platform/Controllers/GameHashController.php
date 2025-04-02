@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Data\UserPermissionsData;
 use App\Http\Controller;
 use App\Models\Game;
@@ -24,7 +25,7 @@ class GameHashController extends Controller
 
     public function index(Request $request, Game $game): InertiaResponse
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         $gameData = GameData::fromGame($game)->include('badgeUrl', 'forumTopicId', 'system');
         $hashes = GameHashData::fromCollection($game->hashes);

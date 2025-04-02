@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Models\PlayerBadge;
 use App\Models\User;
@@ -14,7 +15,7 @@ class PlayerBadgeController extends Controller
 {
     public function index(User $player): View
     {
-        $this->authorize('viewAny', [PlayerBadge::class, $player]);
+        Gate::authorize('viewAny', [PlayerBadge::class, $player]);
 
         return view('player.badge.index')
             ->with('user', $player);
@@ -22,31 +23,31 @@ class PlayerBadgeController extends Controller
 
     public function create(): void
     {
-        $this->authorize('create', PlayerBadge::class);
+        Gate::authorize('create', PlayerBadge::class);
     }
 
     public function store(Request $request): void
     {
-        $this->authorize('create', PlayerBadge::class);
+        Gate::authorize('create', PlayerBadge::class);
     }
 
     public function show(PlayerBadge $playerBadge): void
     {
-        $this->authorize('view', $playerBadge);
+        Gate::authorize('view', $playerBadge);
     }
 
     public function edit(PlayerBadge $playerBadge): void
     {
-        $this->authorize('update', $playerBadge);
+        Gate::authorize('update', $playerBadge);
     }
 
     public function update(Request $request, PlayerBadge $playerBadge): void
     {
-        $this->authorize('update', $playerBadge);
+        Gate::authorize('update', $playerBadge);
     }
 
     public function destroy(PlayerBadge $playerBadge): void
     {
-        $this->authorize('delete', $playerBadge);
+        Gate::authorize('delete', $playerBadge);
     }
 }

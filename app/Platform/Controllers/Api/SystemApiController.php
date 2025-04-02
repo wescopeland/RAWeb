@@ -2,6 +2,7 @@
 
 namespace App\Platform\Controllers\Api;
 
+use Illuminate\Support\Facades\Gate;
 use App\Actions\GetUserDeviceKindAction;
 use App\Http\Controller;
 use App\Models\System;
@@ -25,7 +26,7 @@ class SystemApiController extends Controller
     {
         $system = $systemId;
 
-        $this->authorize('view', $system);
+        Gate::authorize('view', $system);
 
         $isMobile = (new GetUserDeviceKindAction())->execute() === 'mobile';
 

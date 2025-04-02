@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\BuildAchievementChecklistAction;
 use App\Community\Data\AchievementChecklistPagePropsData;
 use App\Data\UserData;
@@ -17,7 +18,7 @@ class UserAchievementChecklistController extends Controller
 {
     public function index(Request $request, User $user): InertiaResponse
     {
-        $this->authorize('view', $user);
+        Gate::authorize('view', $user);
 
         $list = $request->get('list');
 

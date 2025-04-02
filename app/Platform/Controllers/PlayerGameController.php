@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Data\UserData;
 use App\Http\Controller;
 use App\Models\Game;
@@ -27,7 +28,7 @@ class PlayerGameController extends Controller
 {
     public function index(User $user, ?System $system = null): View
     {
-        $this->authorize('viewAny', [PlayerGame::class, $user]);
+        Gate::authorize('viewAny', [PlayerGame::class, $user]);
 
         $games = $user->playerGames()
             ->with([
@@ -60,7 +61,7 @@ class PlayerGameController extends Controller
             ->where('game_id', $game->id)
             ->firstOrFail();
 
-        $this->authorize('view', [PlayerGame::class, $playerGame]);
+        Gate::authorize('view', [PlayerGame::class, $playerGame]);
 
         $playerGame->loadMissing([
             'achievements' => function ($query) use ($user) {
@@ -84,7 +85,7 @@ class PlayerGameController extends Controller
             ->where('game_id', $game->id)
             ->firstOrFail();
 
-        $this->authorize('update', [PlayerGame::class, $playerGame]);
+        Gate::authorize('update', [PlayerGame::class, $playerGame]);
     }
 
     public function update(Request $request, User $user, Game $game): void
@@ -93,7 +94,7 @@ class PlayerGameController extends Controller
             ->where('game_id', $game->id)
             ->firstOrFail();
 
-        $this->authorize('update', [PlayerGame::class, $playerGame]);
+        Gate::authorize('update', [PlayerGame::class, $playerGame]);
     }
 
     public function destroy(Request $request, Game $game): JsonResponse
@@ -113,7 +114,7 @@ class PlayerGameController extends Controller
     ): InertiaResponse {
         $playerGame = $user->playerGames()->whereGameId($game->id)->first();
         // TODO rename to viewSessionHistory
-        $this->authorize('viewSessionHistory2', [PlayerGame::class, $playerGame]);
+        Gate::authorize('viewSessionHistory2', [PlayerGame::class, $playerGame]);
 
         $props = new PlayerGameActivityPagePropsData(
             player: UserData::fromUser($user),

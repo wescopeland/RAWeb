@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Models\Game;
 use Illuminate\Contracts\View\View;
@@ -13,7 +14,7 @@ class GameAssetsController extends Controller
 {
     public function index(Game $game): View
     {
-        $this->authorize('view', $game);
+        Gate::authorize('view', $game);
 
         $game->loadMissing(['gameHashSets' => function (HasMany $query) {
             $query->orderByDesc('compatible');

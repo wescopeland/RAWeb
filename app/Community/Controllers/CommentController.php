@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Http\Controller;
 use App\Models\Comment;
@@ -15,7 +16,7 @@ class CommentController extends Controller
         Comment $comment,
         GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('view', $comment);
+        Gate::authorize('view', $comment);
 
         abort_if($comment->commentable === null, 404);
 

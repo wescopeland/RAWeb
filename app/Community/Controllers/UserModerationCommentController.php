@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Concerns\IndexesComments;
 use App\Community\Data\CommentData;
 use App\Community\Data\UserModerationCommentsPagePropsData;
@@ -20,7 +21,7 @@ class UserModerationCommentController extends CommentController
 
     public function index(User $user): InertiaResponse|RedirectResponse
     {
-        $this->authorize('manage', $user);
+        Gate::authorize('manage', $user);
 
         return $this->handleCommentIndex(
             commentable: $user,

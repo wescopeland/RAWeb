@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Enums\TicketType;
 use App\Data\UserPermissionsData;
 use App\Http\Controller;
@@ -22,7 +23,7 @@ class ReportAchievementIssueController extends Controller
 {
     public function index(Request $request, Achievement $achievement): InertiaResponse
     {
-        $this->authorize('view', $achievement);
+        Gate::authorize('view', $achievement);
 
         /** @var User $user */
         $user = Auth::user();

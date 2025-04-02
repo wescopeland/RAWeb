@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Models\IntegrationRelease;
 use App\Platform\Actions\LinkLatestIntegrationReleaseAction;
@@ -22,7 +23,7 @@ class IntegrationReleaseController extends Controller
 
     public function index(): View
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         $releases = IntegrationRelease::withTrashed()->orderByDesc('created_at')->get();
         $minimum = IntegrationRelease::stable()->minimum()->latest()->first();
@@ -39,7 +40,7 @@ class IntegrationReleaseController extends Controller
 
     public function create(): View
     {
-        $this->authorize('create', $this->resourceClass());
+        Gate::authorize('create', $this->resourceClass());
 
         return view('integration.release.create');
     }
@@ -49,7 +50,7 @@ class IntegrationReleaseController extends Controller
         AddMediaAction $addMediaAction,
         LinkLatestIntegrationReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('create', $this->resourceClass());
+        Gate::authorize('create', $this->resourceClass());
 
         $data = $request->validated();
         $data['minimum'] ??= false;
@@ -67,12 +68,12 @@ class IntegrationReleaseController extends Controller
 
     public function show(IntegrationRelease $release): void
     {
-        $this->authorize('view', $release);
+        Gate::authorize('view', $release);
     }
 
     public function edit(IntegrationRelease $release): View
     {
-        $this->authorize('update', $release);
+        Gate::authorize('update', $release);
 
         return view('integration.release.edit')
             ->with('release', $release);
@@ -84,7 +85,7 @@ class IntegrationReleaseController extends Controller
         AddMediaAction $addMediaAction,
         LinkLatestIntegrationReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('update', $release);
+        Gate::authorize('update', $release);
 
         $data = $request->validated();
         $data['minimum'] ??= false;
@@ -102,7 +103,7 @@ class IntegrationReleaseController extends Controller
         IntegrationRelease $release,
         LinkLatestIntegrationReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('delete', $release);
+        Gate::authorize('delete', $release);
 
         $release->delete();
 
@@ -114,13 +115,13 @@ class IntegrationReleaseController extends Controller
 
     public function forceDestroy(int $release): RedirectResponse
     {
-        $this->authorize('forceDelete', $release);
+        Gate::authorize('forceDelete', $release);
 
         $release = IntegrationRelease::withTrashed()->find($release);
 
         abort_if($release === null, 404);
 
-        $this->authorize('forceDelete', $release);
+        Gate::authorize('forceDelete', $release);
 
         $builds = $release->getMedia('build_x86');
         /** @var Media $build */
@@ -140,7 +141,7 @@ class IntegrationReleaseController extends Controller
 
         abort_if($release === null, 404);
 
-        $this->authorize('restore', $release);
+        Gate::authorize('restore', $release);
 
         $release->restore();
 

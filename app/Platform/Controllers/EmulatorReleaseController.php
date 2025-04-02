@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Platform\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Http\Controller;
 use App\Models\Emulator;
 use App\Models\EmulatorRelease;
@@ -23,7 +24,7 @@ class EmulatorReleaseController extends Controller
 
     public function index(Emulator $emulator): View
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         $releases = $emulator->releases()->withTrashed()->orderByDesc('created_at')->get();
         $minimum = $emulator->releases()->stable()->minimum()->latest()->first();
@@ -47,7 +48,7 @@ class EmulatorReleaseController extends Controller
 
     public function create(Emulator $emulator): View
     {
-        $this->authorize('create', $this->resourceClass());
+        Gate::authorize('create', $this->resourceClass());
 
         return view('emulator.release.create')
             ->with('emulator', $emulator);
@@ -59,7 +60,7 @@ class EmulatorReleaseController extends Controller
         AddMediaAction $addFileToCollectionAction,
         LinkLatestEmulatorReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('create', $this->resourceClass());
+        Gate::authorize('create', $this->resourceClass());
 
         $data = $request->validated();
         $data['minimum'] ??= false;
@@ -79,12 +80,12 @@ class EmulatorReleaseController extends Controller
 
     public function show(EmulatorRelease $release): void
     {
-        $this->authorize('view', $release);
+        Gate::authorize('view', $release);
     }
 
     public function edit(EmulatorRelease $release): View
     {
-        $this->authorize('update', $release);
+        Gate::authorize('update', $release);
 
         return view('emulator.release.edit')
             ->with('release', $release)
@@ -97,7 +98,7 @@ class EmulatorReleaseController extends Controller
         AddMediaAction $addFileToCollectionAction,
         LinkLatestEmulatorReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('update', $release);
+        Gate::authorize('update', $release);
 
         $addFileToCollectionAction->execute($release, $request, 'build_x86');
         $addFileToCollectionAction->execute($release, $request, 'build_x64');
@@ -117,7 +118,7 @@ class EmulatorReleaseController extends Controller
         EmulatorRelease $release,
         LinkLatestEmulatorReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('delete', $release);
+        Gate::authorize('delete', $release);
 
         $emulator = $release->emulator;
 
@@ -135,7 +136,7 @@ class EmulatorReleaseController extends Controller
 
         abort_if($release === null, 404);
 
-        $this->authorize('forceDelete', $release);
+        Gate::authorize('forceDelete', $release);
 
         $archives = $release->getMedia('build_x86');
         /** @var Media $archive */
@@ -157,7 +158,7 @@ class EmulatorReleaseController extends Controller
 
         abort_if($release === null, 404);
 
-        $this->authorize('restore', $release);
+        Gate::authorize('restore', $release);
 
         $release->restore();
 

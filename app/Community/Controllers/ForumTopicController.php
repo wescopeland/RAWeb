@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Community\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Community\Actions\BuildAggregateRecentForumPostsDataAction;
 use App\Community\Actions\BuildShowForumTopicPagePropsAction;
 use App\Community\Data\RecentPostsPagePropsData;
@@ -29,12 +30,12 @@ class ForumTopicController extends Controller
 {
     public function index(): void
     {
-        $this->authorize('viewAny', ForumTopic::class);
+        Gate::authorize('viewAny', ForumTopic::class);
     }
 
     public function create(ForumCategory $category, Forum $forum, Request $request): InertiaResponse
     {
-        $this->authorize('create', [ForumTopic::class, $forum]);
+        Gate::authorize('create', [ForumTopic::class, $forum]);
 
         $props = new CreateForumTopicPagePropsData(
             forum: ForumData::from($forum)->include(
@@ -47,7 +48,7 @@ class ForumTopicController extends Controller
 
     public function show(ForumTopic $topic, ShowForumTopicRequest $request): InertiaResponse|RedirectResponse
     {
-        $this->authorize('view', $topic);
+        Gate::authorize('view', $topic);
 
         $actionResult = (new BuildShowForumTopicPagePropsAction())->execute(
             topic: $topic,
