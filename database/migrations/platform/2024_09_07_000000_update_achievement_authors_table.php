@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Schema;
  * This migration changes the unique constraint to ['achievement_id', 'user_id', 'task'].
  */
 
-return new class() extends Migration {
+return new class extends Migration {
     public function up(): void
     {
         Schema::table('achievement_authors', function (Blueprint $table) {

@@ -16,6 +16,7 @@ use App\Platform\Data\GameData;
 use App\Policies\GameCommentPolicy;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class GameCommentController extends CommentController
@@ -58,7 +59,7 @@ class GameCommentController extends CommentController
 
     public function edit(GameComment $comment): View
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         return view('game.comment.edit')
             ->with('comment', $comment);
@@ -67,9 +68,9 @@ class GameCommentController extends CommentController
     protected function update(
         StoreCommentRequest $request,
         GameComment $comment,
-        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction
+        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->fill($request->validated())->save();
 
@@ -79,7 +80,7 @@ class GameCommentController extends CommentController
 
     protected function destroy(GameComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 
@@ -95,7 +96,7 @@ class GameCommentController extends CommentController
 
     public function destroyAll(Game $game): RedirectResponse
     {
-        $this->authorize('deleteComments', $game);
+        Gate::authorize('deleteComments', $game);
 
         $game->comments()->delete();
 

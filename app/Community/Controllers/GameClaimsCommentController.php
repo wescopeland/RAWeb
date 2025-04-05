@@ -13,6 +13,7 @@ use App\Models\Comment;
 use App\Models\Game;
 use App\Platform\Data\GameData;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class GameClaimsCommentController extends CommentController
@@ -21,7 +22,7 @@ class GameClaimsCommentController extends CommentController
 
     public function index(Game $game): InertiaResponse|RedirectResponse
     {
-        $this->authorize('manage', [AchievementSetClaim::class]);
+        Gate::authorize('manage', [AchievementSetClaim::class]);
 
         return $this->handleCommentIndex(
             commentable: $game,

@@ -38,14 +38,17 @@ class Event extends BaseModel
         'active_through',
     ];
 
-    protected $casts = [
-        'active_from' => 'date',
-        'active_until' => 'date',
-    ];
-
     protected $appends = [
         'active_through',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'active_from' => 'date',
+            'active_until' => 'date',
+        ];
+    }
 
     protected static function newFactory(): EventFactory
     {

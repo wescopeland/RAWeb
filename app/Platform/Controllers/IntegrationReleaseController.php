@@ -11,6 +11,7 @@ use App\Platform\Requests\IntegrationReleaseRequest;
 use App\Support\MediaLibrary\Actions\AddMediaAction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class IntegrationReleaseController extends Controller
@@ -22,7 +23,7 @@ class IntegrationReleaseController extends Controller
 
     public function index(): View
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         $releases = IntegrationRelease::withTrashed()->orderByDesc('created_at')->get();
         $minimum = IntegrationRelease::stable()->minimum()->latest()->first();
@@ -39,7 +40,7 @@ class IntegrationReleaseController extends Controller
 
     public function create(): View
     {
-        $this->authorize('create', $this->resourceClass());
+        Gate::authorize('create', $this->resourceClass());
 
         return view('integration.release.create');
     }
@@ -47,9 +48,9 @@ class IntegrationReleaseController extends Controller
     public function store(
         IntegrationReleaseRequest $request,
         AddMediaAction $addMediaAction,
-        LinkLatestIntegrationReleaseAction $linkLatestReleaseAction
+        LinkLatestIntegrationReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('create', $this->resourceClass());
+        Gate::authorize('create', $this->resourceClass());
 
         $data = $request->validated();
         $data['minimum'] ??= false;
@@ -67,12 +68,12 @@ class IntegrationReleaseController extends Controller
 
     public function show(IntegrationRelease $release): void
     {
-        $this->authorize('view', $release);
+        Gate::authorize('view', $release);
     }
 
     public function edit(IntegrationRelease $release): View
     {
-        $this->authorize('update', $release);
+        Gate::authorize('update', $release);
 
         return view('integration.release.edit')
             ->with('release', $release);
@@ -82,9 +83,9 @@ class IntegrationReleaseController extends Controller
         IntegrationReleaseRequest $request,
         IntegrationRelease $release,
         AddMediaAction $addMediaAction,
-        LinkLatestIntegrationReleaseAction $linkLatestReleaseAction
+        LinkLatestIntegrationReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('update', $release);
+        Gate::authorize('update', $release);
 
         $data = $request->validated();
         $data['minimum'] ??= false;
@@ -100,9 +101,9 @@ class IntegrationReleaseController extends Controller
 
     public function destroy(
         IntegrationRelease $release,
-        LinkLatestIntegrationReleaseAction $linkLatestReleaseAction
+        LinkLatestIntegrationReleaseAction $linkLatestReleaseAction,
     ): RedirectResponse {
-        $this->authorize('delete', $release);
+        Gate::authorize('delete', $release);
 
         $release->delete();
 
@@ -114,13 +115,13 @@ class IntegrationReleaseController extends Controller
 
     public function forceDestroy(int $release): RedirectResponse
     {
-        $this->authorize('forceDelete', $release);
+        Gate::authorize('forceDelete', $release);
 
         $release = IntegrationRelease::withTrashed()->find($release);
 
         abort_if($release === null, 404);
 
-        $this->authorize('forceDelete', $release);
+        Gate::authorize('forceDelete', $release);
 
         $builds = $release->getMedia('build_x86');
         /** @var Media $build */
@@ -140,7 +141,7 @@ class IntegrationReleaseController extends Controller
 
         abort_if($release === null, 404);
 
-        $this->authorize('restore', $release);
+        Gate::authorize('restore', $release);
 
         $release->restore();
 

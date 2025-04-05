@@ -10,6 +10,7 @@ use App\Data\UserData;
 use App\Http\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -17,7 +18,7 @@ class UserAchievementChecklistController extends Controller
 {
     public function index(Request $request, User $user): InertiaResponse
     {
-        $this->authorize('view', $user);
+        Gate::authorize('view', $user);
 
         $list = $request->get('list');
 

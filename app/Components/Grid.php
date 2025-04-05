@@ -10,7 +10,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Pagination\Paginator;
 use Livewire\Component;
 use Spatie\QueryBuilder\AllowedSort;
@@ -19,7 +18,6 @@ use Spatie\QueryBuilder\QueryBuilderRequest;
 
 abstract class Grid extends Component
 {
-    use AuthorizesRequests;
     use DeferLoading;
     use HandlesResources;
 

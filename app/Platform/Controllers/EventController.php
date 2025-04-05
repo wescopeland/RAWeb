@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Platform\Actions\BuildEventShowPagePropsAction;
 use App\Platform\Actions\LoadEventWithRelationsAction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -21,7 +22,7 @@ class EventController extends Controller
         LoadEventWithRelationsAction $loadEventWithRelationsAction,
         BuildEventShowPagePropsAction $buildEventShowPagePropsAction,
     ): InertiaResponse {
-        $this->authorize('view', $event);
+        Gate::authorize('view', $event);
 
         /** @var ?User $user */
         $user = $request->user();

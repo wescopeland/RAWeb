@@ -45,10 +45,13 @@ class GameHash extends BaseModel
         'patch_url',
     ];
 
-    protected $casts = [
-        'file_names' => 'json',
-        'regions' => 'json',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'file_names' => 'json',
+            'regions' => 'json',
+        ];
+    }
 
     // == logging
 

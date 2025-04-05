@@ -16,6 +16,7 @@ use App\Platform\Data\AchievementData;
 use App\Policies\AchievementCommentPolicy;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class AchievementCommentController extends CommentController
@@ -58,7 +59,7 @@ class AchievementCommentController extends CommentController
 
     public function edit(AchievementComment $comment): View
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         return view('achievement.comment.edit')
             ->with('comment', $comment);
@@ -67,9 +68,9 @@ class AchievementCommentController extends CommentController
     protected function update(
         StoreCommentRequest $request,
         AchievementComment $comment,
-        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction
+        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->fill($request->validated())->save();
 
@@ -79,7 +80,7 @@ class AchievementCommentController extends CommentController
 
     protected function destroy(AchievementComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 
@@ -95,7 +96,7 @@ class AchievementCommentController extends CommentController
 
     public function destroyAll(Achievement $achievement): RedirectResponse
     {
-        $this->authorize('deleteComments', $achievement);
+        Gate::authorize('deleteComments', $achievement);
 
         $achievement->comments()->delete();
 

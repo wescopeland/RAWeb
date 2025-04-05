@@ -10,6 +10,7 @@ use App\Platform\Actions\GetRandomGameAction;
 use App\Platform\Enums\GameListType;
 use App\Platform\Requests\GameListRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class SystemApiController extends Controller
 {
@@ -25,7 +26,7 @@ class SystemApiController extends Controller
     {
         $system = $systemId;
 
-        $this->authorize('view', $system);
+        Gate::authorize('view', $system);
 
         $isMobile = (new GetUserDeviceKindAction())->execute() === 'mobile';
 

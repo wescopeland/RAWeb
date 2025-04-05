@@ -8,14 +8,15 @@ use App\Community\Actions\GetUrlToCommentDestinationAction;
 use App\Http\Controller;
 use App\Models\Comment;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class CommentController extends Controller
 {
     public function show(
         Comment $comment,
-        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction
+        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('view', $comment);
+        Gate::authorize('view', $comment);
 
         abort_if($comment->commentable === null, 404);
 

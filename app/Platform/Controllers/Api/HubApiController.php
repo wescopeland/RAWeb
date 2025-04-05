@@ -10,6 +10,7 @@ use App\Platform\Actions\GetRandomGameAction;
 use App\Platform\Enums\GameListType;
 use App\Platform\Requests\GameListRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class HubApiController extends Controller
 {
@@ -35,7 +36,7 @@ class HubApiController extends Controller
 
     public function games(GameListRequest $request, GameSet $gameSet): JsonResponse
     {
-        $this->authorize('view', $gameSet);
+        Gate::authorize('view', $gameSet);
 
         $isMobile = (new GetUserDeviceKindAction())->execute() === 'mobile';
 

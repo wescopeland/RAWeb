@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AchievementSetFactory extends Factory
 {
-    protected $model = AchievementSet::class;
-
     public function definition(): array
     {
         return [

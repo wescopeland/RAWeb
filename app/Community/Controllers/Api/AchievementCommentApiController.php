@@ -11,6 +11,7 @@ use App\Models\AchievementComment;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class AchievementCommentApiController extends Controller
 {
@@ -20,7 +21,7 @@ class AchievementCommentApiController extends Controller
 
     public function store(StoreCommentRequest $request, Achievement $achievement): JsonResponse
     {
-        $this->authorize('create', [AchievementComment::class, $achievement]);
+        Gate::authorize('create', [AchievementComment::class, $achievement]);
 
         $data = StoreCommentData::fromRequest($request);
 
@@ -52,7 +53,7 @@ class AchievementCommentApiController extends Controller
 
     public function destroy(Achievement $achievement, AchievementComment $comment): JsonResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         /*
          * don't touch

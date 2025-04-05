@@ -14,8 +14,6 @@ use Illuminate\Support\Carbon;
  */
 class EventFactory extends Factory
 {
-    protected $model = Event::class;
-
     /**
      * @return array<string, mixed>
      */

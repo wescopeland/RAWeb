@@ -20,6 +20,7 @@ use App\Platform\Enums\GameListType;
 use App\Platform\Enums\GameSetType;
 use App\Platform\Requests\GameListRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -59,7 +60,7 @@ class HubController extends Controller
         // Return a 404 if this game set isn't actually for a hub.
         abort_if($gameSet->type !== GameSetType::Hub, 404);
 
-        $this->authorize('view', $gameSet);
+        Gate::authorize('view', $gameSet);
 
         /** @var ?User $user */
         $user = $request->user();

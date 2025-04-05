@@ -32,10 +32,13 @@ class Trigger extends BaseModel
         'updated_at', // TODO remove after initial sync
     ];
 
-    protected $casts = [
-        'triggerable_type' => TriggerableType::class,
-        'version' => 'integer',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'triggerable_type' => TriggerableType::class,
+            'version' => 'integer',
+        ];
+    }
 
     protected static function newFactory(): TriggerFactory
     {

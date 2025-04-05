@@ -10,6 +10,7 @@ use App\Models\Leaderboard;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class LeaderboardCommentApiController extends Controller
 {
@@ -19,7 +20,7 @@ class LeaderboardCommentApiController extends Controller
 
     public function store(StoreCommentRequest $request, Leaderboard $leaderboard): JsonResponse
     {
-        $this->authorize('create', [Comment::class, $leaderboard]);
+        Gate::authorize('create', [Comment::class, $leaderboard]);
 
         $data = StoreCommentData::fromRequest($request);
 
@@ -43,7 +44,7 @@ class LeaderboardCommentApiController extends Controller
 
     public function destroy(Leaderboard $leaderboard, Comment $comment): JsonResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         /*
          * don't touch

@@ -16,8 +16,6 @@ class NewsFactory extends Factory
 {
     use SeedsUsers;
 
-    protected $model = News::class;
-
     /**
      * @return array<string, mixed>
      */

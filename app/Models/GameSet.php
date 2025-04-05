@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\GameSetObserver;
 use App\Platform\Enums\GameSetType;
 use App\Support\Database\Eloquent\BaseModel;
 use Database\Factories\GameSetFactory;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +20,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 // TODO drop image_asset_path, migrate to media
+#[ObservedBy([GameSetObserver::class])]
 class GameSet extends BaseModel
 {
     use LogsActivity {
@@ -44,10 +47,13 @@ class GameSet extends BaseModel
         'user_id',
     ];
 
-    protected $casts = [
-        'has_mature_content' => 'boolean',
-        'type' => GameSetType::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'has_mature_content' => 'boolean',
+            'type' => GameSetType::class,
+        ];
+    }
 
     protected static function newFactory(): GameSetFactory
     {

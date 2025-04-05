@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class UserRelationFactory extends Factory
 {
-    protected $model = UserRelation::class;
-
     /**
      * @return array<string, mixed>
      */

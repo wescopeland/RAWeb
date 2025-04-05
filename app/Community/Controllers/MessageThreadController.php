@@ -16,6 +16,7 @@ use App\Models\MessageThreadParticipant;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -23,7 +24,7 @@ class MessageThreadController extends Controller
 {
     public function index(Request $request): InertiaResponse|RedirectResponse
     {
-        $this->authorize('viewAny', MessageThread::class);
+        Gate::authorize('viewAny', MessageThread::class);
 
         /** @var User $user */
         $user = $request->user();
@@ -70,7 +71,7 @@ class MessageThreadController extends Controller
 
     public function create(Request $request): InertiaResponse
     {
-        $this->authorize('create', MessageThread::class);
+        Gate::authorize('create', MessageThread::class);
 
         $toUser = null;
         $toUserData = null;

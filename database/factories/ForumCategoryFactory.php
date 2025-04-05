@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ForumCategoryFactory extends Factory
 {
-    protected $model = ForumCategory::class;
-
     /**
      * @return array<string, mixed>
      */

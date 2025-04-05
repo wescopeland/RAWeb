@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class extends Migration {
     public function up(): void
     {
         Schema::rename('achievement_set_game_hashes', 'achievement_set_incompatible_game_hashes');

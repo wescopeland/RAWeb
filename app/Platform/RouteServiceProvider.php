@@ -54,7 +54,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(): void
     {
         Route::middleware(['web', 'csp'])->group(function () {
-            Route::group(['prefix' => 'internal-api'], function () {
+            Route::prefix('internal-api')->group(function () {
                 Route::get('hub/{gameSet}/games', [HubApiController::class, 'games'])->name('api.hub.game.index');
                 Route::get('hub/{gameSet}/games/random', [HubApiController::class, 'randomGame'])->name('api.hub.game.random');
 
@@ -127,12 +127,8 @@ class RouteServiceProvider extends ServiceProvider
             // Route::get('tools', [ToolController::class, 'index'])->name('tool.index');
             // Route::get('tool/hash-check', [ToolController::class, 'hashCheck'])->name('tool.hash-check');
 
-            Route::group([
-                'middleware' => ['auth'], // TODO: 'verified'
-            ], function () {
-                Route::group([
-                    'prefix' => 'internal-api',
-                ], function () {
+            Route::middleware('auth')->group(function () {
+                Route::prefix('internal-api')->group(function () {
                     Route::post('game/{game}/topic', [GameApiController::class, 'generateOfficialForumTopic'])->name('api.game.forum-topic.create');
 
                     Route::delete('user/game/{game}', [PlayerGameController::class, 'destroy'])->name('api.user.game.destroy');

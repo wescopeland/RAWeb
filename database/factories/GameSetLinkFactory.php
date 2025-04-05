@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class GameSetLinkFactory extends Factory
 {
-    protected $model = GameSetLink::class;
-
     public function definition(): array
     {
         return [

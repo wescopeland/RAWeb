@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class EventAchievementFactory extends Factory
 {
-    protected $model = EventAchievement::class;
-
     /**
      * @return array<string, mixed>
      */

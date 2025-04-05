@@ -10,6 +10,7 @@ use App\Platform\Actions\CreateTriggerTicketAction;
 use App\Platform\Data\StoreTriggerTicketData;
 use App\Platform\Requests\StoreTriggerTicketRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class TriggerTicketApiController extends Controller
 {
@@ -23,7 +24,7 @@ class TriggerTicketApiController extends Controller
     ): JsonResponse {
         $data = StoreTriggerTicketData::fromRequest($request);
 
-        $this->authorize('create', [TriggerTicket::class, $data->ticketable]);
+        Gate::authorize('create', [TriggerTicket::class, $data->ticketable]);
 
         // If the user has an existing open ticket, don't create a duplicate.
         $existingTicket = Ticket::whereReporterId($request->user()->id)

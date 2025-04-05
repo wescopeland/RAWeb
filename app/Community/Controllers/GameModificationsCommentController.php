@@ -12,6 +12,7 @@ use App\Models\Comment;
 use App\Models\Game;
 use App\Platform\Data\GameData;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class GameModificationsCommentController extends CommentController
@@ -20,7 +21,7 @@ class GameModificationsCommentController extends CommentController
 
     public function index(Game $game): InertiaResponse|RedirectResponse
     {
-        $this->authorize('manage', [Game::class]);
+        Gate::authorize('manage', [Game::class]);
 
         return $this->handleCommentIndex(
             commentable: $game,

@@ -31,12 +31,15 @@ class PlayerBadge extends BaseModel
         'DisplayOrder',
     ];
 
-    protected $casts = [
-        'AwardType' => 'int',
-        'AwardData' => 'int',
-        'AwardDataExtra' => 'int',
-        'DisplayOrder' => 'int',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'AwardType' => 'int',
+            'AwardData' => 'int',
+            'AwardDataExtra' => 'int',
+            'DisplayOrder' => 'int',
+        ];
+    }
 
     public const MINIMUM_ACHIEVEMENTS_COUNT_FOR_MASTERY = 6;
 

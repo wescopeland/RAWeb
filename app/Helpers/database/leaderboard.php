@@ -152,7 +152,7 @@ function GetLeaderboardData(
     ?User $user,
     int $numToFetch,
     int $offset,
-    bool $nearby = false
+    bool $nearby = false,
 ): array {
     $retVal = [
         'LBID' => $leaderboard->ID,
@@ -265,7 +265,7 @@ function submitLBData(
     string $lbDescription,
     string $lbFormat,
     bool $lbLowerIsBetter,
-    int $lbDisplayOrder
+    int $lbDisplayOrder,
 ): bool {
     sanitize_sql_inputs($user, $lbMem, $lbTitle, $lbDescription, $lbFormat);
 
@@ -321,7 +321,7 @@ function UploadNewLeaderboard(
     bool $lowerIsBetter,
     string $mem,
     ?int &$idInOut,
-    ?string &$errorOut
+    ?string &$errorOut,
 ): bool {
     $displayOrder = 0;
     $originalAuthor = null;

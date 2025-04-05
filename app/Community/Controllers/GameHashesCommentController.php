@@ -13,6 +13,7 @@ use App\Models\Game;
 use App\Models\GameHash;
 use App\Platform\Data\GameData;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class GameHashesCommentController extends CommentController
@@ -21,7 +22,7 @@ class GameHashesCommentController extends CommentController
 
     public function index(Game $game): InertiaResponse|RedirectResponse
     {
-        $this->authorize('manage', [GameHash::class]);
+        Gate::authorize('manage', [GameHash::class]);
 
         return $this->handleCommentIndex(
             commentable: $game,

@@ -7,6 +7,7 @@ namespace App\Platform\Controllers;
 use App\Http\Controller;
 use App\Models\Achievement;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Gate;
 
 class AchievementPlayerController extends Controller
 {
@@ -17,7 +18,7 @@ class AchievementPlayerController extends Controller
 
     public function index(Achievement $achievement): View
     {
-        $this->authorize('view', $achievement);
+        Gate::authorize('view', $achievement);
 
         $achievement->loadMissing([
             'game',

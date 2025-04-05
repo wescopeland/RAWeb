@@ -12,6 +12,7 @@ use App\Platform\Data\GameData;
 use App\Platform\Data\GameHashData;
 use App\Platform\Data\GameHashesPagePropsData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -24,7 +25,7 @@ class GameHashController extends Controller
 
     public function index(Request $request, Game $game): InertiaResponse
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         $gameData = GameData::fromGame($game)->include('badgeUrl', 'forumTopicId', 'system');
         $hashes = GameHashData::fromCollection($game->hashes);

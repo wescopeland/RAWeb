@@ -15,7 +15,7 @@ class TrimGameMetadata extends Command
     protected $description = "Trim whitespace from game(s) metadata";
 
     public function __construct(
-        private readonly TrimGameMetadataAction $trimGameMetadata
+        private readonly TrimGameMetadataAction $trimGameMetadata,
     ) {
         parent::__construct();
     }

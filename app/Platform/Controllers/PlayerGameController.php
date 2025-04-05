@@ -20,6 +20,7 @@ use App\Platform\Data\PlayerResettableGameData;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -27,7 +28,7 @@ class PlayerGameController extends Controller
 {
     public function index(User $user, ?System $system = null): View
     {
-        $this->authorize('viewAny', [PlayerGame::class, $user]);
+        Gate::authorize('viewAny', [PlayerGame::class, $user]);
 
         $games = $user->playerGames()
             ->with([
@@ -60,7 +61,7 @@ class PlayerGameController extends Controller
             ->where('game_id', $game->id)
             ->firstOrFail();
 
-        $this->authorize('view', [PlayerGame::class, $playerGame]);
+        Gate::authorize('view', [PlayerGame::class, $playerGame]);
 
         $playerGame->loadMissing([
             'achievements' => function ($query) use ($user) {
@@ -84,7 +85,7 @@ class PlayerGameController extends Controller
             ->where('game_id', $game->id)
             ->firstOrFail();
 
-        $this->authorize('update', [PlayerGame::class, $playerGame]);
+        Gate::authorize('update', [PlayerGame::class, $playerGame]);
     }
 
     public function update(Request $request, User $user, Game $game): void
@@ -93,7 +94,7 @@ class PlayerGameController extends Controller
             ->where('game_id', $game->id)
             ->firstOrFail();
 
-        $this->authorize('update', [PlayerGame::class, $playerGame]);
+        Gate::authorize('update', [PlayerGame::class, $playerGame]);
     }
 
     public function destroy(Request $request, Game $game): JsonResponse
@@ -109,11 +110,11 @@ class PlayerGameController extends Controller
     public function activity(
         User $user,
         Game $game,
-        BuildPlayerGameActivityDataAction $buildPlayerGameActivityData
+        BuildPlayerGameActivityDataAction $buildPlayerGameActivityData,
     ): InertiaResponse {
         $playerGame = $user->playerGames()->whereGameId($game->id)->first();
         // TODO rename to viewSessionHistory
-        $this->authorize('viewSessionHistory2', [PlayerGame::class, $playerGame]);
+        Gate::authorize('viewSessionHistory2', [PlayerGame::class, $playerGame]);
 
         $props = new PlayerGameActivityPagePropsData(
             player: UserData::fromUser($user),

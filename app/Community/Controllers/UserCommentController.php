@@ -20,6 +20,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class UserCommentController extends CommentController
@@ -66,7 +67,7 @@ class UserCommentController extends CommentController
 
     public function edit(UserComment $comment): View
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->commentable->loadMissing('lastActivity');
 
@@ -77,9 +78,9 @@ class UserCommentController extends CommentController
     protected function update(
         StoreCommentRequest $request,
         UserComment $comment,
-        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction
+        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->fill($request->validated())->save();
 
@@ -89,7 +90,7 @@ class UserCommentController extends CommentController
 
     protected function destroy(UserComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 
@@ -106,7 +107,7 @@ class UserCommentController extends CommentController
     public function destroyAll(Request $request, int $targetUserId): JsonResponse
     {
         $targetUser = User::findOrFail($targetUserId);
-        $this->authorize('clearUserWall', $targetUser);
+        Gate::authorize('clearUserWall', $targetUser);
 
         Comment::where('ArticleType', ArticleType::User)
             ->where('ArticleID', $targetUser->id)

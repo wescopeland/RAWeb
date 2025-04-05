@@ -381,7 +381,7 @@ function calculateBuckets(
     bool $isDynamicBucketingEnabled,
     int $numAchievements,
     array $softcoreUnlocks,
-    array $hardcoreUnlocks
+    array $hardcoreUnlocks,
 ): array {
     $largestWonByCount = 0;
 

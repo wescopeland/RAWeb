@@ -13,8 +13,6 @@ use Illuminate\Support\Carbon;
  */
 class MessageThreadFactory extends Factory
 {
-    protected $model = MessageThread::class;
-
     /**
      * @return array<string, mixed>
      */

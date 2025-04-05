@@ -151,7 +151,7 @@ function getSubscribersOfArticle(
     int $articleID,
     int $reqWebsitePrefs,
     ?string $subjectAuthor = null,
-    bool $noExplicitSubscriptions = false
+    bool $noExplicitSubscriptions = false,
 ): array {
     $websitePrefsFilter = $noExplicitSubscriptions ? "AND (_ua.websitePrefs & :websitePrefs) != 0" : "";
 

@@ -107,12 +107,6 @@ class Game extends BaseModel implements HasMedia, HasVersionedTrigger
         'ImageBoxArt',
     ];
 
-    protected $casts = [
-        'released_at' => 'datetime',
-        'released_at_granularity' => ReleasedAtGranularity::class,
-        'last_achievement_update' => 'datetime',
-    ];
-
     protected $visible = [
         'ID',
         'Title',
@@ -137,6 +131,15 @@ class Game extends BaseModel implements HasMedia, HasVersionedTrigger
         'points_total',
         'players_total',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'released_at' => 'datetime',
+            'released_at_granularity' => ReleasedAtGranularity::class,
+            'last_achievement_update' => 'datetime',
+        ];
+    }
 
     protected static function newFactory(): GameFactory
     {

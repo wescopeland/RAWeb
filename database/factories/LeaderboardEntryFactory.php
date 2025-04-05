@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class LeaderboardEntryFactory extends Factory
 {
-    protected $model = LeaderboardEntry::class;
-
     /**
      * @return array<string, mixed>
      */

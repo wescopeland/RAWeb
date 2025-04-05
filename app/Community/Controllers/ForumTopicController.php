@@ -20,6 +20,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -29,12 +30,12 @@ class ForumTopicController extends Controller
 {
     public function index(): void
     {
-        $this->authorize('viewAny', ForumTopic::class);
+        Gate::authorize('viewAny', ForumTopic::class);
     }
 
     public function create(ForumCategory $category, Forum $forum, Request $request): InertiaResponse
     {
-        $this->authorize('create', [ForumTopic::class, $forum]);
+        Gate::authorize('create', [ForumTopic::class, $forum]);
 
         $props = new CreateForumTopicPagePropsData(
             forum: ForumData::from($forum)->include(
@@ -47,7 +48,7 @@ class ForumTopicController extends Controller
 
     public function show(ForumTopic $topic, ShowForumTopicRequest $request): InertiaResponse|RedirectResponse
     {
-        $this->authorize('view', $topic);
+        Gate::authorize('view', $topic);
 
         $actionResult = (new BuildShowForumTopicPagePropsAction())->execute(
             topic: $topic,
@@ -75,7 +76,7 @@ class ForumTopicController extends Controller
 
     public function recentPosts(
         Request $request,
-        BuildAggregateRecentForumPostsDataAction $buildAggregateRecentPostsData
+        BuildAggregateRecentForumPostsDataAction $buildAggregateRecentPostsData,
     ): InertiaResponse {
         /** @var ?User $user */
         $user = Auth::user();

@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class UserGameListEntryFactory extends Factory
 {
-    protected $model = UserGameListEntry::class;
-
     public function definition(): array
     {
         return [

@@ -46,9 +46,12 @@ class AchievementSetClaim extends BaseModel
         'Finished',
     ];
 
-    protected $casts = [
-        'Finished' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'Finished' => 'datetime',
+        ];
+    }
 
     protected static function newFactory(): AchievementSetClaimFactory
     {

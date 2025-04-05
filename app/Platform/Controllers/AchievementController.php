@@ -9,6 +9,7 @@ use App\Models\Achievement;
 use App\Platform\Requests\AchievementRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class AchievementController extends Controller
 {
@@ -19,7 +20,7 @@ class AchievementController extends Controller
 
     public function index(): View
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         return view('resource.index')
             ->with('resource', $this->resourceName());
@@ -27,7 +28,7 @@ class AchievementController extends Controller
 
     public function show(Achievement $achievement, ?string $slug = null): View|RedirectResponse
     {
-        $this->authorize('view', $achievement);
+        Gate::authorize('view', $achievement);
 
         if (!$this->resolvesToSlug($achievement->slug, $slug)) {
             return redirect($achievement->canonicalUrl);
@@ -43,7 +44,7 @@ class AchievementController extends Controller
 
     public function edit(Achievement $achievement): View
     {
-        $this->authorize('update', $achievement);
+        Gate::authorize('update', $achievement);
 
         $achievement->load([
             'game' => function ($query) {
@@ -57,7 +58,7 @@ class AchievementController extends Controller
 
     public function update(AchievementRequest $request, Achievement $achievement): RedirectResponse
     {
-        $this->authorize('update', $achievement);
+        Gate::authorize('update', $achievement);
 
         $achievement->fill($request->validated())->save();
 

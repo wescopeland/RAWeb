@@ -8,13 +8,14 @@ use App\Http\Controller;
 use App\Http\Requests\UpdateForumPostPermissionsRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class UserApiController extends Controller
 {
     public function updateForumPostPermissions(
-        UpdateForumPostPermissionsRequest $request
+        UpdateForumPostPermissionsRequest $request,
     ): JsonResponse {
-        $this->authorize('manage', User::class);
+        Gate::authorize('manage', User::class);
 
         $sourceUser = $request->user();
         $targetUser = User::whereName($request->input('displayName'))->first();

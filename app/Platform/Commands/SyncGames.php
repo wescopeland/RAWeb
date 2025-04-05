@@ -23,7 +23,7 @@ class SyncGames extends Command
 
     public function __construct(
         private readonly AddImageToGameAction $addImageToGameAction,
-        private readonly UpsertTriggerVersionAction $upsertTriggerVersionAction
+        private readonly UpsertTriggerVersionAction $upsertTriggerVersionAction,
     ) {
         parent::__construct();
     }

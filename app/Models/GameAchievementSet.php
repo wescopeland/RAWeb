@@ -26,9 +26,12 @@ class GameAchievementSet extends BaseModel
         'order_column',
     ];
 
-    protected $casts = [
-        'type' => AchievementSetType::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'type' => AchievementSetType::class,
+        ];
+    }
 
     protected static function newFactory(): GameAchievementSetFactory
     {

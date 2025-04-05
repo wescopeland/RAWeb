@@ -12,12 +12,13 @@ use App\Platform\Enums\GameListType;
 use App\Platform\Requests\GameListRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class GameApiController extends Controller
 {
     public function index(GameListRequest $request): JsonResponse
     {
-        $this->authorize('viewAny', Game::class);
+        Gate::authorize('viewAny', Game::class);
 
         $isMobile = (new GetUserDeviceKindAction())->execute() === 'mobile';
 
@@ -51,7 +52,7 @@ class GameApiController extends Controller
 
     public function random(GameListRequest $request): JsonResponse
     {
-        $this->authorize('viewAny', Game::class);
+        Gate::authorize('viewAny', Game::class);
 
         $randomGame = (new GetRandomGameAction())->execute(
             GameListType::AllGames,
@@ -64,7 +65,7 @@ class GameApiController extends Controller
 
     public function generateOfficialForumTopic(Request $request, Game $game): JsonResponse
     {
-        $this->authorize('createForumTopic', $game);
+        Gate::authorize('createForumTopic', $game);
 
         /** @var User $user */
         $user = $request->user();

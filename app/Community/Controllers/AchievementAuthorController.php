@@ -8,6 +8,7 @@ use App\Community\Actions\BuildDeveloperFeedDataAction;
 use App\Http\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -43,7 +44,7 @@ class AchievementAuthorController extends Controller
     {
         abort_if($user->ContribCount === 0, 404);
 
-        $this->authorize('viewDeveloperFeed', $user);
+        Gate::authorize('viewDeveloperFeed', $user);
 
         $props = (new BuildDeveloperFeedDataAction())->execute($user);
 

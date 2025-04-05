@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class GameSetFactory extends Factory
 {
-    protected $model = GameSet::class;
-
     private static int $sequence = 1;
 
     /**

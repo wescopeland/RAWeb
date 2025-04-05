@@ -33,6 +33,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -40,7 +41,7 @@ class UserSettingsController extends Controller
 {
     public function show(): InertiaResponse
     {
-        $this->authorize('updateSettings');
+        Gate::authorize('updateSettings');
 
         /** @var User $user */
         $user = Auth::user();
@@ -90,7 +91,7 @@ class UserSettingsController extends Controller
 
     public function storeUsernameChangeRequest(StoreUsernameChangeRequest $request): JsonResponse
     {
-        $this->authorize('create', UserUsername::class);
+        Gate::authorize('create', UserUsername::class);
 
         $data = StoreUsernameChangeData::fromRequest($request);
 

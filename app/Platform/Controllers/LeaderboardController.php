@@ -10,6 +10,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class LeaderboardController extends Controller
 {
@@ -20,7 +21,7 @@ class LeaderboardController extends Controller
 
     public function index(): View
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         return view('resource.index')
             ->with('resource', $this->resourceName());
@@ -39,7 +40,7 @@ class LeaderboardController extends Controller
      */
     public function show(Leaderboard $leaderboard, ?string $slug = null): View|RedirectResponse
     {
-        $this->authorize('view', $leaderboard);
+        Gate::authorize('view', $leaderboard);
 
         if (!$this->resolvesToSlug($leaderboard->slug, $slug)) {
             return redirect($leaderboard->canonicalUrl);

@@ -15,6 +15,7 @@ use App\Platform\Data\PlayerBadgeData;
 use App\Platform\Data\RankedGameTopAchieverData;
 use App\Platform\Services\GameTopAchieversService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -24,7 +25,7 @@ class GameTopAchieversController extends Controller
         Game $game,
         GameTopAchieversService $topAchieversService,
     ): InertiaResponse|RedirectResponse {
-        $this->authorize('viewAny', [$game]);
+        Gate::authorize('viewAny', [$game]);
 
         $perPage = 50;
         $currentPage = (int) request()->input('page', 1);

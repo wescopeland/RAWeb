@@ -19,8 +19,6 @@ class UserFactory extends Factory
 {
     use FakesUsername;
 
-    protected $model = User::class;
-
     /**
      * @return array<string, mixed>
      * @throws Exception

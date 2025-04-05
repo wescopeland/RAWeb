@@ -18,6 +18,7 @@ use App\Platform\Requests\SystemRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -30,7 +31,7 @@ class SystemController extends Controller
 
     public function index(): View
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         return view('resource.index')
             ->with('resource', $this->resourceName());
@@ -46,7 +47,7 @@ class SystemController extends Controller
 
     public function games(GameListRequest $request, System $system): InertiaResponse
     {
-        $this->authorize('view', $system);
+        Gate::authorize('view', $system);
 
         /** @var ?User $user */
         $user = $request->user();
@@ -89,7 +90,7 @@ class SystemController extends Controller
 
     public function show(System $system, ?string $slug = null): View|RedirectResponse
     {
-        $this->authorize('view', $system);
+        Gate::authorize('view', $system);
 
         if (!$this->resolvesToSlug($system->slug, $slug)) {
             return redirect($system->canonicalUrl);
@@ -111,14 +112,14 @@ class SystemController extends Controller
 
     public function edit(System $system): View
     {
-        $this->authorize('update', $system);
+        Gate::authorize('update', $system);
 
         return view($this->resourceName() . '.edit')->with('system', $system);
     }
 
     public function update(SystemRequest $request, System $system): RedirectResponse
     {
-        $this->authorize('update', $system);
+        Gate::authorize('update', $system);
 
         $system->fill($request->validated())->save();
 

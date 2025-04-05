@@ -19,10 +19,13 @@ class UserUsername extends BaseModel
         'denied_at',
     ];
 
-    protected $casts = [
-        'approved_at' => 'datetime',
-        'denied_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'approved_at' => 'datetime',
+            'denied_at' => 'datetime',
+        ];
+    }
 
     // == accessors
 

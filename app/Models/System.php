@@ -104,9 +104,12 @@ class System extends BaseModel implements HasMedia
         'active',
     ];
 
-    protected $casts = [
-        'active' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'active' => 'boolean',
+        ];
+    }
 
     // == constants
 

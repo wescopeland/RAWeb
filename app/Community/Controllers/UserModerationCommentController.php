@@ -12,6 +12,7 @@ use App\Data\UserData;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Response as InertiaResponse;
 
 class UserModerationCommentController extends CommentController
@@ -20,7 +21,7 @@ class UserModerationCommentController extends CommentController
 
     public function index(User $user): InertiaResponse|RedirectResponse
     {
-        $this->authorize('manage', $user);
+        Gate::authorize('manage', $user);
 
         return $this->handleCommentIndex(
             commentable: $user,

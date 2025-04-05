@@ -22,7 +22,7 @@ function submitNewTicketsJSON(
     string $idsCSV,
     int $reportType,
     string $noteIn,
-    string $RAHash
+    string $RAHash,
 ): array {
     sanitize_sql_inputs($userSubmitter, $reportType, $noteIn, $RAHash);
 
@@ -102,7 +102,7 @@ function submitNewTicket(User $user, int $achID, int $reportType, int $hardcore,
 function constructAchievementTicketBugReportDetails(
     Ticket $ticket,
     Game $game,
-    Achievement $achievement
+    Achievement $achievement,
 ): string {
     $problemTypeStr = TicketType::toString($ticket->ReportType);
     $ticketUrl = route('ticket.show', ['ticket' => $ticket]);

@@ -26,6 +26,7 @@ use App\Platform\Requests\GameRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -41,7 +42,7 @@ class GameController extends Controller
         /** @var ?User $user */
         $user = $request->user();
 
-        $this->authorize('viewAny', [Game::class, $user]);
+        Gate::authorize('viewAny', [Game::class, $user]);
 
         $persistenceCookieName = 'datatable_view_preference_all_games';
         $request->setPersistenceCookieName($persistenceCookieName);
@@ -88,24 +89,24 @@ class GameController extends Controller
 
     public function popular(): void
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         // return view('game.popular');
     }
 
     public function create(): void
     {
-        $this->authorize('store', $this->resourceClass());
+        Gate::authorize('store', $this->resourceClass());
     }
 
     public function store(Request $request): void
     {
-        $this->authorize('store', $this->resourceClass());
+        Gate::authorize('store', $this->resourceClass());
     }
 
     public function show(Request $request, Game $game, ?string $slug = null): View|RedirectResponse
     {
-        $this->authorize('view', $game);
+        Gate::authorize('view', $game);
 
         if (!$this->resolvesToSlug($game->slug, $slug)) {
             return redirect($game->canonicalUrl);
@@ -144,14 +145,14 @@ class GameController extends Controller
 
     public function edit(Game $game): View
     {
-        $this->authorize('update', $game);
+        Gate::authorize('update', $game);
 
         return view($this->resourceName() . '.edit')->with('game', $game);
     }
 
     public function update(GameRequest $request, Game $game): RedirectResponse
     {
-        $this->authorize('update', $game);
+        Gate::authorize('update', $game);
 
         $game->fill($request->validated())->save();
 
@@ -160,12 +161,12 @@ class GameController extends Controller
 
     public function destroy(Game $game): void
     {
-        $this->authorize('delete', $game);
+        Gate::authorize('delete', $game);
     }
 
     public function devInterest(Game $game): InertiaResponse
     {
-        $this->authorize('viewDeveloperInterest', $game);
+        Gate::authorize('viewDeveloperInterest', $game);
 
         $props = new DeveloperInterestPagePropsData(
             game: GameData::fromGame($game)->include('badgeUrl', 'system'),
@@ -177,7 +178,7 @@ class GameController extends Controller
 
     public function random(GameListRequest $request): RedirectResponse
     {
-        $this->authorize('viewAny', Game::class);
+        Gate::authorize('viewAny', Game::class);
 
         $randomGame = (new GetRandomGameAction())->execute(
             GameListType::AllGames,

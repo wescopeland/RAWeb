@@ -12,15 +12,16 @@ use App\Models\Forum;
 use App\Models\ForumCategory;
 use App\Models\ForumTopic;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class ForumTopicApiController extends Controller
 {
     public function store(
         ForumCategory $category,
         Forum $forum,
-        StoreForumTopicRequest $request
+        StoreForumTopicRequest $request,
     ): JsonResponse {
-        $this->authorize('create', [ForumTopic::class, $forum]);
+        Gate::authorize('create', [ForumTopic::class, $forum]);
 
         $newForumTopicComment = submitNewTopic(
             $request->user(),
@@ -37,9 +38,9 @@ class ForumTopicApiController extends Controller
 
     public function update(
         ForumTopic $topic,
-        UpdateForumTopicRequest $request
+        UpdateForumTopicRequest $request,
     ): JsonResponse {
-        $this->authorize('update', $topic);
+        Gate::authorize('update', $topic);
 
         $topic->title = $request->input('title');
         $topic->save();
@@ -49,7 +50,7 @@ class ForumTopicApiController extends Controller
 
     public function destroy(ForumTopic $topic): JsonResponse
     {
-        $this->authorize('delete', $topic);
+        Gate::authorize('delete', $topic);
 
         $topic->delete();
 
@@ -58,9 +59,9 @@ class ForumTopicApiController extends Controller
 
     public function gate(
         ForumTopic $topic,
-        GateForumTopicRequest $request
+        GateForumTopicRequest $request,
     ): JsonResponse {
-        $this->authorize('gate', $topic);
+        Gate::authorize('gate', $topic);
 
         $topic->required_permissions = $request->input('permissions');
         $topic->save();

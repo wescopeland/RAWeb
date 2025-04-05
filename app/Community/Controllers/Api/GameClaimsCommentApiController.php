@@ -13,6 +13,7 @@ use App\Models\Game;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class GameClaimsCommentApiController extends Controller
 {
@@ -22,7 +23,7 @@ class GameClaimsCommentApiController extends Controller
 
     public function store(StoreCommentRequest $request): JsonResponse
     {
-        $this->authorize('manage', [AchievementSetClaim::class]);
+        Gate::authorize('manage', [AchievementSetClaim::class]);
 
         $data = StoreCommentData::fromRequest($request);
 
@@ -44,7 +45,7 @@ class GameClaimsCommentApiController extends Controller
 
     public function destroy(Game $game, Comment $comment): JsonResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         /*
          * don't touch

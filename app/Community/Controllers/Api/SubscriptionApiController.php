@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class SubscriptionApiController extends Controller
 {
@@ -19,7 +20,7 @@ class SubscriptionApiController extends Controller
 
     public function store(string $subjectType, int $subjectId): JsonResponse
     {
-        $this->authorize('create', [Subscription::class]);
+        Gate::authorize('create', [Subscription::class]);
 
         /** @var User $user */
         $user = Auth::user();
@@ -78,7 +79,7 @@ class SubscriptionApiController extends Controller
             return response()->noContent();
         }
 
-        $this->authorize('delete', $subscription);
+        Gate::authorize('delete', $subscription);
 
         $subscription->state = false;
         $subscription->save();

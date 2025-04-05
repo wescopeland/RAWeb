@@ -14,12 +14,13 @@ use App\Models\MessageThreadParticipant;
 use App\Models\User;
 use App\Support\Shortcode\Shortcode;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 
 class MessageController extends Controller
 {
     public function store(MessageRequest $request): RedirectResponse
     {
-        $this->authorize('create', Message::class);
+        Gate::authorize('create', Message::class);
 
         /** @var User $user */
         $user = request()->user();

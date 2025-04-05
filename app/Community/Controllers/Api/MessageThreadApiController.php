@@ -10,12 +10,13 @@ use App\Models\MessageThread;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MessageThreadApiController extends Controller
 {
     public function destroy(Request $request, MessageThread $messageThread): JsonResponse
     {
-        $this->authorize('delete', $messageThread);
+        Gate::authorize('delete', $messageThread);
 
         /** @var User $user */
         $user = $request->user();

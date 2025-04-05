@@ -13,6 +13,7 @@ use App\Models\NewsComment;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class NewsCommentController extends CommentController
 {
@@ -32,9 +33,9 @@ class NewsCommentController extends CommentController
         StoreCommentRequest $request,
         News $news,
         AddCommentAction $addCommentAction,
-        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction
+        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('create', [NewsComment::class, $news]);
+        Gate::authorize('create', [NewsComment::class, $news]);
 
         /** @var false|Comment $comment */
         $comment = $addCommentAction->execute($request, $news);
@@ -49,7 +50,7 @@ class NewsCommentController extends CommentController
 
     public function edit(NewsComment $comment): View
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         return view('news.comment.edit')
             ->with('comment', $comment);
@@ -58,9 +59,9 @@ class NewsCommentController extends CommentController
     protected function update(
         StoreCommentRequest $request,
         NewsComment $comment,
-        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction
+        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         $comment->fill($request->validated())->save();
 
@@ -70,7 +71,7 @@ class NewsCommentController extends CommentController
 
     protected function destroy(NewsComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 
@@ -86,7 +87,7 @@ class NewsCommentController extends CommentController
 
     public function destroyAll(News $news): RedirectResponse
     {
-        $this->authorize('deleteComments', $news);
+        Gate::authorize('deleteComments', $news);
 
         $news->comments()->delete();
 

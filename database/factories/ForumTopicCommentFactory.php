@@ -16,8 +16,6 @@ use Illuminate\Support\Carbon;
  */
 class ForumTopicCommentFactory extends Factory
 {
-    protected $model = ForumTopicComment::class;
-
     /**
      * @return array<string, mixed>
      */

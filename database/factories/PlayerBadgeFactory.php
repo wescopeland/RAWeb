@@ -14,8 +14,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PlayerBadgeFactory extends Factory
 {
-    protected $model = PlayerBadge::class;
-
     /**
      * @return array<string, mixed>
      */

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\EventAchievementObserver;
 use App\Support\Database\Eloquent\BaseModel;
 use Carbon\Carbon;
 use Database\Factories\EventAchievementFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+#[ObservedBy([EventAchievementObserver::class])]
 class EventAchievement extends BaseModel
 {
     /** @use HasFactory<EventAchievementFactory> */
@@ -33,14 +36,17 @@ class EventAchievement extends BaseModel
         'active_through',
     ];
 
-    protected $casts = [
-        'active_from' => 'date',
-        'active_until' => 'date',
-    ];
-
     protected $appends = [
         'active_through',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'active_from' => 'date',
+            'active_until' => 'date',
+        ];
+    }
 
     protected static function newFactory(): EventAchievementFactory
     {

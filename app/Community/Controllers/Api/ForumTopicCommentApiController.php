@@ -11,14 +11,15 @@ use App\Models\ForumTopicComment;
 use App\Models\User;
 use App\Support\Shortcode\Shortcode;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class ForumTopicCommentApiController extends Controller
 {
     public function store(
         UpsertForumTopicCommentRequest $request,
-        ForumTopic $topic
+        ForumTopic $topic,
     ): JsonResponse {
-        $this->authorize('create', [ForumTopicComment::class, $topic]);
+        Gate::authorize('create', [ForumTopicComment::class, $topic]);
 
         /** @var User $user */
         $user = $request->user();
@@ -31,9 +32,9 @@ class ForumTopicCommentApiController extends Controller
 
     public function update(
         UpsertForumTopicCommentRequest $request,
-        ForumTopicComment $comment
+        ForumTopicComment $comment,
     ): JsonResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         // Take any RA links and convert them to relevant shortcodes.
         // eg: "https://retroachievements.org/game/1" --> "[game=1]"

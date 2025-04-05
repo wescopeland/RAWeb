@@ -55,9 +55,12 @@ class Emulator extends BaseModel implements HasMedia
         'source_url',
     ];
 
-    protected $casts = [
-        'active' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'active' => 'boolean',
+        ];
+    }
 
     protected static function newFactory(): EmulatorFactory
     {

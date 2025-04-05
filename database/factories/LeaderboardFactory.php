@@ -13,8 +13,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class LeaderboardFactory extends Factory
 {
-    protected $model = Leaderboard::class;
-
     /**
      * @return array<string, mixed>
      */

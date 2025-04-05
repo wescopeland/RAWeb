@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class GameHashFactory extends Factory
 {
-    protected $model = GameHash::class;
-
     /**
      * @return array<string, mixed>
      */

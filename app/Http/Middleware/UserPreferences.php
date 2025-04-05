@@ -6,13 +6,15 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
 use Locale;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserPreferences extends Middleware
 {
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         $defaultLocale = Locale::getPrimaryLanguage(Locale::getDefault()) . '_' . Locale::getRegion(Locale::getDefault());
         Session::put('locale', $request->user()->locale ?? $defaultLocale);

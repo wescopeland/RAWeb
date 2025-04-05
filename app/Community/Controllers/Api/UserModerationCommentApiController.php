@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\UserComment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UserModerationCommentApiController extends Controller
 {
@@ -18,7 +19,7 @@ class UserModerationCommentApiController extends Controller
 
     public function store(StoreCommentRequest $request, User $user): JsonResponse
     {
-        $this->authorize('manage', $user);
+        Gate::authorize('manage', $user);
 
         $data = StoreCommentData::fromRequest($request);
 
@@ -40,7 +41,7 @@ class UserModerationCommentApiController extends Controller
 
     public function destroy(User $user, UserComment $comment): JsonResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         /*
          * don't touch

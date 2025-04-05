@@ -13,6 +13,7 @@ use App\Platform\Actions\BuildTicketCreationDataAction;
 use App\Support\Concerns\HandlesResources;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
@@ -28,7 +29,7 @@ class TriggerTicketController extends Controller
 
     public function index(): View
     {
-        $this->authorize('viewAny', $this->resourceClass());
+        Gate::authorize('viewAny', $this->resourceClass());
 
         return view('resource.index')
             ->with('resource', $this->resourceName());
@@ -42,7 +43,7 @@ class TriggerTicketController extends Controller
         Achievement $achievement,
         BuildTicketCreationDataAction $buildTicketCreationData,
     ): InertiaResponse|HttpResponse {
-        $this->authorize('createFor', [TriggerTicket::class, $achievement]);
+        Gate::authorize('createFor', [TriggerTicket::class, $achievement]);
 
         // A user can only have one ticket open at a time for a triggerable.
         // If they already have a ticket open, redirect them to the ticket's page.

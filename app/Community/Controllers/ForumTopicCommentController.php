@@ -13,6 +13,7 @@ use App\Data\ForumTopicCommentData;
 use App\Models\ForumTopic;
 use App\Models\ForumTopicComment;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -33,9 +34,9 @@ class ForumTopicCommentController extends CommentController
         ForumTopicCommentRequest $request,
         ForumTopic $topic,
         AddCommentAction $addCommentAction,
-        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction
+        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('create', [ForumTopicComment::class, $topic]);
+        Gate::authorize('create', [ForumTopicComment::class, $topic]);
 
         // TODO replace with ForumTopicComment, not a commentable morph anymore
         // $comment = $addCommentAction->execute($request, $topic);
@@ -50,7 +51,7 @@ class ForumTopicCommentController extends CommentController
 
     public function edit(ForumTopicComment $comment): InertiaResponse
     {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         // "[user=1]" -> "[user=Scott]"
         $comment->body = (new ReplaceUserShortcodesWithUsernamesAction())->execute($comment->body);
@@ -69,9 +70,9 @@ class ForumTopicCommentController extends CommentController
     protected function update(
         ForumTopicCommentRequest $request,
         ForumTopicComment $comment,
-        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction
+        GetUrlToCommentDestinationAction $getUrlToCommentDestinationAction,
     ): RedirectResponse {
-        $this->authorize('update', $comment);
+        Gate::authorize('update', $comment);
 
         // $comment->fill($request->validated())->save();
 
@@ -83,7 +84,7 @@ class ForumTopicCommentController extends CommentController
 
     protected function destroy(ForumTopicComment $comment): RedirectResponse
     {
-        $this->authorize('delete', $comment);
+        Gate::authorize('delete', $comment);
 
         $return = $comment->commentable->canonicalUrl;
 
