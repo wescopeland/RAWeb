@@ -216,6 +216,7 @@ return [
         'supervisor-2' => [
             'connection' => 'redis',
             'queue' => [
+                'player-estimated-times',
                 'player-game-metrics-batch',
                 'game-player-games',
             ],
