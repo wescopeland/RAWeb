@@ -50,6 +50,12 @@ class UpdateAchievementMetricsAction
 
         $searchIndexingService = app()->make(SearchIndexingService::class);
 
+        // In Horizon, each write requires an entire network round trip to the DB.
+        // If there are hundreds of achievements to update, and each achievement round trip
+        // takes 1-5ms, this could add up to additional second(s) of processing time in the job
+        // just from pure network overhead. To mitigate this, we'll do a single bulk update.
+        $bulkUpdates = [];
+
         foreach ($achievements as $achievement) {
             $unlocksCount = $unlockCounts[$achievement->ID] ?? 0;
             $unlocksHardcoreCount = $hardcoreUnlockCounts[$achievement->ID] ?? 0;
@@ -62,14 +68,32 @@ class UpdateAchievementMetricsAction
                 + $achievement->points * (($playersHardcoreCalc / $unlocksHardcoreCalc) * $weight)
             );
 
-            $achievement->unlocks_total = $unlocksCount;
-            $achievement->unlocks_hardcore_total = $unlocksHardcoreCount;
-            $achievement->unlock_percentage = $playersTotal ? $unlocksCount / $playersTotal : 0;
-            $achievement->unlock_hardcore_percentage = $playersHardcore ? $unlocksHardcoreCount / $playersHardcore : 0;
+            $bulkUpdates[] = [
+                'ID' => $achievement->ID,
+                'unlocks_total' => $unlocksCount,
+                'unlocks_hardcore_total' => $unlocksHardcoreCount,
+                'unlock_hardcore_percentage' => $playersHardcore ? $unlocksHardcoreCount / $playersHardcore : 0,
+                'TrueRatio' => $pointsWeighted,
+            ];
+
+            // Also update the model instance for the sum calculation later.
             $achievement->TrueRatio = $pointsWeighted;
 
-            $achievement->saveQuietly();
             $searchIndexingService->queueAchievementForIndexing($achievement->ID);
+        }
+
+        if (!empty($bulkUpdates)) {
+            Achievement::upsert(
+                $bulkUpdates,
+                ['ID'],
+                [
+                    'unlocks_total',
+                    'unlocks_hardcore_total',
+                    'unlock_percentage',
+                    'unlock_hardcore_percentage',
+                    'TrueRatio',
+                ]
+            );
         }
 
         $game->TotalTruePoints = $achievements->sum('TrueRatio');
