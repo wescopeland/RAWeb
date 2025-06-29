@@ -61,7 +61,23 @@ class PlayerGameActivityService
             $gameIds[] = $game->id;
         }
 
-        $playerSessions = $user->playerSessions()->with('gameHash')->whereIn('game_id', $gameIds)->orderBy('created_at')->get();
+        // Get the PlayerGame record to check when this playthrough started.
+        // It's possible the player reset all their progress, which should also
+        // reset their playtime.
+        $playerGame = PlayerGame::where('user_id', $user->id)
+            ->where('game_id', $game->id)
+            ->first();
+
+        $playerSessionsQuery = $user->playerSessions()
+            ->with('gameHash')
+            ->whereIn('game_id', $gameIds);
+
+        // Only count sessions from when this PlayerGame record was created.
+        if ($playerGame && $playerGame->created_at) {
+            $playerSessionsQuery->where('created_at', '>=', $playerGame->created_at);
+        }
+
+        $playerSessions = $playerSessionsQuery->orderBy('created_at')->get();
 
         foreach ($playerSessions as $playerSession) {
             $session = [
