@@ -82,7 +82,7 @@ $usernameTitle = $previousUsernames ? "Username history:\n{$previousUsernames}" 
                             Banned
                         @elseif ($userMassData['Permissions'] === Permissions::Unregistered)
                             Unregistered
-                        @else
+                        @elseif ($user->visible_role)
                             {{ __('permission.role.' . $user->visible_role->name) }}
                         @endif
                     </p>
