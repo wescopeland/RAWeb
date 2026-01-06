@@ -87,6 +87,17 @@ parameters:
             identifier: method.notFound
             message: '#ImageDriver::performOnCollections#'
 
+        # Pest test traits.
+        # PHPStan doesn't understand that uses(TraitClass::class) makes trait methods
+        # available on $this within Pest test closures. This is a known limitation.
+        # See: https://github.com/pestphp/pest/discussions/670
+        -
+            identifier: trait.unused
+            path: tests/*
+        -
+            identifier: variable.undefined
+            path: tests/*
+
     excludePaths:
         # unrelated directories
         - public/storage (?)
