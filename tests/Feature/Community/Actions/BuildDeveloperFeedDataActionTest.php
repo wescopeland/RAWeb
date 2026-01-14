@@ -7,6 +7,7 @@ namespace Tests\Feature\Community\Actions;
 use App\Community\Actions\BuildDeveloperFeedDataAction;
 use App\Community\Enums\AwardType;
 use App\Models\Achievement;
+use App\Models\AchievementMaintainer;
 use App\Models\Game;
 use App\Models\Leaderboard;
 use App\Models\LeaderboardEntry;
@@ -34,9 +35,9 @@ class BuildDeveloperFeedDataActionTest extends TestCase
         $this->assertEquals(0, $result->activePlayers->total);
         $this->assertEquals(0, $result->awardsContributed);
         $this->assertEquals(0, $result->leaderboardEntriesContributed);
-        $this->assertEquals(0, count($result->recentUnlocks));
-        $this->assertEquals(0, count($result->recentPlayerBadges));
-        $this->assertEquals(0, count($result->recentLeaderboardEntries));
+        $this->assertCount(0, $result->recentUnlocks);
+        $this->assertCount(0, $result->recentPlayerBadges);
+        $this->assertCount(0, $result->recentLeaderboardEntries);
     }
 
     public function testItCountsAwardsAcrossAllGames(): void
@@ -135,7 +136,7 @@ class BuildDeveloperFeedDataActionTest extends TestCase
         $result = (new BuildDeveloperFeedDataAction())->execute($developer);
 
         // Assert
-        $this->assertEquals(1, count($result->recentUnlocks));
+        $this->assertCount(1, $result->recentUnlocks);
     }
 
     public function testItFetchesAllRecentUnlocksForLargeContributors(): void
@@ -165,7 +166,7 @@ class BuildDeveloperFeedDataActionTest extends TestCase
         $result = (new BuildDeveloperFeedDataAction())->execute($developer);
 
         // Assert
-        $this->assertEquals(5, count($result->recentUnlocks));
+        $this->assertCount(5, $result->recentUnlocks);
     }
 
     public function testItExcludesUntrackedPlayersFromUnlocks(): void
@@ -198,11 +199,11 @@ class BuildDeveloperFeedDataActionTest extends TestCase
         $result = (new BuildDeveloperFeedDataAction())->execute($developer);
 
         // Assert
-        $this->assertEquals(1, count($result->recentUnlocks));
+        $this->assertCount(1, $result->recentUnlocks);
         $this->assertEquals($trackedUser->id, $result->recentUnlocks[0]->user->id->resolve());
     }
 
-    public function testItExcludedUntrackedPlayersFromLeaderboardEntries(): void
+    public function testItExcludesUntrackedPlayersFromLeaderboardEntries(): void
     {
         // Arrange
         $developer = User::factory()->create(['yield_unlocks' => 100]);
@@ -229,13 +230,13 @@ class BuildDeveloperFeedDataActionTest extends TestCase
         $result = (new BuildDeveloperFeedDataAction())->execute($developer);
 
         // Assert
-        $this->assertEquals(3, $result->leaderboardEntriesContributed); // countLeaderboardEntries doesn't currently join to users to filter out untracked users
-        $this->assertEquals(2, count($result->recentLeaderboardEntries));
+        $this->assertEquals(3, $result->leaderboardEntriesContributed); // countLeaderboardEntries doesn't currently join to users to filter out untracked users.
+        $this->assertCount(2, $result->recentLeaderboardEntries);
         $this->assertEquals($players[2]->id, $result->recentLeaderboardEntries[0]->user->id->resolve());
         $this->assertEquals($players[0]->id, $result->recentLeaderboardEntries[1]->user->id->resolve());
     }
 
-    public function testItExcludedDeletedLeaderboardsFromLeaderboardEntries(): void
+    public function testItExcludesDeletedLeaderboardsFromLeaderboardEntries(): void
     {
         // Arrange
         $developer = User::factory()->create(['yield_unlocks' => 100]);
@@ -271,9 +272,156 @@ class BuildDeveloperFeedDataActionTest extends TestCase
         $result = (new BuildDeveloperFeedDataAction())->execute($developer);
 
         // Assert
-        $this->assertEquals(3, $result->leaderboardEntriesContributed); // countLeaderboardEntries doesn't currently join to users to filter out untracked users
-        $this->assertEquals(2, count($result->recentLeaderboardEntries));
+        $this->assertEquals(3, $result->leaderboardEntriesContributed); // countLeaderboardEntries doesn't currently join to users to filter out untracked users.
+        $this->assertCount(2, $result->recentLeaderboardEntries);
         $this->assertEquals($players[2]->id, $result->recentLeaderboardEntries[0]->user->id->resolve());
         $this->assertEquals($players[0]->id, $result->recentLeaderboardEntries[1]->user->id->resolve());
+    }
+
+    public function testItIncludesMaintainedAchievementsInRecentUnlocks(): void
+    {
+        // Arrange
+        $author = User::factory()->create(['yield_unlocks' => 100]);
+        $maintainer = User::factory()->create(['yield_unlocks' => 50]);
+        $system = System::factory()->create();
+        $game = Game::factory()->create(['system_id' => $system->id]);
+
+        // Create an achievement authored by someone else.
+        $achievement = Achievement::factory()->promoted()->create([
+            'game_id' => $game->id,
+            'user_id' => $author->id,
+        ]);
+
+        // Make our maintainer the active maintainer of this achievement.
+        AchievementMaintainer::create([
+            'achievement_id' => $achievement->id,
+            'user_id' => $maintainer->id,
+            'effective_from' => now()->subDay(),
+            'is_active' => true,
+        ]);
+
+        $player = User::factory()->create();
+        PlayerAchievement::factory()->create([
+            'achievement_id' => $achievement->id,
+            'user_id' => $player->id,
+            'unlocked_at' => now()->subDays(5),
+        ]);
+
+        // Act
+        $result = (new BuildDeveloperFeedDataAction())->execute($maintainer);
+
+        // Assert - the maintainer should see unlocks for achievements they maintain.
+        $this->assertCount(1, $result->recentUnlocks);
+        $this->assertEquals($achievement->id, $result->recentUnlocks[0]->achievement->id);
+    }
+
+    public function testItDoesNotCountMaintainedGamesInAwardsContributed(): void
+    {
+        // Arrange
+        $author = User::factory()->create(['yield_unlocks' => 100]);
+        $maintainer = User::factory()->create(['yield_unlocks' => 50]);
+        $system = System::factory()->create();
+        $game = Game::factory()->create(['system_id' => $system->id]);
+
+        // Create achievements authored by someone else.
+        $achievements = Achievement::factory()->count(3)->promoted()->create([
+            'game_id' => $game->id,
+            'user_id' => $author->id,
+        ]);
+
+        // Make our maintainer the active maintainer of one achievement.
+        AchievementMaintainer::create([
+            'achievement_id' => $achievements->first()->id,
+            'user_id' => $maintainer->id,
+            'effective_from' => now()->subDay(),
+            'is_active' => true,
+        ]);
+
+        // Award a mastery badge to a player for this game.
+        PlayerBadge::factory()->create([
+            'award_type' => AwardType::Mastery,
+            'award_key' => $game->id,
+            'award_tier' => UnlockMode::Hardcore,
+        ]);
+
+        // Act
+        $result = (new BuildDeveloperFeedDataAction())->execute($maintainer);
+
+        // Assert - the maintainer should NOT see awards for games they only maintain.
+        // Game-level credit (awards) should be author-only.
+        $this->assertEquals(0, $result->awardsContributed);
+        $this->assertCount(0, $result->recentPlayerBadges);
+    }
+
+    public function testItDoesNotDuplicateAchievementsWhenUserIsAuthorAndMaintainer(): void
+    {
+        // Arrange
+        $developer = User::factory()->create(['yield_unlocks' => 100]);
+        $system = System::factory()->create();
+        $game = Game::factory()->create(['system_id' => $system->id]);
+
+        // Create an achievement authored by the developer.
+        $achievement = Achievement::factory()->promoted()->create([
+            'game_id' => $game->id,
+            'user_id' => $developer->id,
+        ]);
+
+        // Make the developer also the maintainer (this shouldn't cause duplicates).
+        AchievementMaintainer::create([
+            'achievement_id' => $achievement->id,
+            'user_id' => $developer->id,
+            'effective_from' => now()->subDay(),
+            'is_active' => true,
+        ]);
+
+        $player = User::factory()->create();
+        PlayerAchievement::factory()->create([
+            'achievement_id' => $achievement->id,
+            'user_id' => $player->id,
+            'unlocked_at' => now()->subDays(5),
+        ]);
+
+        // Act
+        $result = (new BuildDeveloperFeedDataAction())->execute($developer);
+
+        // Assert - should have exactly one unlock, not duplicated.
+        $this->assertCount(1, $result->recentUnlocks);
+    }
+
+    public function testItExcludesInactiveMaintainerAchievements(): void
+    {
+        // Arrange
+        $author = User::factory()->create(['yield_unlocks' => 100]);
+        $formerMaintainer = User::factory()->create(['yield_unlocks' => 50]);
+        $system = System::factory()->create();
+        $game = Game::factory()->create(['system_id' => $system->id]);
+
+        // Create an achievement authored by someone else.
+        $achievement = Achievement::factory()->promoted()->create([
+            'game_id' => $game->id,
+            'user_id' => $author->id,
+        ]);
+
+        // Make our user a former (inactive) maintainer.
+        AchievementMaintainer::create([
+            'achievement_id' => $achievement->id,
+            'user_id' => $formerMaintainer->id,
+            'effective_from' => now()->subDays(30),
+            'effective_until' => now()->subDays(10),
+            'is_active' => false,
+        ]);
+
+        $player = User::factory()->create();
+        PlayerAchievement::factory()->create([
+            'achievement_id' => $achievement->id,
+            'user_id' => $player->id,
+            'unlocked_at' => now()->subDays(5),
+        ]);
+
+        // Act
+        $result = (new BuildDeveloperFeedDataAction())->execute($formerMaintainer);
+
+        // Assert - the former maintainer should NOT see unlocks for achievements they no longer maintain.
+        $this->assertCount(0, $result->recentUnlocks);
     }
 }
