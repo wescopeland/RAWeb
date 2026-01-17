@@ -225,14 +225,14 @@ return [
             ],
             'balance' => 'auto',
             'autoScalingStrategy' => 'size',
-            'maxProcesses' => 19, // Optimized for high-volume queues with auto-scaling
+            'maxProcesses' => 19,
             'balanceMaxShift' => 1,
             'balanceCooldown' => 3,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 300, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value
+            'timeout' => 300,
             'nice' => 0,
         ],
 
@@ -256,7 +256,7 @@ return [
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 600, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value
+            'timeout' => 600,
             'nice' => 0,
         ],
 
@@ -271,12 +271,12 @@ return [
                 'scout',
             ],
             'balance' => 'simple',
-            'processes' => 2, // Pinned at 2 - search indexing is not time-critical.
+            'processes' => 2,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 300, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value.
+            'timeout' => 300,
             'nice' => 0,
         ],
 
@@ -290,7 +290,7 @@ return [
                 'player-sessions',
             ],
             'balance' => 'simple',
-            'processes' => 8, // Pinned at 8 - 38ms avg job time
+            'processes' => 8,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
@@ -310,18 +310,18 @@ return [
                 'game-player-count',
             ],
             'balance' => 'simple',
-            'processes' => 4, // Pinned at 4 - limited due to slow job execution time
+            'processes' => 4,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 300, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value.
+            'timeout' => 300,
             'nice' => 0,
         ],
 
         /**
          * Daily email supervisor - handles mass email distribution.
-         * Isolated to allow non-time-critial emails to be sent without affecting other queues.
+         * Isolated to allow non-time-critical emails to be sent without affecting other queues.
          */
         'supervisor-6' => [
             'connection' => 'redis',
@@ -337,26 +337,51 @@ return [
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 300, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value.
-            'nice' => 5, // low priority - don't starve other processes
+            'timeout' => 300,
+            'nice' => 5,
         ],
     ],
 
     'environments' => [
-        'production' => [
-            'supervisor-1' => [
-            ],
-        ],
+        'production' => [],
 
-        'stage' => [
-            'supervisor-1' => [
-            ],
-        ],
+        'stage' => [],
 
-        'local' => [
+        /**
+         * Local development uses a single consolidated supervisor to reduce Horizon's memory footprint.
+         * All queues are handled by one supervisor with a configurable max number of processes.
+         * Set HORIZON_FULL_SUPERVISORS=true in .env to use the full production config locally.
+         */
+        'local' => env('HORIZON_FULL_SUPERVISORS', false) ? [] : [
             'supervisor-1' => [
-                'maxProcesses' => 3,
+                'balance' => 'false',
+                'maxProcesses' => (int) env('HORIZON_LOCAL_MAX_PROCESSES', 4),
+                'queue' => [
+                    'player-sessions',
+                    'achievement-metrics',
+                    'alerts',
+                    'default',
+                    'developer-metrics',
+                    'game-metrics',
+                    'player-achievements',
+                    'player-beaten-games-stats',
+                    'player-game-metrics',
+                    'player-metrics',
+                    'player-points-stats',
+                    'game-beaten-metrics',
+                    'game-player-games',
+                    'player-game-metrics-batch',
+                    'player-points-stats-batch',
+                    'game-player-count',
+                    'scout',
+                    'summary-emails',
+                ],
             ],
+            'supervisor-2' => ['maxProcesses' => 0],
+            'supervisor-3' => ['maxProcesses' => 0],
+            'supervisor-4' => ['maxProcesses' => 0],
+            'supervisor-5' => ['maxProcesses' => 0],
+            'supervisor-6' => ['maxProcesses' => 0],
         ],
     ],
 ];
