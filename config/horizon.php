@@ -355,7 +355,7 @@ return [
         'local' => env('HORIZON_FULL_SUPERVISORS', false) ? [] : [
             'supervisor-1' => [
                 'balance' => 'false',
-                'maxProcesses' => (int) env('HORIZON_LOCAL_MAX_PROCESSES', 4),
+                'maxProcesses' => (int) env('HORIZON_LOCAL_MAX_PROCESSES', 3),
                 'queue' => [
                     'player-sessions',
                     'achievement-metrics',
