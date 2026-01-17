@@ -271,7 +271,7 @@ return [
                 'scout',
             ],
             'balance' => 'simple',
-            'processes' => 2, // oinned at 2 - search indexing is not time-critical
+            'processes' => 2, // pinned at 2 - search indexing is not time-critical
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
