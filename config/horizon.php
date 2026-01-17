@@ -225,14 +225,14 @@ return [
             ],
             'balance' => 'auto',
             'autoScalingStrategy' => 'size',
-            'maxProcesses' => 19,
+            'maxProcesses' => 19, // optimized for high-volume queues with auto-scaling
             'balanceMaxShift' => 1,
             'balanceCooldown' => 3,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 300,
+            'timeout' => 300, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value.
             'nice' => 0,
         ],
 
@@ -256,7 +256,7 @@ return [
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 600,
+            'timeout' => 600, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value.
             'nice' => 0,
         ],
 
@@ -271,12 +271,12 @@ return [
                 'scout',
             ],
             'balance' => 'simple',
-            'processes' => 2,
+            'processes' => 2, // oinned at 2 - search indexing is not time-critical
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 300,
+            'timeout' => 300, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value.
             'nice' => 0,
         ],
 
@@ -290,7 +290,7 @@ return [
                 'player-sessions',
             ],
             'balance' => 'simple',
-            'processes' => 8,
+            'processes' => 8, // pinned at 8 - 38ms avg job time
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
@@ -310,12 +310,12 @@ return [
                 'game-player-count',
             ],
             'balance' => 'simple',
-            'processes' => 4,
+            'processes' => 4, // pinned at 4 - limited due to slow job execution time
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 300,
+            'timeout' => 300, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value.
             'nice' => 0,
         ],
 
@@ -337,8 +337,8 @@ return [
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 1,
-            'timeout' => 300,
-            'nice' => 5,
+            'timeout' => 300, // NOTE timeout should always be at least several seconds shorter than the queue config's retry_after configuration value.
+            'nice' => 5, // low priority - don't starve other processes
         ],
     ],
 
