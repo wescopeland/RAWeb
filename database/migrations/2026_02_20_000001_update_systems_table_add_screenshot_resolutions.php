@@ -85,7 +85,7 @@ return new class extends Migration {
             78 => [[256, 384]],
 
             // Nintendo 3DS - Top screen is 400x240. Bottom screen is 320x240.
-            62 => [[400, 240]],
+            62 => [[400, 240], [320, 240]],
 
             // Nokia N-Gage - Fixed 176x208 TFT LCD (portrait).
             // https://en.wikipedia.org/wiki/N-Gage_(device)
