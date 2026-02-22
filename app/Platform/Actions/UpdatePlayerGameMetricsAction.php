@@ -84,12 +84,9 @@ class UpdatePlayerGameMetricsAction
         $possiblePlayerCountChangeGameIds = [];
         foreach ($gameAchievementSets as $gameAchievementSet) {
             $achievementSet = $gameAchievementSet->achievementSet;
-            $setAchievementIds = [];
-            foreach ($achievementSet->achievements as $achievement) {
-                $setAchievementIds[] = $achievement->id;
-            }
+            $setAchievementIds = $achievementSet->achievements->pluck('id');
 
-            $setAchievementsUnlocked = $achievementsUnlocked->filter(fn (Achievement $achievement) => in_array($achievement->id, $setAchievementIds));
+            $setAchievementsUnlocked = $achievementsUnlocked->filter(fn (Achievement $achievement) => $setAchievementIds->contains($achievement->id));
 
             // skip subsets the player hasn't touched to avoid creating unnecessary rows
             $isUntouchedSubset = $setAchievementsUnlocked->count() === 0 && $achievementSet !== $coreAchievementSet;
@@ -112,7 +109,7 @@ class UpdatePlayerGameMetricsAction
                     'created_at' => $playerGame->created_at,
                 ],
             );
-            $setAchievementsUnlockedHardcore = $achievementsUnlockedHardcore->filter(fn (Achievement $achievement) => in_array($achievement->id, $setAchievementIds));
+            $setAchievementsUnlockedHardcore = $achievementsUnlockedHardcore->filter(fn (Achievement $achievement) => $setAchievementIds->contains($achievement->id));
 
             $playerAchievementSet->achievements_unlocked = $setAchievementsUnlocked->count();
             $playerAchievementSet->achievements_unlocked_hardcore = $setAchievementsUnlockedHardcore->count();
