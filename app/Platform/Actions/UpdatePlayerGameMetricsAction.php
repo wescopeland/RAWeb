@@ -81,32 +81,37 @@ class UpdatePlayerGameMetricsAction
         $achievementsUnlockedHardcore = $achievementsUnlocked->filter(fn (Achievement $achievement) => $achievement->pivot->unlocked_hardcore_at !== null);
 
         // process each set
-        $playerAchievementSets = [];
         $possiblePlayerCountChangeGameIds = [];
         foreach ($gameAchievementSets as $gameAchievementSet) {
             $achievementSet = $gameAchievementSet->achievementSet;
-            $playerAchievementSet = PlayerAchievementSet::where('user_id', $playerGame->user->id)
-                ->where('achievement_set_id', $achievementSet->id)
-                ->first();
-
-            if (!$playerAchievementSet) {
-                $playerAchievementSet = new PlayerAchievementSet([
-                    'user_id' => $playerGame->user->id,
-                    'achievement_set_id' => $achievementSet->id,
-                    'created_at' => $playerGame->created_at,
-                ]);
-            }
-
             $setAchievementIds = [];
             foreach ($achievementSet->achievements as $achievement) {
                 $setAchievementIds[] = $achievement->id;
             }
 
             $setAchievementsUnlocked = $achievementsUnlocked->filter(fn (Achievement $achievement) => in_array($achievement->id, $setAchievementIds));
-            if ($setAchievementsUnlocked->count() === 0 && $achievementSet !== $coreAchievementSet && !$playerAchievementSet->exists) {
-                // no unlocks for the subset and no existing metrics, don't create a player_achievement_set
-                continue;
+
+            // skip subsets the player hasn't touched to avoid creating unnecessary rows
+            $isUntouchedSubset = $setAchievementsUnlocked->count() === 0 && $achievementSet !== $coreAchievementSet;
+            if ($isUntouchedSubset) {
+                $hasExistingMetrics = PlayerAchievementSet::where('user_id', $playerGame->user->id)
+                    ->where('achievement_set_id', $achievementSet->id)
+                    ->exists();
+
+                if (!$hasExistingMetrics) {
+                    continue;
+                }
             }
+
+            $playerAchievementSet = PlayerAchievementSet::firstOrCreate(
+                [
+                    'user_id' => $playerGame->user->id,
+                    'achievement_set_id' => $achievementSet->id,
+                ],
+                [
+                    'created_at' => $playerGame->created_at,
+                ],
+            );
             $setAchievementsUnlockedHardcore = $achievementsUnlockedHardcore->filter(fn (Achievement $achievement) => in_array($achievement->id, $setAchievementIds));
 
             $playerAchievementSet->achievements_unlocked = $setAchievementsUnlocked->count();
@@ -116,7 +121,7 @@ class UpdatePlayerGameMetricsAction
             $playerAchievementSet->points_weighted = $setAchievementsUnlockedHardcore->sum('points_weighted');
 
             // if the player went from 0 unlocks to non-zero unlocks, they're considered a player for the set.
-            // similarly, if they went fro non-zero unlocks to zero unlocks, they're no longer considered a
+            // similarly, if they went from non-zero unlocks to zero unlocks, they're no longer considered a
             // player for the set. in both cases, we need to update the game player count
             if (($playerAchievementSet->achievements_unlocked > 0 && $playerAchievementSet->getOriginal('achievements_unlocked') < 1)
                 || ($playerAchievementSet->achievements_unlocked_hardcore > 0 && $playerAchievementSet->getOriginal('achievements_unlocked_hardcore') < 1)
