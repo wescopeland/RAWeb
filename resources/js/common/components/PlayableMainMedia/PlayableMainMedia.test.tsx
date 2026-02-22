@@ -45,4 +45,44 @@ describe('Component: PlayableMainMedia', () => {
     // ASSERT
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
+
+  it('given expected dimensions, sets width and height on both images', () => {
+    // ARRANGE
+    render(
+      <PlayableMainMedia
+        imageTitleUrl="https://example.com/title.jpg"
+        imageIngameUrl="https://example.com/ingame.jpg"
+        expectedWidth={256}
+        expectedHeight={224}
+      />,
+    );
+
+    // ASSERT
+    const titleImage = screen.getByRole('img', { name: /title screenshot/i });
+    const ingameImage = screen.getByRole('img', { name: /ingame screenshot/i });
+
+    expect(titleImage).toHaveAttribute('width', '256');
+    expect(titleImage).toHaveAttribute('height', '224');
+    expect(ingameImage).toHaveAttribute('width', '256');
+    expect(ingameImage).toHaveAttribute('height', '224');
+  });
+
+  it('given no expected dimensions, does not set width and height on images', () => {
+    // ARRANGE
+    render(
+      <PlayableMainMedia
+        imageTitleUrl="https://example.com/title.jpg"
+        imageIngameUrl="https://example.com/ingame.jpg"
+      />,
+    );
+
+    // ASSERT
+    const titleImage = screen.getByRole('img', { name: /title screenshot/i });
+    const ingameImage = screen.getByRole('img', { name: /ingame screenshot/i });
+
+    expect(titleImage).not.toHaveAttribute('width');
+    expect(titleImage).not.toHaveAttribute('height');
+    expect(ingameImage).not.toHaveAttribute('width');
+    expect(ingameImage).not.toHaveAttribute('height');
+  });
 });

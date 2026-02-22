@@ -142,6 +142,8 @@ export const GameShowMobileRoot: FC = () => {
               imageIngameUrl={game.imageIngameUrl!}
               imageTitleUrl={game.imageTitleUrl!}
               isPixelated={getIsSystemPixelated(game.system!.id)}
+              expectedWidth={game.system?.screenshotResolutions?.[0]?.width}
+              expectedHeight={game.system?.screenshotResolutions?.[0]?.height}
             />
           </div>
 

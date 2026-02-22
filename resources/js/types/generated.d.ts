@@ -1173,6 +1173,7 @@ declare namespace App.Platform.Data {
     nameFull?: string;
     nameShort?: string;
     iconUrl?: string;
+    screenshotResolutions?: Array<{ width: number; height: number }> | null;
   };
   export type SystemGameListPageProps<TItems = App.Platform.Data.GameListEntry> = {
     system: App.Platform.Data.System;
@@ -1210,9 +1211,9 @@ declare namespace App.Platform.Data {
   };
 }
 declare namespace App.Platform.Enums {
-  export type UnlockMode = 0 | 1;
   export type AchievementAuthorTask = 'artwork' | 'design' | 'logic' | 'testing' | 'writing';
   export type AchievementSetAuthorTask = 'artwork' | 'banner';
+  export type UnlockMode = 0 | 1;
   export type AchievementSetType =
     | 'core'
     | 'bonus'
@@ -1278,6 +1279,7 @@ declare namespace App.Platform.Enums {
     | 'na'
     | 'worldwide'
     | 'other';
+  export type GameScreenshotStatus = 'approved' | 'pending' | 'rejected';
   export type GameSetRolePermission = 'view' | 'update';
   export type GameSetType = 'hub' | 'similar-games';
   export type GameSuggestionReason =
@@ -1305,6 +1307,7 @@ declare namespace App.Platform.Enums {
     | 'hacks_beaten'
     | 'all_beaten';
   export type ReleasedAtGranularity = 'day' | 'month' | 'year';
+  export type ScreenshotType = 'title' | 'ingame' | 'completion';
   export type TicketableType = 'achievement' | 'leaderboard' | 'game.rich-presence';
   export type TriggerableType = 'achievement' | 'leaderboard' | 'game';
 }

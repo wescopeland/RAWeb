@@ -17,6 +17,7 @@ class GamePolicy
     {
         return $user->hasAnyRole([
             Role::GAME_HASH_MANAGER,
+            Role::GAME_EDITOR,
 
             Role::DEVELOPER,
             Role::DEVELOPER_JUNIOR,
@@ -52,6 +53,7 @@ class GamePolicy
     {
         $canAlwaysUpdate = $user->hasAnyRole([
             Role::GAME_HASH_MANAGER,
+            Role::GAME_EDITOR,
             Role::DEVELOPER,
             Role::ARTIST,
         ]);
@@ -104,6 +106,7 @@ class GamePolicy
                 'image_box_art_asset_path',
                 'image_title_asset_path',
                 'image_ingame_asset_path',
+                'screenshots',
                 'released_at',
                 'released_at_granularity',
                 'trigger_definition',
@@ -120,9 +123,14 @@ class GamePolicy
                 'image_box_art_asset_path',
                 'image_title_asset_path',
                 'image_ingame_asset_path',
+                'screenshots',
                 'released_at',
                 'released_at_granularity',
                 'trigger_definition',
+            ],
+
+            Role::GAME_EDITOR => [
+                'screenshots',
             ],
 
             Role::ARTIST => [

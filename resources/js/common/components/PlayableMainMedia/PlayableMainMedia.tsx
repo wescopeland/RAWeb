@@ -5,13 +5,25 @@ import { cn } from '@/common/utils/cn';
 
 import { ZoomableImage } from '../ZoomableImage';
 
+/**
+ * TODO replace legacy PNG sources with <picture> sourcesets
+ * using the sm/md WebP/AVIF conversions from the screenshots
+ * MediaLibrary collection.
+ */
+
 interface PlayableMainMediaProps {
   imageTitleUrl: string;
   imageIngameUrl: string;
   isPixelated?: boolean;
+
+  /** Set width/height on img tags to reserve space and prevent layout shift. */
+  expectedWidth?: number | null;
+  expectedHeight?: number | null;
 }
 
 export const PlayableMainMedia: FC<PlayableMainMediaProps> = ({
+  expectedHeight,
+  expectedWidth,
   imageIngameUrl,
   imageTitleUrl,
   isPixelated,
@@ -22,6 +34,9 @@ export const PlayableMainMedia: FC<PlayableMainMediaProps> = ({
   if (imageTitleUrl.includes('000002') && imageIngameUrl.includes('000002')) {
     return null;
   }
+
+  const dimensionProps =
+    expectedWidth && expectedHeight ? { width: expectedWidth, height: expectedHeight } : {};
 
   return (
     <div
@@ -34,13 +49,23 @@ export const PlayableMainMedia: FC<PlayableMainMediaProps> = ({
     >
       <ZoomableImage src={imageTitleUrl} alt={t('title screenshot')} isPixelated={isPixelated}>
         <div className="flex items-center justify-center overflow-hidden">
-          <img className="w-full rounded-sm" src={imageTitleUrl} alt={t('title screenshot')} />
+          <img
+            className="w-full rounded-sm"
+            src={imageTitleUrl}
+            alt={t('title screenshot')}
+            {...dimensionProps}
+          />
         </div>
       </ZoomableImage>
 
       <ZoomableImage src={imageIngameUrl} alt={t('ingame screenshot')} isPixelated={isPixelated}>
         <div className="flex items-center justify-center overflow-hidden">
-          <img className="w-full rounded-sm" src={imageIngameUrl} alt={t('ingame screenshot')} />
+          <img
+            className="w-full rounded-sm"
+            src={imageIngameUrl}
+            alt={t('ingame screenshot')}
+            {...dimensionProps}
+          />
         </div>
       </ZoomableImage>
     </div>

@@ -7,6 +7,7 @@ namespace App\Platform\Data;
 use App\Models\System;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Lazy;
+use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript('System')]
@@ -20,6 +21,8 @@ class SystemData extends Data
         public Lazy|string $nameFull,
         public Lazy|string $nameShort,
         public Lazy|string $iconUrl,
+        #[LiteralTypeScriptType('Array<{ width: number; height: number }> | null')]
+        public Lazy|array|null $screenshotResolutions,
     ) {
     }
 
@@ -33,6 +36,7 @@ class SystemData extends Data
             nameFull: Lazy::create(fn () => $system->name_full),
             nameShort: Lazy::create(fn () => $system->name_short),
             iconUrl: Lazy::create(fn () => $system->icon_url),
+            screenshotResolutions: Lazy::create(fn () => $system->screenshot_resolutions),
         );
     }
 }
