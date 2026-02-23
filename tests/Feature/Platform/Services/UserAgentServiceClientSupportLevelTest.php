@@ -324,6 +324,10 @@ class UserAgentServiceClientSupportLevelTest extends TestCase
         $this->assertEquals(ClientSupportLevel::Full,
             $userAgentService->getSupportLevel('RetroArch/1.22.2 (Linux) problemcore_libretro/1.5.0'));
 
+        // core version with a "v" prefix at the minimum should also bypass the restriction
+        $this->assertEquals(ClientSupportLevel::Full,
+            $userAgentService->getSupportLevel('RetroArch/1.22.2 (Linux) dolphin_libretro/v2.0.0'));
+
         $restriction = $userAgentService->getCoreRestrictionForUserAgent('RetroArch/1.22.2 (Linux) dolphin_libretro/2.0.0');
         $this->assertNull($restriction);
 
