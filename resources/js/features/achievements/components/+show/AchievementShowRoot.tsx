@@ -19,6 +19,7 @@ import { AchievementCommentList } from '../AchievementCommentList';
 import { AchievementGamePanel } from '../AchievementGamePanel';
 import { AchievementHero } from '../AchievementHero';
 import { AchievementInlineActions } from '../AchievementInlineActions';
+import { AchievementRecentUnlocks } from '../AchievementRecentUnlocks';
 
 export const AchievementShowRoot: FC = () => {
   const { achievement, backingGame, gameAchievementSet } =
@@ -145,7 +146,9 @@ export const AchievementShowRoot: FC = () => {
               <AchievementCommentList />
             </BaseTabsContent>
 
-            <BaseTabsContent value="unlocks">{'AchievementRecentUnlocks'}</BaseTabsContent>
+            <BaseTabsContent value="unlocks">
+              <AchievementRecentUnlocks />
+            </BaseTabsContent>
 
             <BaseTabsContent value="changelog">
               <AchievementChangelog />
