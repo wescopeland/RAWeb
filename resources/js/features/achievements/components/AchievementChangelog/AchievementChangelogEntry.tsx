@@ -106,13 +106,13 @@ const FieldChangeDiff: FC<FieldChangeDiffProps> = ({ change, type }) => {
 
   return (
     <div className="flex flex-col gap-0.5 text-2xs">
-      {change.oldValue !== null ? (
+      {change.oldValue ? (
         <span className="rounded bg-red-950/40 px-1 py-px text-red-400 line-through light:bg-red-100 light:text-red-700">
           {change.oldValue}
         </span>
       ) : null}
 
-      {change.newValue !== null ? (
+      {change.newValue ? (
         <span className="rounded bg-green-950/40 px-1 py-px text-green-400 light:bg-green-100 light:text-green-700">
           {change.newValue}
         </span>
