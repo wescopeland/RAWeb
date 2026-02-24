@@ -52,9 +52,9 @@ function validateFile(array $file): bool
 function createImageFromExtension(array $file): GdImage
 {
     $image = match (pathinfo($file['name'], PATHINFO_EXTENSION)) {
-        'png' => imagecreatefrompng($file['tmp_name']),
-        'jpg', 'jpeg' => imagecreatefromjpeg($file['tmp_name']),
-        'gif' => imagecreatefromgif($file['tmp_name']),
+        'png' => @imagecreatefrompng($file['tmp_name']),
+        'jpg', 'jpeg' => @imagecreatefromjpeg($file['tmp_name']),
+        'gif' => @imagecreatefromgif($file['tmp_name']),
         default => null,
     };
     if (!$image) {
