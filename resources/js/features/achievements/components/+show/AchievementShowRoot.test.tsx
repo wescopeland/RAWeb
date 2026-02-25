@@ -129,7 +129,7 @@ describe('Component: AchievementShowRoot', () => {
     await userEvent.click(screen.getByRole('tab', { name: /unlocks/i }));
 
     // ASSERT
-    expect(screen.getByText(/AchievementRecentUnlocks/i)).toBeVisible();
+    expect(screen.getByRole('table')).toBeVisible();
   });
 
   it('given the user hovers over an inactive tab, applies the hover text style', async () => {
@@ -236,6 +236,7 @@ describe('Component: AchievementShowRoot', () => {
         backingGame: null,
         gameAchievementSet: null,
         can: { createAchievementComments: false },
+        changelog: [],
         isSubscribedToComments: false,
         numComments: 0,
         recentVisibleComments: [],
@@ -246,6 +247,6 @@ describe('Component: AchievementShowRoot', () => {
     await userEvent.click(screen.getByRole('tab', { name: /changelog/i }));
 
     // ASSERT
-    expect(screen.getByText(/AchievementChangelog/i)).toBeVisible();
+    expect(screen.getByText(/no changelog entries found/i)).toBeVisible();
   });
 });
