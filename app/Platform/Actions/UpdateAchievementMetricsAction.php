@@ -158,7 +158,7 @@ class UpdateAchievementMetricsAction
             'unlocks_hardcore',
             'unlock_percentage',
             'unlock_hardcore_percentage',
-            'points_weighted'
+            'points_weighted',
         ];
 
         $cases = [];
