@@ -280,7 +280,8 @@ function RenderAward(
                     $tooltipTitle = "{$event->title} - {$tierLabel}";
                 }
 
-                $tooltipDescription = "Awarded for earning at least {$actualEventAward->points_required} points";
+                $pointsLabel = $actualEventAward->points_required === 1 ? 'point' : 'points';
+                $tooltipDescription = "Awarded for earning at least {$actualEventAward->points_required} {$pointsLabel}";
             }
 
             echo avatar('event', $event->id,
