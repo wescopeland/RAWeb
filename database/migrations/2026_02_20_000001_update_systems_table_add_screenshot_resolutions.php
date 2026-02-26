@@ -167,8 +167,8 @@ return new class extends Migration {
             40 => [[320, 240]],
 
             // PlayStation - RA docs: 320x240.
-            // GPU supports widths 256/320/368/512/640 at 240 lines 
-            // (progressive) or 480 (interlaced). No 224-line mode 
+            // GPU supports widths 256/320/368/512/640 at 240 lines
+            // (progressive) or 480 (interlaced). No 224-line mode
             // exists on PS1 unlike NES/SNES. Most games use 320x240.
             // https://docs.libretro.com/library/beetle_psx/
             // https://psx-spx.consoledev.net/graphicsprocessingunitgpu/
@@ -382,7 +382,6 @@ return new class extends Migration {
             75,  // Elektor TV Games Computer
             54,  // Cassette Vision
             55,  // Super Cassette Vision
-            46,  // Vectrex
 
             // Computers with analog output
             29,  // MSX
