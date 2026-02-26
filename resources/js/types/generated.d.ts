@@ -1231,7 +1231,6 @@ declare namespace App.Platform.Data {
 }
 declare namespace App.Platform.Enums {
   export type AchievementAuthorTask = 'artwork' | 'design' | 'logic' | 'testing' | 'writing';
-  export type UnlockMode = 0 | 1;
   export type AchievementChangelogEntryType =
     | 'created'
     | 'deleted'
@@ -1249,9 +1248,9 @@ declare namespace App.Platform.Enums {
     | 'type-set'
     | 'type-changed'
     | 'type-removed';
+  export type UnlockMode = 0 | 1;
   export type AchievementPageTab = 'changelog' | 'comments' | 'tips' | 'unlocks';
   export type AchievementSetAuthorTask = 'artwork' | 'banner';
-  export type UnlockMode = 0 | 1;
   export type AchievementSetType =
     | 'core'
     | 'bonus'

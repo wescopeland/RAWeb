@@ -74,7 +74,7 @@ it('rejects duplicate images for the same game', function () {
     $game = Game::factory()->create(['system_id' => System::factory()]);
     $action = new AddGameScreenshotAction();
 
-    // ... create the source image content, then make two UploadedFile instances from it ...
+    // ... both files need identical bytes so the SHA1 hash collides ...
     $source = UploadedFile::fake()->image('screenshot.png', 256, 224);
     $sourceContent = file_get_contents($source->getRealPath());
 
@@ -162,7 +162,7 @@ it('accepts a screenshot matching an exact base resolution', function () {
     // ARRANGE
     $system = System::factory()->create([
         'screenshot_resolutions' => [['width' => 256, 'height' => 224]],
-        'supports_resolution_scaling' => false,
+        'has_analog_tv_output' => false,
     ]);
     $game = Game::factory()->create(['system_id' => $system->id]);
     $file = UploadedFile::fake()->image('screenshot.png', 256, 224);
@@ -178,7 +178,7 @@ it('rejects a screenshot with wrong dimensions for the system', function () {
     // ARRANGE
     $system = System::factory()->create([
         'screenshot_resolutions' => [['width' => 256, 'height' => 224]],
-        'supports_resolution_scaling' => false,
+        'has_analog_tv_output' => false,
     ]);
     $game = Game::factory()->create(['system_id' => $system->id]);
     $file = UploadedFile::fake()->image('screenshot.png', 320, 240);
@@ -187,11 +187,11 @@ it('rejects a screenshot with wrong dimensions for the system', function () {
     (new AddGameScreenshotAction())->execute($game, $file, ScreenshotType::Ingame);
 })->throws(ValidationException::class);
 
-it('accepts a 2x scaled screenshot when the system supports resolution scaling', function () {
+it('accepts a 2x scaled screenshot', function () {
     // ARRANGE
     $system = System::factory()->create([
         'screenshot_resolutions' => [['width' => 320, 'height' => 240]],
-        'supports_resolution_scaling' => true,
+        'has_analog_tv_output' => false,
     ]);
     $game = Game::factory()->create(['system_id' => $system->id]);
     $file = UploadedFile::fake()->image('screenshot.png', 640, 480);
@@ -203,11 +203,11 @@ it('accepts a 2x scaled screenshot when the system supports resolution scaling',
     expect($screenshot)->toBeInstanceOf(GameScreenshot::class);
 });
 
-it('accepts a 3x scaled screenshot when the system supports resolution scaling', function () {
+it('accepts a 3x scaled screenshot', function () {
     // ARRANGE
     $system = System::factory()->create([
         'screenshot_resolutions' => [['width' => 320, 'height' => 240]],
-        'supports_resolution_scaling' => true,
+        'has_analog_tv_output' => false,
     ]);
     $game = Game::factory()->create(['system_id' => $system->id]);
     $file = UploadedFile::fake()->image('screenshot.png', 960, 720);
@@ -219,27 +219,14 @@ it('accepts a 3x scaled screenshot when the system supports resolution scaling',
     expect($screenshot)->toBeInstanceOf(GameScreenshot::class);
 });
 
-it('rejects a 4x scaled screenshot even when the system supports resolution scaling', function () {
+it('rejects a 4x scaled screenshot', function () {
     // ARRANGE
     $system = System::factory()->create([
         'screenshot_resolutions' => [['width' => 160, 'height' => 144]],
-        'supports_resolution_scaling' => true,
+        'has_analog_tv_output' => false,
     ]);
     $game = Game::factory()->create(['system_id' => $system->id]);
     $file = UploadedFile::fake()->image('screenshot.png', 640, 576);
-
-    // ASSERT
-    (new AddGameScreenshotAction())->execute($game, $file, ScreenshotType::Ingame);
-})->throws(ValidationException::class);
-
-it('rejects a scaled screenshot when the system does not support resolution scaling', function () {
-    // ARRANGE
-    $system = System::factory()->create([
-        'screenshot_resolutions' => [['width' => 256, 'height' => 224]],
-        'supports_resolution_scaling' => false,
-    ]);
-    $game = Game::factory()->create(['system_id' => $system->id]);
-    $file = UploadedFile::fake()->image('screenshot.png', 512, 448);
 
     // ASSERT
     (new AddGameScreenshotAction())->execute($game, $file, ScreenshotType::Ingame);
@@ -249,7 +236,7 @@ it('allows any dimensions when the system has null resolutions', function () {
     // ARRANGE
     $system = System::factory()->create([
         'screenshot_resolutions' => null,
-        'supports_resolution_scaling' => false,
+        'has_analog_tv_output' => false,
     ]);
     $game = Game::factory()->create(['system_id' => $system->id]);
     $file = UploadedFile::fake()->image('screenshot.png', 800, 600);
@@ -271,7 +258,65 @@ it('treats different screenshot types independently for primary', function () {
     $title = $action->execute($game, UploadedFile::fake()->image('title.png', 320, 240), ScreenshotType::Title);
 
     // ASSERT
-    // ... both should be primary since they're different types ...
     expect($ingame->is_primary)->toBeTrue();
     expect($title->is_primary)->toBeTrue();
 });
+
+it('accepts an SMPTE 601 NTSC resolution for a system with analog TV output', function () {
+    // ARRANGE
+    $system = System::factory()->create([
+        'screenshot_resolutions' => [['width' => 320, 'height' => 224]],
+        'has_analog_tv_output' => true,
+    ]);
+    $game = Game::factory()->create(['system_id' => $system->id]);
+    $file = UploadedFile::fake()->image('screenshot.png', 720, 480);
+
+    // ACT
+    $screenshot = (new AddGameScreenshotAction())->execute($game, $file, ScreenshotType::Ingame);
+
+    // ASSERT
+    expect($screenshot)->toBeInstanceOf(GameScreenshot::class);
+});
+
+it('accepts an SMPTE 601 PAL resolution for a system with analog TV output', function () {
+    // ARRANGE
+    $system = System::factory()->create([
+        'screenshot_resolutions' => [['width' => 320, 'height' => 224]],
+        'has_analog_tv_output' => true,
+    ]);
+    $game = Game::factory()->create(['system_id' => $system->id]);
+    $file = UploadedFile::fake()->image('screenshot.png', 720, 576);
+
+    // ACT
+    $screenshot = (new AddGameScreenshotAction())->execute($game, $file, ScreenshotType::Ingame);
+
+    // ASSERT
+    expect($screenshot)->toBeInstanceOf(GameScreenshot::class);
+});
+
+it('rejects a 3x multiple that exceeds the 1920x1080 hard cap', function () {
+    // ARRANGE
+    // ... 640x400 * 3 = 1920x1200 - this passes resolution validation but exceeds the dimension cap ...
+    $system = System::factory()->create([
+        'screenshot_resolutions' => [['width' => 640, 'height' => 400]],
+        'has_analog_tv_output' => false,
+    ]);
+    $game = Game::factory()->create(['system_id' => $system->id]);
+    $file = UploadedFile::fake()->image('screenshot.png', 1920, 1200);
+
+    // ASSERT
+    (new AddGameScreenshotAction())->execute($game, $file, ScreenshotType::Ingame);
+})->throws(ValidationException::class);
+
+it('rejects an SMPTE 601 resolution for a handheld system', function () {
+    // ARRANGE
+    $system = System::factory()->create([
+        'screenshot_resolutions' => [['width' => 160, 'height' => 144]],
+        'has_analog_tv_output' => false,
+    ]);
+    $game = Game::factory()->create(['system_id' => $system->id]);
+    $file = UploadedFile::fake()->image('screenshot.png', 720, 480);
+
+    // ASSERT
+    (new AddGameScreenshotAction())->execute($game, $file, ScreenshotType::Ingame);
+})->throws(ValidationException::class);

@@ -9,6 +9,7 @@ use App\Models\GameScreenshot;
 use App\Platform\Enums\GameScreenshotStatus;
 use App\Platform\Enums\ScreenshotType;
 use App\Rules\DisallowAnimatedImageRule;
+use App\Rules\ValidScreenshotResolutionRule;
 use App\Support\Media\CreateLegacyScreenshotPngAction;
 use App\Support\MediaLibrary\RejectedHashes;
 use Illuminate\Http\UploadedFile;
@@ -17,8 +18,6 @@ use Illuminate\Validation\ValidationException;
 
 class AddGameScreenshotAction
 {
-    private const MAX_SCALE_FACTOR = 3;
-
     /**
      * @throws ValidationException
      */
@@ -84,6 +83,10 @@ class AddGameScreenshotAction
      */
     private function validateFile(UploadedFile $file): void
     {
+        // A 1920x1080 hard cap bounds the maximum file size and 
+        // prevents unreasonably large uploads. Any system whose 
+        // 3x multiple exceeds this (eg: PC-98 at 1920x1200) will
+        // be rejected here before the resolution rule runs.
         $validator = Validator::make(
             ['screenshot' => $file],
             ['screenshot' => [
@@ -132,63 +135,16 @@ class AddGameScreenshotAction
     private function validateResolution(UploadedFile $file, Game $game): void
     {
         $system = $game->system;
-        $resolutions = $system?->screenshot_resolutions;
-
-        // Systems with null resolutions allow any dimensions.
-        if (empty($resolutions)) {
+        if (!$system) {
             return;
         }
 
-        $imageInfo = getimagesize($file->getRealPath());
-        if ($imageInfo === false) {
-            throw ValidationException::withMessages([
-                'screenshot' => 'Unable to read image dimensions. The file may be corrupt.',
-            ]);
-        }
+        $validator = Validator::make(
+            ['screenshot' => $file],
+            ['screenshot' => [new ValidScreenshotResolutionRule($system)]],
+        );
 
-        [$width, $height] = $imageInfo;
-
-        // Check for an exact match against a known base resolution.
-        foreach ($resolutions as $resolution) {
-            if ($width === $resolution['width'] && $height === $resolution['height']) {
-                return;
-            }
-        }
-
-        // If the system supports resolution scaling, check if the dimensions are
-        // an exact integer multiple of any base resolution (up to 3x).
-        if ($system->supports_resolution_scaling) {
-            foreach ($resolutions as $resolution) {
-                $baseW = $resolution['width'];
-                $baseH = $resolution['height'];
-
-                if ($baseW === 0 || $baseH === 0) {
-                    continue;
-                }
-
-                // Both axes must scale by the same integer factor.
-                if ($width % $baseW === 0 && $height % $baseH === 0) {
-                    $scaleX = (int) ($width / $baseW);
-                    $scaleY = (int) ($height / $baseH);
-
-                    if ($scaleX === $scaleY && $scaleX >= 2 && $scaleX <= self::MAX_SCALE_FACTOR) {
-                        return;
-                    }
-                }
-            }
-        }
-
-        $formatted = collect($resolutions)
-            ->map(fn (array $r) => "{$r['width']}x{$r['height']}")
-            ->join(', ');
-
-        $scalingNote = $system->supports_resolution_scaling
-            ? " (or 2x/3x integer multiples)"
-            : '';
-
-        throw ValidationException::withMessages([
-            'screenshot' => "This screenshot's dimensions ({$width}x{$height}) don't match the expected resolutions for {$system->name}: {$formatted}{$scalingNote}.",
-        ]);
+        $validator->validate();
     }
 
     /**

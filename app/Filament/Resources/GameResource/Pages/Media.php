@@ -15,8 +15,10 @@ use App\Platform\Actions\AddGameScreenshotAction;
 use App\Platform\Enums\ScreenshotType;
 use App\Rules\DisallowAnimatedImageRule;
 use App\Rules\UploadedImageAspectRatioRule;
+use App\Rules\ValidScreenshotResolutionRule;
 use App\Support\MediaLibrary\Actions\ExtractBannerEdgeColorsAction;
 use BackedEnum;
+use Closure;
 use Exception;
 use Filament\Forms;
 use Filament\Notifications\Notification;
@@ -142,6 +144,7 @@ class Media extends EditRecord
                             ->maxSize(1024)
                             ->maxFiles(1)
                             ->previewable(true)
+                            ->rules($this->getScreenshotValidationRules())
                             ->helperText($this->getScreenshotHelperText()),
                     ])
                     ->hidden(!$user->can('updateField', [$schema->model, 'image_title_asset_path'])),
@@ -162,10 +165,7 @@ class Media extends EditRecord
                             ->maxFiles(1)
                             ->maxSize(4096)
                             ->acceptedFileTypes(['image/png', 'image/jpeg', 'image/webp'])
-                            ->rules([
-                                'dimensions:min_width=64,min_height=64,max_width=1920,max_height=1080',
-                                new DisallowAnimatedImageRule(),
-                            ])
+                            ->rules($this->getScreenshotValidationRules())
                             ->previewable(true)
                             ->helperText($this->getScreenshotHelperText()),
                     ])
@@ -254,6 +254,17 @@ class Media extends EditRecord
         }
     }
 
+    private function getScreenshotValidationRules(): Closure
+    {
+        return fn () => array_filter([
+            'dimensions:min_width=64,min_height=64,max_width=1920,max_height=1080',
+            new DisallowAnimatedImageRule(),
+            $this->record?->system
+                ? new ValidScreenshotResolutionRule($this->record->system)
+                : null,
+        ]);
+    }
+
     private function getScreenshotHelperText(): ?string
     {
         $system = $this->record?->system;
@@ -268,6 +279,12 @@ class Media extends EditRecord
 
         $label = count($resolutions) > 1 ? 'Accepted resolutions' : 'Expected resolution';
 
-        return "{$label} for {$system->name}: {$formatted}";
+        $text = "{$label} for {$system->name}: {$formatted} (or 2x/3x integer multiples where dimensions permit)";
+
+        if ($system->has_analog_tv_output) {
+            $text .= '. SMPTE 601 capture resolutions (704x480, 720x480, 720x486, 704x576, 720x576) are also accepted.';
+        }
+
+        return $text;
     }
 }

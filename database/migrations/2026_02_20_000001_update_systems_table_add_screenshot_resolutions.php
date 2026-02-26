@@ -12,33 +12,44 @@ return new class extends Migration {
     {
         Schema::table('systems', function (Blueprint $table) {
             $table->json('screenshot_resolutions')->nullable()->after('name_short');
-            $table->boolean('supports_resolution_scaling')->default(false)->after('screenshot_resolutions');
+            $table->boolean('has_analog_tv_output')->default(false)->after('screenshot_resolutions');
         });
 
         /**
          * Seed known system screenshot resolutions.
          *
          * Each entry is a JSON array of {width, height} objects representing
-         * the valid emulator output resolutions for screenshots on that system.
+         * the RA community's editorial standard dimensions for screenshots.
          *
-         * IMPORTANT: These are what the libretro core (or RA-verified standalone
-         * emulator) actually writes to the framebuffer. These are not raw hardware
-         * pixel counts or display aspect ratios.
+         * Sources:
+         * - https://docs.retroachievements.org/guidelines/content/game-info-and-hub-guidelines.html#screenshot-dimensions
+         * - https://www.mobygames.com/info/screenshots/
          *
-         * The first resolution in each array is the "most common", and it's used
-         * as the default for layout shift prevention in the front-end.
+         * The first resolution in each array is the "most common", and it's
+         * used as the default for layout shift prevention in the front-end.
          *
-         * Unlisted systems stay null, meaning the resolution varies per game and
-         * no dimension validation is applied at upload time.
+         * Integer multiples (2x, 3x) of these base resolutions are also
+         * accepted at upload time for all systems. Systems with
+         * has_analog_tv_output=true additionally accept SMPTE 601 analog
+         * capture resolutions (704x480, 720x480, 720x486, 704x576, 720x576).
          *
-         * Citations point to core source code (retro_get_system_av_info or
-         * equivalent geometry structs) where possible.
+         * Unlisted systems stay null, meaning the resolution varies per game
+         * and no dimension validation is applied at upload time.
          */
         $resolutions = [
 
             // =================================================================
-            // HANDHELDS - Fixed LCD resolutions, no PAL/NTSC variance.
+            // HANDHELDS - Fixed LCD resolutions, no analog TV output.
             // =================================================================
+
+            // Pokemon Mini - Fixed 96x64 monochrome LCD.
+            24 => [[96, 64]],
+
+            // Arduboy - Fixed 128x64 1-bit OLED.
+            71 => [[128, 64]],
+
+            // Game Gear - Fixed 160x144 LCD viewport.
+            15 => [[160, 144]],
 
             // Game Boy - Fixed 160x144 dot-matrix LCD.
             4 => [[160, 144]],
@@ -46,11 +57,8 @@ return new class extends Migration {
             // Game Boy Color - Same 160x144 LCD as Game Boy.
             6 => [[160, 144]],
 
-            // Game Boy Advance - Fixed 240x160 TFT LCD.
-            5 => [[240, 160]],
-
-            // Game Gear - Fixed 160x144 LCD viewport.
-            15 => [[160, 144]],
+            // Mega Duck - Fixed 160x144 LCD (Game Boy clone hardware).
+            69 => [[160, 144]],
 
             // Atari Lynx - Fixed 160x102 backlit LCD.
             13 => [[160, 102]],
@@ -58,103 +66,91 @@ return new class extends Migration {
             // Neo Geo Pocket / Color - Fixed 160x152 TFT LCD.
             14 => [[160, 152]],
 
-            // Pokemon Mini - Fixed 96x64 monochrome LCD.
-            // https://docs.libretro.com/library/pokemini/
-            24 => [[96, 64]],
+            // WASM-4 - Spec defines 160x160 at 4 colors.
+            72 => [[160, 160]],
+
+            // Watara Supervision - Fixed 160x160 monochrome LCD (4 shades).
+            63 => [[160, 160]],
+
+            // Nintendo DS - 256x192 per screen, 256x384 stacked.
+            18 => [[256, 384], [256, 192]],
+
+            // Nintendo DSi - Same dual-screen layout as DS.
+            78 => [[256, 384], [256, 192]],
 
             // WonderSwan / Color - 224x144 LCD with physical rotation.
             // Games run horizontal (224x144) or vertical (144x224).
             53 => [[224, 144], [144, 224]],
 
-            // Watara Supervision - Fixed 160x160 monochrome LCD (4 shades).
-            // https://en.wikipedia.org/wiki/Watara_Supervision
-            63 => [[160, 160]],
+            // Game Boy Advance - Fixed 240x160 TFT LCD.
+            5 => [[240, 160]],
 
-            // Mega Duck - Fixed 160x144 LCD (Game Boy clone hardware).
-            69 => [[160, 144]],
+            // TIC-80 - Spec defines 240x136.
+            65 => [[240, 136]],
 
-            // PlayStation Portable - Fixed 480x272 TFT LCD.
-            // https://docs.libretro.com/library/ppsspp/
-            41 => [[480, 272]],
+            // TI-83 - 96x64 monochrome LCD.
+            79 => [[96, 64]],
 
-            // Nintendo DS - Two 256x192 screens stacked into 256x384.
-            // https://docs.libretro.com/library/melonds/
-            18 => [[256, 384]],
-
-            // Nintendo DSi - Same dual-screen layout as DS, 256x384.
-            78 => [[256, 384]],
+            // PlayStation Portable - RA docs standard is 320x180.
+            // Also accept 480x272 (native LCD resolution, what ppsspp outputs).
+            41 => [[320, 180], [480, 272]],
 
             // Nintendo 3DS - Top screen is 400x240. Bottom screen is 320x240.
-            62 => [[400, 240], [320, 240]],
+            // Supported isolated screens as well as stacked similar to DS.
+            62 => [[400, 240], [320, 240], [720, 480]],
 
-            // Nokia N-Gage - Fixed 176x208 TFT LCD (portrait).
-            // https://en.wikipedia.org/wiki/N-Gage_(device)
-            61 => [[176, 208]],
+            // Virtual Boy - RA docs: 320x186. MobyGames uses 384x224 (raw LED
+            // resolution). Classified as handheld (no analog TV output) since
+            // it has a fixed-resolution display with no analog video signal.
+            28 => [[320, 186], [384, 224]],
 
             // =================================================================
-            // NINTENDO HOME CONSOLES
+            // CONSOLES - Analog TV output (CRT). SMPTE 601 also accepted.
+            // The first resolution listed is the RA docs editorial standard.
+            // PAL variants are included where applicable.
             // =================================================================
 
-            // NES/Famicom - PPU outputs 256x240. NTSC cores crop overscan to
-            // 256x224 by default. PAL uses the full 256x240.
+            // NES/Famicom - RA docs: 256x224 (NTSC). PAL: 256x240.
             7 => [[256, 224], [256, 240]],
 
-            // Famicom Disk System - Same PPU as NES.
-            81 => [[256, 224], [256, 240]],
+            // Famicom Disk System - Same PPU as NES. NTSC-only region.
+            81 => [[256, 224]],
 
-            // SNES/Super Famicom - 256x224 standard. Hi-res Mode 5/6 doubles
-            // horizontal to 512. Interlaced doubles vertical. Max 512x478.
-            // https://docs.libretro.com/library/snes9x/
-            3 => [[256, 224], [256, 239], [512, 224], [512, 239], [512, 448], [512, 478]],
+            // SNES/Super Famicom - RA docs: 256x224 (NTSC). PAL: 256x240.
+            // 512x224 is the hi-res horizontal mode (Mode 5/6).
+            3 => [[256, 224], [256, 240], [512, 224]],
 
-            // Nintendo 64 - 320x240 standard. Expansion Pak games support 640x480 interlaced.
-            // https://github.com/libretro/mupen64plus-libretro-nx/blob/develop/libretro/libretro.c#L1441
-            2 => [[320, 240], [640, 480]],
+            // Nintendo 64 - RA docs: 320x240.
+            2 => [[320, 240]],
 
-            // Virtual Boy - Fixed 384x224 LED display per eye.
-            // https://en.wikipedia.org/wiki/Virtual_Boy
-            28 => [[384, 224]],
+            // GameCube - RA docs: 320x240.
+            16 => [[320, 240]],
 
-            // GameCube - Dolphin core outputs 640x480 at 1x native.
-            // https://docs.libretro.com/library/dolphin/
-            16 => [[640, 480]],
+            // Wii - RA docs: 320x240.
+            19 => [[320, 240]],
 
-            // Wii - Same Dolphin core as GameCube, 640x480 at 1x native.
-            // https://docs.libretro.com/library/dolphin/
-            19 => [[640, 480]],
-
-            // Wii U - Most games render at 1280x720.
+            // Wii U - Digital output. RA docs do not list this system.
             20 => [[1280, 720]],
 
-            // =================================================================
-            // SEGA
-            // =================================================================
-
-            // SG-1000 - TMS9918A VDP. 256x192 only, no extended modes.
-            // https://docs.libretro.com/library/genesis_plus_gx/
+            // SG-1000 - RA docs: 256x192.
             33 => [[256, 192]],
 
-            // Master System - TMS9918-derived VDP outputs 256x192. SMS2 VDP
-            // adds 256x224 and 256x240, used by Codemasters titles and others.
-            // https://docs.libretro.com/library/gearsystem/
-            // https://www.smspower.org/Development/Modes
+            // Master System - RA docs: 256x192. Also 256x224 and 256x240
+            // used by some titles (Codemasters, etc).
             11 => [[256, 192], [256, 224], [256, 240]],
 
-            // Genesis/Mega Drive - H40 (320px, most games) and H32 (256px).
-            // NTSC: 224 lines, PAL: 240 lines.
-            // https://docs.libretro.com/library/genesis_plus_gx/
-            // https://docs.libretro.com/library/picodrive/
-            1 => [[320, 224], [256, 224], [320, 240], [256, 240]],
+            // Genesis/Mega Drive - RA docs: 320x224 (NTSC). PAL: 320x240.
+            // 256x224 is the H32 mode used by some games (eg: Fire Mustang).
+            1 => [[320, 224], [256, 224], [320, 240]],
 
-            // Sega CD - Same VDP as Genesis, same resolution modes.
-            9 => [[320, 224], [256, 224], [320, 240], [256, 240]],
+            // Sega CD - Same VDP as Genesis.
+            9 => [[320, 224], [256, 224], [320, 240]],
 
-            // 32X - Inherits Genesis VDP. Most 32X rendering uses 320-wide.
-            // PAL outputs 240 lines.
-            10 => [[320, 224], [320, 240]],
+            // 32X - RA docs: 320x224 (NTSC). Also 256x224 (H32 mode). PAL: 320x240.
+            10 => [[320, 224], [256, 224], [320, 240]],
 
             // Sega Pico - Same VDP as Genesis.
-            68 => [[320, 224], [256, 224], [320, 240], [256, 240]],
+            68 => [[320, 224], [256, 224], [320, 240]],
 
             // Saturn - VDP2 supports widths 320/352 (lo-res) and 640/704
             // (hi-res), heights 224/240 (NTSC) and 256 (PAL). Interlaced
@@ -167,18 +163,13 @@ return new class extends Migration {
                 [640, 448], [704, 448], [640, 480], [704, 480],  // interlaced
             ],
 
-            // Dreamcast - Flycast always outputs 640x480. Games rendering at
-            // 320x240 are pixel-doubled by hardware.
-            // https://github.com/libretro/flycast/blob/b897744e27c730c7519784b2aef12ba7f658de31/core/libretro/libretro.cpp#L318
-            40 => [[640, 480]],
+            // Dreamcast - RA docs: 320x240.
+            40 => [[320, 240]],
 
-            // =================================================================
-            // SONY
-            // =================================================================
-
-            // PlayStation - GPU supports widths 256/320/368/512/640 at 240
-            // lines (progressive) or 480 (interlaced). No 224-line mode exists
-            // on PS1 unlike NES/SNES. Most games use 320x240.
+            // PlayStation - RA docs: 320x240.
+            // GPU supports widths 256/320/368/512/640 at 240 lines 
+            // (progressive) or 480 (interlaced). No 224-line mode 
+            // exists on PS1 unlike NES/SNES. Most games use 320x240.
             // https://docs.libretro.com/library/beetle_psx/
             // https://psx-spx.consoledev.net/graphicsprocessingunitgpu/
             12 => [
@@ -186,196 +177,103 @@ return new class extends Migration {
                 [320, 480], [256, 480], [368, 480], [512, 480], [640, 480],  // interlaced
             ],
 
-            // PlayStation 2 - PS2 always outputs 640x448 (NTSC) or 640x512
-            // (PAL). Games rendering at 512-wide get stretched to fill 640.
-            // 512-wide variants appear when screen offsets are disabled.
-            // https://github.com/PCSX2/pcsx2/issues/10922#issuecomment-1997653184
-            21 => [[640, 448], [512, 448], [640, 512], [512, 512]],
+            // PlayStation 2 - RA docs: 320x240. PCSX2 outputs 640x448 (NTSC)
+            // and 640x512 (PAL) at native resolution. "Widescreen" is anamorphic.
+            21 => [[320, 240], [640, 448], [640, 512]],
 
-            // =================================================================
-            // MICROSOFT
-            // =================================================================
+            // Xbox - RA docs: 320x240.
+            22 => [[320, 240]],
 
-            // Xbox - 640x480 baseline output.
-            // https://www.copetti.org/writings/consoles/xbox/
-            22 => [[640, 480]],
+            // Atari 5200 - RA docs: 320x228. MobyGames: 336x240.
+            50 => [[320, 228], [336, 240]],
 
-            // =================================================================
-            // ATARI
-            // =================================================================
+            // Atari 7800 - RA docs: 320x223 (NTSC). PAL: 320x272.
+            // 320x240 and 160x240 (double-wide pixel mode) are also common.
+            51 => [[320, 223], [320, 272], [320, 240], [160, 240]],
 
-            // Atari 5200 - a5200 core outputs 336x240 (includes overscan
-            // borders around the ANTIC chip's 320x192 active area).
-            // https://docs.libretro.com/library/atari800/
-            50 => [[336, 240]],
+            // PC Engine/TurboGrafx-16 - RA docs: 256x232. Beetle PCE FAST
+            // outputs 256x239, 336x239, or 512x243 depending on the game.
+            8 => [[256, 232], [256, 239], [336, 239], [512, 243]],
 
-            // Atari 7800 - ProSystem core: 320x223 (NTSC), 320x272 (PAL).
-            // https://docs.libretro.com/library/prosystem/
-            51 => [[320, 223], [320, 272]],
+            // PC-FX - RA docs: 256x232. Core also outputs 256x240 and 341x240.
+            49 => [[256, 232], [256, 240], [341, 240]],
 
-            // Atari Jaguar - Most games use 320x240.
-            // https://github.com/libretro/virtualjaguar-libretro/blob/48096c1f6f8b98cfff048a5cb4e6a86686631072/libretro.c#L860
-            17 => [[320, 240]],
+            // Neo Geo CD - RA docs: 320x224.
+            56 => [[320, 224]],
 
-            // Atari Jaguar CD - Same hardware as Jaguar.
-            // https://github.com/libretro/virtualjaguar-libretro/blob/48096c1f6f8b98cfff048a5cb4e6a86686631072/libretro.c#L860
-            77 => [[320, 240]],
-
-            // =================================================================
-            // NEC
-            // =================================================================
-
-            // PC Engine/TurboGrafx-16 - HuC6270 VDC supports widths 256, 336,
-            // and 512 with ~239 visible lines. Beetle PCE FAST outputs 512x243
-            // to handle mid-frame width switching.
-            // https://docs.libretro.com/library/beetle_pce_fast/
-            8 => [[256, 239], [336, 239], [512, 243]],
-
-            // PC Engine CD - Same hardware as PC Engine.
-            // https://docs.libretro.com/library/beetle_pce_fast/
-            76 => [[256, 239], [336, 239], [512, 243]],
-
-            // PC-FX - Most games use 256x240 or 341x240.
-            // https://github.com/libretro/beetle-pcfx-libretro/blob/dd04cef9355286488a1d78ff18c4c848a1575540/libretro.cpp#L441
-            49 => [[256, 240], [341, 240]],
-
-            // =================================================================
-            // SNK
-            // =================================================================
-
-            // Neo Geo CD - LSPC2 outputs 320x224. Many games use the center
-            // 304 pixels only (16px black borders).
-            // https://www.chibiakumas.com/68000/neogeo.php
-            56 => [[320, 224], [304, 224]],
-
-            // =================================================================
-            // OTHER CONSOLES
-            // =================================================================
-
-            // 3DO - Opera core: 320x240 default, 640x480 with High Resolution
-            // option enabled.
-            // https://docs.libretro.com/library/opera/
-            43 => [[320, 240], [640, 480]],
+            // 3DO Interactive Multiplayer - RA docs: 320x240.
+            43 => [[320, 240]],
 
             // Philips CD-i
-            // http://www.icdia.co.uk/docs_sw/vcd_on_cdi_311.pdf
             42 => [[384, 240], [384, 280]],
 
-            // ColecoVision - TMS9928A VDP, 256x192 only.
-            // https://www.msx.org/forum/msx-talk/development/setting-graphics-mode-7-and-sprites-also-bluemsx-vram-debugging
+            // ColecoVision - RA docs: 256x192.
             44 => [[256, 192]],
 
-            // Intellivision - FreeIntv core outputs 352x224 by default.
-            // https://github.com/libretro/FreeIntv/blob/df5a5312985b66b1ec71b496868641e40b7ad1c9/src/libretro.c#L53
-            45 => [[352, 224]],
+            // Intellivision - RA docs: 320x200.
+            45 => [[320, 200]],
 
-            // Magnavox Odyssey 2
-            // https://docs.libretro.com/library/o2em/
-            23 => [[340, 250]],
+            // Magnavox Odyssey 2 - RA docs: 320x235.
+            23 => [[320, 235]],
 
-            // Fairchild Channel F - FreeChaF core outputs 306x192.
-            // https://github.com/libretro/FreeChaF/blob/cdb8ad6fcecb276761b193650f5ce9ae8b878067/src/libretro.c#L40
+            // Fairchild Channel F - RA docs: 306x192. The visible game area
+            // is only 102x58, but the FreeChaF core includes overscan in its
+            // 306x192 output.
             57 => [[306, 192]],
 
-            // Arcadia 2001
-            // https://docs.retroachievements.org/guidelines/content/badge-and-icon-guidelines.html
+            // Arcadia 2001 - RA docs: 146x240.
             73 => [[146, 240]],
 
-            // Interton VC 4000
-            // https://docs.retroachievements.org/guidelines/content/badge-and-icon-guidelines.html
+            // Interton VC 4000 - RA docs: 146x240.
             74 => [[146, 240]],
 
-            // Elektor TV Games Computer
-            // https://docs.retroachievements.org/guidelines/content/badge-and-icon-guidelines.html
+            // Elektor TV Games Computer - RA docs: 146x240.
             75 => [[146, 240]],
 
-            // Cassette Vision - Hardware spec.
-            // https://en.wikipedia.org/wiki/Cassette_Vision
+            // Cassette Vision
             54 => [[128, 192]],
 
-            // Super Cassette Vision - Hardware spec.
-            // https://en.wikipedia.org/wiki/Super_Cassette_Vision
+            // Super Cassette Vision
             55 => [[256, 192]],
 
-            // Vectrex - Vector display with no fixed pixel resolution. The vecx
-            // core rasterizes to 330x410 (portrait matches original CRT).
-            // https://docs.libretro.com/library/vecx/
-            46 => [[330, 410]],
+            // Vectrex - RA docs: 193x240. MobyGames: 360x480.
+            46 => [[193, 240], [360, 480]],
 
-            // Zeebo - ARM-based console with 800x480 display.
-            // https://en.wikipedia.org/wiki/Zeebo
+            // Zeebo - ARM-based console with 800x480 display (digital output).
             70 => [[800, 480]],
 
             // =================================================================
-            // FANTASY CONSOLES & CALCULATORS
+            // COMPUTERS - Analog TV/monitor output. SMPTE 601 also accepted.
             // =================================================================
 
-            // Arduboy - Fixed 128x64 1-bit OLED.
-            // https://docs.libretro.com/library/ardens/
-            71 => [[128, 64]],
-
-            // WASM-4 - Spec defines 160x160 at 4 colors.
-            // https://github.com/aduros/wasm4/blob/main/runtimes/native/src/backend/main_libretro.c#L266
-            72 => [[160, 160]],
-
-            // TIC-80 - Spec defines 240x136.
-            // https://github.com/nesbox/TIC-80/blob/main/src/system/libretro/tic80_libretro.c#L433
-            65 => [[240, 136]],
-
-            // TI-83 - 96x64 monochrome LCD.
-            79 => [[96, 64]],
-
-            // =================================================================
-            // COMPUTERS - Fixed or well-defined core output.
-            // =================================================================
-
-            // MSX
+            // MSX - RA docs: 272x240.
             29 => [[272, 240]],
 
-            // VIC-20 - VICE xvic core: 448x284 (PAL), 400x234 (NTSC).
-            // https://docs.libretro.com/library/vice/
-            // https://github.com/libretro/vice-libretro/blob/master/libretro/libretro-core.h
-            34 => [[448, 284], [400, 234]],
+            // VIC-20 - RA docs: 200x234.
+            34 => [[200, 234]],
 
-            // Atari ST - Hatari core scales all ST display modes into its
-            // "Internal Resolution" buffer. Default is 640x480.
-            // https://github.com/libretro/hatari/blob/7008194d3f951a157997f67a820578f56f7feee0/libretro/libretro.c#L976
-            36 => [[640, 480], [320, 200]],
+            // Atari ST - RA docs: 320x200.
+            36 => [[320, 200]],
 
-            // Amstrad CPC
+            // Amstrad CPC - RA docs: 320x226.
             37 => [[320, 226]],
 
-            // Apple II - RAppleWin outputs a fixed 560x384 framebuffer. All
-            // video modes (HGR, LoRes, DHGR) render into this buffer.
-            // https://github.com/AppleWin/AppleWin
-            38 => [[560, 384], [320, 219]],
+            // Apple II - RA docs: 320x219.
+            38 => [[320, 219]],
 
-            // PC-8000/8800 - QUASI88 core always outputs 640x400 regardless
-            // of PC-88 video mode.
-            // https://docs.libretro.com/library/quasi88/
-            47 => [[640, 400]],
+            // PC-8000/8800 - RA docs: 320x200.
+            47 => [[320, 200]],
 
-            // PC-9800 - NP2kai core: 640x400 (nearly all PC-98 games).
-            // https://forums.libretro.com/t/neko-project-ii-kai-pc-9801-core-different-nekop2-meowpc98/11086/41
+            // PC-9800 - 640x400 (nearly all PC-98 games).
             48 => [[640, 400]],
 
-            // Sharp X68000 - PX68k core outputs a fixed 800x600 framebuffer.
-            // All native modes are internally scaled by the core.
-            // https://docs.libretro.com/library/px68k/
-            // https://github.com/libretro/px68k-libretro/blob/9dfa6abc25ddd6e597790f7a535cd0a1d7f9c385/libretro.c#L129
-            52 => [[800, 600]],
-
-            // ZX Spectrum - Fuse core: 320x240 (standard models). Timex
-            // models (TC2048, TC2068) output 640x480.
-            // https://github.com/libretro/fuse-libretro/blob/cad85b7b1b864c65734f71aa4a510b6f6536881c/src/libretro.c#L499
-            59 => [[320, 240], [640, 480]],
+            // ZX Spectrum - RA docs do not list; using 320x240 as standard.
+            59 => [[320, 240]],
 
             // Sharp X1
-            // https://github.com/libretro/xmil-libretro/blob/master/libretro/xmil.h
-            64 => [[320, 200], [640, 400]],
+            64 => [[320, 200]],
 
             // Thomson TO8
-            // https://docs.libretro.com/library/theodore/
             66 => [[672, 432]],
 
             // =================================================================
@@ -384,14 +282,22 @@ return new class extends Migration {
 
             // Atari 2600 (ID 25) - TIA is 160px wide but vertical scanline
             // count varies per game (~160 to ~230+). Stella core is dynamic.
-            // https://github.com/libretro/stella2014-libretro/blob/3cc89f0d316d6c924a5e3f4011d17421df58e615/libretro.cxx#L1020
+
+            // Atari Jaguar (ID 17) - Per RA docs.
+
+            // Atari Jaguar CD (ID 77) - Per RA docs.
 
             // Arcade (ID 27) - Every board has different hardware.
-            // FBNeo outputs per-game native resolution.
 
             // DOS (ID 26) - DOSBox Pure dynamically resizes per video mode.
 
             // Amiga (ID 35) - PUAE core varies by game mode and PAL/NTSC.
+
+            // Nokia N-Gage (ID 61) - Per RA docs.
+
+            // PC Engine CD (ID 76) - Per RA docs.
+
+            // Sharp X68000 (ID 52) - Per RA docs.
 
             // Oric (ID 32)
 
@@ -401,8 +307,7 @@ return new class extends Migration {
 
             // Uzebox (ID 80) - Resolution varies per game mode.
 
-            // Game & Watch (ID 60) - gw-libretro uses per-game dimensions
-            // (each .mgw file defines its own resolution). No fixed output.
+            // Game & Watch (ID 60) - gw-libretro uses per-game dimensions.
 
             // FM Towns (ID 58)
 
@@ -426,31 +331,80 @@ return new class extends Migration {
             ]);
         }
 
-        // Systems where the emulator supports internal resolution scaling
-        // (2x, 3x, etc). Validation accepts screenshots that are exact
-        // integer multiples of any base resolution, capped at 3x.
-        $scalingSystems = [
-            41,  // PSP
-            12,  // PlayStation
-            21,  // PlayStation 2
+        // Systems with analog TV/monitor output. Upload validation also
+        // accepts SMPTE 601 capture resolutions for these systems.
+        $analogTvSystems = [
+            // Nintendo consoles
+            7,   // NES/Famicom
+            81,  // Famicom Disk System
+            3,   // SNES/Super Famicom
             2,   // Nintendo 64
             16,  // GameCube
             19,  // Wii
+
+            // Sega consoles
+            33,  // SG-1000
+            11,  // Master System
+            1,   // Genesis/Mega Drive
+            9,   // Sega CD
+            10,  // 32X
+            68,  // Sega Pico
+            39,  // Saturn
             40,  // Dreamcast
-            18,  // Nintendo DS
-            78,  // Nintendo DSi
-            62,  // Nintendo 3DS
+
+            // Sony consoles
+            12,  // PlayStation
+            21,  // PlayStation 2
+
+            // Microsoft consoles
+            22,  // Xbox
+
+            // Atari consoles
+            50,  // Atari 5200
+            51,  // Atari 7800
+
+            // NEC consoles
+            8,   // PC Engine/TurboGrafx-16
+            49,  // PC-FX
+
+            // SNK consoles
+            56,  // Neo Geo CD
+
+            // Other consoles
+            43,  // 3DO
+            42,  // Philips CD-i
+            44,  // ColecoVision
+            45,  // Intellivision
+            23,  // Magnavox Odyssey 2
+            57,  // Fairchild Channel F
+            73,  // Arcadia 2001
+            74,  // Interton VC 4000
+            75,  // Elektor TV Games Computer
+            54,  // Cassette Vision
+            55,  // Super Cassette Vision
+            46,  // Vectrex
+
+            // Computers with analog output
+            29,  // MSX
+            34,  // VIC-20
+            36,  // Atari ST
+            37,  // Amstrad CPC
+            38,  // Apple II
+            47,  // PC-8000/8800
+            59,  // ZX Spectrum
+            64,  // Sharp X1
+            66,  // Thomson TO8
         ];
 
-        DB::table('systems')->whereIn('id', $scalingSystems)->update([
-            'supports_resolution_scaling' => true,
+        DB::table('systems')->whereIn('id', $analogTvSystems)->update([
+            'has_analog_tv_output' => true,
         ]);
     }
 
     public function down(): void
     {
         Schema::table('systems', function (Blueprint $table) {
-            $table->dropColumn(['screenshot_resolutions', 'supports_resolution_scaling']);
+            $table->dropColumn(['screenshot_resolutions', 'has_analog_tv_output']);
         });
     }
 };
