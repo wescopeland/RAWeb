@@ -6,6 +6,7 @@ use App\Models\EventAward;
 use App\Models\PlayerBadge;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Str;
 
 function SeparateAwards(array $userAwards): array
 {
@@ -280,7 +281,7 @@ function RenderAward(
                     $tooltipTitle = "{$event->title} - {$tierLabel}";
                 }
 
-                $pointsLabel = $actualEventAward->points_required === 1 ? 'point' : 'points';
+                $pointsLabel = Str::plural('point', $actualEventAward->points_required);
                 $tooltipDescription = "Awarded for earning at least {$actualEventAward->points_required} {$pointsLabel}";
             }
 
