@@ -289,6 +289,7 @@ class BuildGameShowPagePropsAction
                 'system.active',
                 'system.iconUrl',
                 'system.nameShort',
+                'system.hasAnalogTvOutput',
                 'system.screenshotResolutions',
                 'system',
                 'timesBeaten',

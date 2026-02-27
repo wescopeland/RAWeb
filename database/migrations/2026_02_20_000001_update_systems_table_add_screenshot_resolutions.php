@@ -195,6 +195,9 @@ return new class extends Migration {
             // outputs 256x239, 336x239, or 512x243 depending on the game.
             8 => [[256, 232], [256, 239], [336, 239], [512, 243]],
 
+            // PC Engine CD - Same VDP as PC Engine.
+            76 => [[256, 232], [256, 239], [336, 239], [512, 243]],
+
             // PC-FX - RA docs: 256x232. Core also outputs 256x240 and 341x240.
             49 => [[256, 232], [256, 240], [341, 240]],
 
@@ -295,8 +298,6 @@ return new class extends Migration {
 
             // Nokia N-Gage (ID 61) - Per RA docs.
 
-            // PC Engine CD (ID 76) - Per RA docs.
-
             // Sharp X68000 (ID 52) - Per RA docs.
 
             // Oric (ID 32)
@@ -360,11 +361,15 @@ return new class extends Migration {
             22,  // Xbox
 
             // Atari consoles
+            25,  // Atari 2600
             50,  // Atari 5200
             51,  // Atari 7800
+            17,  // Atari Jaguar
+            77,  // Atari Jaguar CD
 
             // NEC consoles
             8,   // PC Engine/TurboGrafx-16
+            76,  // PC Engine CD
             49,  // PC-FX
 
             // SNK consoles

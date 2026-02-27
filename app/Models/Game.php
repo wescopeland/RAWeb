@@ -488,7 +488,7 @@ class Game extends BaseModel implements HasMedia, HasPermalink, HasVersionedTrig
      * from the primary GameScreenshot records. This keeps all existing API consumers
      * working without changes.
      */
-    public function syncLegacyScreenshotFields(): void
+    public function syncLegacyScreenshotFields(?ScreenshotType $resetType = null): void
     {
         $primaries = $this->gameScreenshots()
             ->primary()
@@ -496,10 +496,25 @@ class Game extends BaseModel implements HasMedia, HasPermalink, HasVersionedTrig
             ->get()
             ->keyBy(fn (GameScreenshot $s) => $s->type->value);
 
-        $this->updateQuietly([
-            'image_ingame_asset_path' => $primaries->get('ingame')?->media?->getCustomProperty('legacy_path') ?? '/Images/000002.png',
-            'image_title_asset_path' => $primaries->get('title')?->media?->getCustomProperty('legacy_path') ?? '/Images/000002.png',
-        ]);
+        $updates = [];
+
+        $primaryIngame = $primaries->get('ingame');
+        if ($primaryIngame) {
+            $updates['image_ingame_asset_path'] = $primaryIngame->media?->getCustomProperty('legacy_path') ?? '/Images/000002.png';
+        } elseif ($resetType === ScreenshotType::Ingame) {
+            $updates['image_ingame_asset_path'] = '/Images/000002.png';
+        }
+
+        $primaryTitle = $primaries->get('title');
+        if ($primaryTitle) {
+            $updates['image_title_asset_path'] = $primaryTitle->media?->getCustomProperty('legacy_path') ?? '/Images/000002.png';
+        } elseif ($resetType === ScreenshotType::Title) {
+            $updates['image_title_asset_path'] = '/Images/000002.png';
+        }
+
+        if (!empty($updates)) {
+            $this->updateQuietly($updates);
+        }
     }
 
     // == accessors

@@ -119,3 +119,47 @@ it('resets to placeholder when the last screenshot of a type is deleted', functi
     // ASSERT
     expect($game->fresh()->image_ingame_asset_path)->toEqual('/Images/000002.png');
 });
+
+it('preserves the title path when syncing an ingame screenshot', function () {
+    // ARRANGE
+    $game = Game::factory()->create([
+        'system_id' => System::factory(),
+        'image_title_asset_path' => '/Images/088888.png',
+        'image_ingame_asset_path' => '/Images/000002.png',
+    ]);
+
+    $media = createMediaForGame($game, '/Images/099999.png');
+
+    // ACT
+    GameScreenshot::factory()->for($game)->ingame()->primary()->create([
+        'media_id' => $media->id,
+    ]);
+
+    // ASSERT
+    $fresh = $game->fresh();
+    expect($fresh->image_ingame_asset_path)->toEqual('/Images/099999.png');
+    expect($fresh->image_title_asset_path)->toEqual('/Images/088888.png');
+});
+
+it('preserves the ingame path when deleting the last title screenshot', function () {
+    // ARRANGE
+    $game = Game::factory()->create([
+        'system_id' => System::factory(),
+        'image_ingame_asset_path' => '/Images/088888.png',
+        'image_title_asset_path' => '/Images/099999.png',
+    ]);
+
+    $media = createMediaForGame($game, '/Images/099999.png');
+
+    $screenshot = GameScreenshot::factory()->for($game)->title()->primary()->create([
+        'media_id' => $media->id,
+    ]);
+
+    // ACT
+    $screenshot->delete();
+
+    // ASSERT
+    $fresh = $game->fresh();
+    expect($fresh->image_title_asset_path)->toEqual('/Images/000002.png');
+    expect($fresh->image_ingame_asset_path)->toEqual('/Images/088888.png');
+});

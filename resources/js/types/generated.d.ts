@@ -1188,10 +1188,11 @@ declare namespace App.Platform.Data {
     id: number;
     name: string;
     active?: boolean;
+    hasAnalogTvOutput?: boolean;
+    iconUrl?: string;
     manufacturer?: string;
     nameFull?: string;
     nameShort?: string;
-    iconUrl?: string;
     screenshotResolutions?: Array<{ width: number; height: number }> | null;
   };
   export type SystemGameListPageProps<TItems = App.Platform.Data.GameListEntry> = {

@@ -65,6 +65,6 @@ class GameScreenshotObserver
         }
 
         // No remaining screenshots of this type. Reset to placeholder.
-        $game->syncLegacyScreenshotFields();
+        $game->syncLegacyScreenshotFields($screenshot->type);
     }
 }
