@@ -22,7 +22,7 @@ class ResolveSubsetGameRedirectAction
     public function execute(Game $game): ?array
     {
         $parentGameId = $game->parent_game_id;
-        
+
         if (!$parentGameId || $parentGameId === $game->id) {
             return null;
         }
