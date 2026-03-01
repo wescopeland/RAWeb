@@ -54,23 +54,26 @@ const TestHarness: FC<TestHarnessProps> = ({
               itemRefs.current[index] = el;
             }}
             data-testid={`item-${index}`}
-            role="button"
-            tabIndex={focusedIndex === index ? 0 : -1}
-            onClick={() => handleItemClick(index, item.href)}
-            onKeyDown={(e) => handleItemKeyDown(e, index, item.href)}
-            onMouseEnter={() => handleItemMouseEnter(item.href)}
-            onMouseLeave={handleItemMouseLeave}
           >
-            <p
-              ref={(el) => {
-                if (wireTitleRefs) {
-                  titleRefs.current[index] = el;
-                }
-              }}
-              data-testid={`title-${index}`}
+            <button
+              type="button"
+              tabIndex={focusedIndex === index ? 0 : -1}
+              onClick={() => handleItemClick(index, item.href)}
+              onKeyDown={(e) => handleItemKeyDown(e, index, item.href)}
+              onMouseEnter={() => handleItemMouseEnter(item.href)}
+              onMouseLeave={handleItemMouseLeave}
             >
-              {item.label}
-            </p>
+              <p
+                ref={(el) => {
+                  if (wireTitleRefs) {
+                    titleRefs.current[index] = el;
+                  }
+                }}
+                data-testid={`title-${index}`}
+              >
+                {item.label}
+              </p>
+            </button>
           </li>
         ))}
       </ol>
