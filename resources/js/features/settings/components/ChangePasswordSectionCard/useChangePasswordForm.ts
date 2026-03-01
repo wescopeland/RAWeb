@@ -48,6 +48,7 @@ export function useChangePasswordForm() {
     toastMessage.promise(mutation.mutateAsync({ payload: formValues }), {
       loading: t('Changing password...'),
       success: () => {
+        // eslint-disable-next-line react-compiler/react-compiler -- Full-page navigation is intentional.
         window.location.href = route('login');
 
         return '';

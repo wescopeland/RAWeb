@@ -57,6 +57,7 @@ export function useGameBacklogState({
   const toggleBacklog = useCallback(
     async (options?: { shouldHideToasts: boolean }) => {
       if (!auth?.user && typeof window !== 'undefined') {
+        // eslint-disable-next-line react-compiler/react-compiler -- Full-page navigation is intentional. Eventually when login is powered by Inertia, this can be changed.
         window.location.href = route('login');
 
         return;
