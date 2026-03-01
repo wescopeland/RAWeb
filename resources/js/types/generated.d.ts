@@ -603,6 +603,7 @@ declare namespace App.Platform.Data {
     description?: string;
     decorator?: string | null;
     developer?: App.Data.User;
+    embedUrl?: string | null;
     isPromoted?: boolean;
     game?: App.Platform.Data.Game;
     groupId?: number | null;
@@ -1248,7 +1249,7 @@ declare namespace App.Platform.Enums {
     | 'type-set'
     | 'type-changed'
     | 'type-removed';
-  export type AchievementPageTab = 'changelog' | 'comments' | 'tips' | 'unlocks';
+  export type AchievementPageTab = 'changelog' | 'comments' | 'tips' | 'unlocks' | 'video';
   export type AchievementSetAuthorTask = 'artwork' | 'banner';
   export type AchievementSetType =
     | 'core'

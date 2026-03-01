@@ -1,15 +1,16 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useShowPageTabs } from '@/common/hooks/useShowPageTabs';
 
+import type { TabConfig } from '../models';
 import { currentTabAtom } from '../state/achievements.atoms';
 import { useAnimatedTabIndicator } from './useAnimatedTabIndicator';
 
 type AchievementTab = App.Platform.Enums.AchievementPageTab;
 
-const tabValues: AchievementTab[] = ['comments', 'unlocks', 'changelog'];
+export function useAchievementShowTabs(tabConfigs: TabConfig[]) {
+  const tabValues = useMemo(() => tabConfigs.map((c) => c.value), [tabConfigs]);
 
-export function useAchievementShowTabs() {
   const { currentTab, setCurrentTab } = useShowPageTabs(currentTabAtom, 'comments');
 
   const initialIndex = tabValues.indexOf(currentTab);
@@ -26,7 +27,7 @@ export function useAchievementShowTabs() {
 
       setCurrentTab(value as AchievementTab);
     },
-    [setActiveIndex, setCurrentTab],
+    [setActiveIndex, setCurrentTab, tabValues],
   );
 
   return {

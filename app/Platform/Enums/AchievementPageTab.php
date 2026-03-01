@@ -13,4 +13,7 @@ enum AchievementPageTab: string
     case Comments = 'comments';
     case Tips = 'tips';
     case Unlocks = 'unlocks';
+
+    /** TODO this will eventually be rolled into 'Tips' */
+    case Video = 'video';
 }

@@ -223,6 +223,55 @@ describe('Component: AchievementShowRoot', () => {
     vi.useRealTimers();
   });
 
+  it('given the achievement has an embed URL, shows the Video tab', () => {
+    // ARRANGE
+    const achievement = createAchievement({
+      game: createGame({ playersTotal: 1000, system: createSystem() }),
+      unlocksTotal: 250,
+      unlocksHardcore: 150,
+      embedUrl: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
+    });
+
+    render(<AchievementShowRoot />, {
+      pageProps: {
+        achievement,
+        backingGame: null,
+        gameAchievementSet: null,
+        can: { createAchievementComments: false },
+        isSubscribedToComments: false,
+        numComments: 0,
+        recentVisibleComments: [],
+      },
+    });
+
+    // ASSERT
+    expect(screen.getAllByRole('tab', { name: /video/i }).length).toBeGreaterThan(0);
+  });
+
+  it('given the achievement has no embed URL, does not show the Video tab', () => {
+    // ARRANGE
+    const achievement = createAchievement({
+      game: createGame({ playersTotal: 1000, system: createSystem() }),
+      unlocksTotal: 250,
+      unlocksHardcore: 150,
+    });
+
+    render(<AchievementShowRoot />, {
+      pageProps: {
+        achievement,
+        backingGame: null,
+        gameAchievementSet: null,
+        can: { createAchievementComments: false },
+        isSubscribedToComments: false,
+        numComments: 0,
+        recentVisibleComments: [],
+      },
+    });
+
+    // ASSERT
+    expect(screen.queryAllByRole('tab', { name: /video/i })).toHaveLength(0);
+  });
+
   it('allows switching to the changelog tab', async () => {
     // ARRANGE
     const achievement = createAchievement({
