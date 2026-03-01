@@ -29,6 +29,10 @@ use Illuminate\Support\Facades\Cache;
 
 $gameId = (int) request()->query('i');
 
+if ($gameId <= 0) {
+    return response()->json();
+}
+
 $baseData = Cache::flexible(CacheKey::buildLegacyApiGameBaseDataCacheKey($gameId), [600, 1_800], function () use ($gameId) {
     $game = Game::with('system')->find($gameId);
 

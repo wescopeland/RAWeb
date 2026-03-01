@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Cache;
  *    bool      IsGameSystem        indicates if the system is a game system (not Events, Hubs, etc.)
  */
 
-$onlyActive = (int) (bool) request()->query('a', '0');
-$onlyGameConsoles = (int) (bool) request()->query('g', '0');
+$onlyActive = request()->boolean('a') ? 1 : 0;
+$onlyGameConsoles = request()->boolean('g') ? 1 : 0;
 
 $cacheKey = CacheKey::buildLegacyApiConsoleIdsCacheKey($onlyActive, $onlyGameConsoles);
 

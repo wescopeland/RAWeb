@@ -133,7 +133,7 @@ $cachedAchievements = Cache::flexible(CacheKey::buildLegacyApiGameAchievementsCa
         'developer_ulid' => $a->developer?->ulid,
         'created_at' => $a->created_at->format('Y-m-d H:i:s'),
         'modified_at' => $a->modified_at->format('Y-m-d H:i:s'),
-        'trigger_definition_md5' => md5($a->trigger_definition),
+        'trigger_definition_md5' => md5($a->trigger_definition ?? ''),
     ])->all();
 });
 
