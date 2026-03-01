@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role -- doesn't matter in a test suite */
+/* eslint-disable jsx-a11y/prefer-tag-over-role -- test harness mirrors the production <li role="button"> pattern */
 
 import { router } from '@inertiajs/react';
 import type { FC } from 'react';
@@ -54,26 +54,23 @@ const TestHarness: FC<TestHarnessProps> = ({
               itemRefs.current[index] = el;
             }}
             data-testid={`item-${index}`}
+            role="button"
+            tabIndex={focusedIndex === index ? 0 : -1}
+            onClick={() => handleItemClick(index, item.href)}
+            onKeyDown={(e) => handleItemKeyDown(e, index, item.href)}
+            onMouseEnter={() => handleItemMouseEnter(item.href)}
+            onMouseLeave={handleItemMouseLeave}
           >
-            <button
-              type="button"
-              tabIndex={focusedIndex === index ? 0 : -1}
-              onClick={() => handleItemClick(index, item.href)}
-              onKeyDown={(e) => handleItemKeyDown(e, index, item.href)}
-              onMouseEnter={() => handleItemMouseEnter(item.href)}
-              onMouseLeave={handleItemMouseLeave}
+            <p
+              ref={(el) => {
+                if (wireTitleRefs) {
+                  titleRefs.current[index] = el;
+                }
+              }}
+              data-testid={`title-${index}`}
             >
-              <p
-                ref={(el) => {
-                  if (wireTitleRefs) {
-                    titleRefs.current[index] = el;
-                  }
-                }}
-                data-testid={`title-${index}`}
-              >
-                {item.label}
-              </p>
-            </button>
+              {item.label}
+            </p>
           </li>
         ))}
       </ol>
