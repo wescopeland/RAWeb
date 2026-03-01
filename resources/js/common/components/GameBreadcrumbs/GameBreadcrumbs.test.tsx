@@ -148,9 +148,10 @@ describe('Component: GameBreadcrumbs', () => {
     );
 
     // ASSERT
-    const breadcrumbPageEl = screen.getByText('Super Mario World');
-    expect(breadcrumbPageEl).toBeVisible();
-    expect(breadcrumbPageEl).toHaveAttribute('aria-current', 'page');
+    const textEl = screen.getByText('Super Mario World');
+    expect(textEl).toBeVisible();
+
+    expect(textEl.closest('[aria-current="page"]')).toBeTruthy();
   });
 
   it('given game with gameAchievementSet but no t_currentPageLabel, renders game as link', () => {
