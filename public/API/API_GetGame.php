@@ -24,31 +24,62 @@
  */
 
 use App\Models\Game;
+use App\Support\Cache\CacheKey;
+use Illuminate\Support\Facades\Cache;
 
 $gameId = (int) request()->query('i');
 
-$game = Game::with('system')->find($gameId);
+$baseData = Cache::flexible(CacheKey::buildLegacyApiGameBaseDataCacheKey($gameId), [600, 1_800], function () use ($gameId) {
+    $game = Game::with('system')->find($gameId);
 
-if (!$game) {
+    if (!$game) {
+        return null;
+    }
+
+    return [
+        'id' => $game->id,
+        'title' => $game->title,
+        'system_id' => $game->system_id,
+        'system_name' => $game->system->name,
+        'forum_topic_id' => $game->forum_topic_id,
+        'image_icon' => $game->image_icon_asset_path,
+        'image_title' => $game->image_title_asset_path,
+        'image_ingame' => $game->image_ingame_asset_path,
+        'image_box_art' => $game->image_box_art_asset_path,
+        'publisher' => $game->publisher,
+        'developer' => $game->developer,
+        'genre' => $game->genre,
+        'released_at' => $game->released_at?->format('Y-m-d'),
+        'released_at_granularity' => $game->released_at_granularity?->value,
+        'trigger_definition_md5' => md5($game->trigger_definition ?? ''),
+        'parent_game_id' => $game->parentGameId,
+        'players_total' => $game->players_total,
+        'achievements_published' => $game->achievements_published,
+        'updated_at' => $game->updated_at->format('Y-m-d\TH:i:s.u\Z'),
+        'legacy_guide_url' => $game->legacy_guide_url,
+    ];
+});
+
+if (!$baseData) {
     return response()->json();
 }
 
 return response()->json([
-    'Title' => $game->title,
-    'GameTitle' => $game->title,
-    'ConsoleID' => $game->system_id,
-    'ConsoleName' => $game->system->name,
-    'Console' => $game->system->name,
-    'ForumTopicID' => $game->forum_topic_id,
-    'Flags' => 0, // Always '0'
-    'GameIcon' => $game->image_icon_asset_path,
-    'ImageIcon' => $game->image_icon_asset_path,
-    'ImageTitle' => $game->image_title_asset_path,
-    'ImageIngame' => $game->image_ingame_asset_path,
-    'ImageBoxArt' => $game->image_box_art_asset_path,
-    'Publisher' => $game->publisher,
-    'Developer' => $game->developer,
-    'Genre' => $game->genre,
-    'Released' => $game->released_at?->format('Y-m-d'),
-    'ReleasedAtGranularity' => $game->released_at_granularity?->value,
+    'Title' => $baseData['title'],
+    'GameTitle' => $baseData['title'],
+    'ConsoleID' => $baseData['system_id'],
+    'ConsoleName' => $baseData['system_name'],
+    'Console' => $baseData['system_name'],
+    'ForumTopicID' => $baseData['forum_topic_id'],
+    'Flags' => 0,
+    'GameIcon' => $baseData['image_icon'],
+    'ImageIcon' => $baseData['image_icon'],
+    'ImageTitle' => $baseData['image_title'],
+    'ImageIngame' => $baseData['image_ingame'],
+    'ImageBoxArt' => $baseData['image_box_art'],
+    'Publisher' => $baseData['publisher'],
+    'Developer' => $baseData['developer'],
+    'Genre' => $baseData['genre'],
+    'Released' => $baseData['released_at'],
+    'ReleasedAtGranularity' => $baseData['released_at_granularity'],
 ]);

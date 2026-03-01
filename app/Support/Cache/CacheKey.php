@@ -63,6 +63,26 @@ class CacheKey
         return self::buildNormalizedUserCacheKey($username, "beta-visits", [$betaName]);
     }
 
+    public static function buildLegacyApiConsoleIdsCacheKey(int $active, int $gameOnly): string
+    {
+        return self::buildNormalizedCacheKey("api-v1-console", "ids", "list", ["a={$active}", "g={$gameOnly}"]);
+    }
+
+    public static function buildLegacyApiGameBaseDataCacheKey(int $gameId): string
+    {
+        return self::buildNormalizedCacheKey("api-v1-game", $gameId, "base-data");
+    }
+
+    public static function buildLegacyApiGameAchievementsCacheKey(int $gameId, bool $isPromoted): string
+    {
+        return self::buildNormalizedCacheKey("api-v1-game", $gameId, "achievements", [$isPromoted ? 'promoted' : 'unpromoted']);
+    }
+
+    public static function buildLegacyApiGameListCacheKey(int $consoleId): string
+    {
+        return self::buildNormalizedCacheKey("api-v1-console", $consoleId, "game-list");
+    }
+
     /**
      * Constructs a normalized cache key.
      *
