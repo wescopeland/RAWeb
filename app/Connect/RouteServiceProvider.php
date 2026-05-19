@@ -133,7 +133,10 @@ class RouteServiceProvider extends ServiceProvider
      */
     private function loginLimits(Request $request): array
     {
-        $username = Str::transliterate(Str::lower((string) $request->input('u', '')));
+        $rawUsername = $request->input('u', '');
+        $username = is_scalar($rawUsername)
+            ? Str::transliterate(Str::lower((string) $rawUsername))
+            : '';
         $ip = $this->ipBucket($request);
 
         return [
