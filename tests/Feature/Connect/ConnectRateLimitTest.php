@@ -117,6 +117,13 @@ it('does not let a spoofed username consume the authenticated developer publish 
         ->assertHeader('X-RateLimit-Remaining', '599');
 });
 
+
+it('handles malformed array usernames in login requests without throwing', function () {
+    $this->post('dorequest.php', ['r' => 'login2', 'u' => ['x']])
+        ->assertUnprocessable()
+        ->assertHeader('X-RateLimit-Limit', '5');
+});
+
 it('returns the connect JSON shape and a Retry-After header when login is rate limited', function () {
     $params = ['r' => 'login2', 'u' => 'someuser'];
 
